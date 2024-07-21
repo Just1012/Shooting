@@ -51,12 +51,12 @@
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarDashboards" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarDashboards">
-                        <i class='bx bx-dish'></i> <span data-key="t-dashboards">Meals</span>
+                        <i class='bx bx-home'></i> <span data-key="t-dashboards">Home Page</span>
                     </a>
                     <div class="collapse menu-dropdown" id="sidebarDashboards">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a href="" class="nav-link" data-key="t-one-page">List</a>
+                                <a href="{{ route('slider.index') }}" class="nav-link" data-key="t-one-page">Slider Section</a>
                             </li>
                         </ul>
                     </div>

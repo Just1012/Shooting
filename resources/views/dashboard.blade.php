@@ -9,7 +9,7 @@
 @section('content')
 <div class="main-content">
     <div class="page-content">
-        Hello Man
+        Hello Man ,
     </div>
 </div>
 @endsection

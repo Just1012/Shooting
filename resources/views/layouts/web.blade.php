@@ -36,6 +36,7 @@
     @endif
     <!-- custom Css-->
     <link rel="stylesheet" href="https://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <style>
         * {
             font-family: 'cairo' !important;
@@ -49,19 +50,19 @@
         @auth
 
 
-        @include('layouts.web_ex.header')
-        @include('layouts.web_ex.notavcation')
-        @include('layouts.web_ex.menu')
+            @include('layouts.web_ex.header')
+            @include('layouts.web_ex.notavcation')
+            @include('layouts.web_ex.menu')
         @endauth
 
         <div class="vertical-overlay"></div>
-             @yield('content')
+        @yield('content')
 
-        </div>
-        @auth
-    @include('layouts.web_ex.preloader')
-    @include('layouts.web_ex.customizer')
-    @include('layouts.web_ex.thems')
+    </div>
+    @auth
+        @include('layouts.web_ex.preloader')
+        @include('layouts.web_ex.customizer')
+        @include('layouts.web_ex.thems')
     @endauth
 
 
@@ -96,7 +97,9 @@
     }, false);
 </script>
   ------------>
-
+    <!-- Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <!-- JAVASCRIPT -->
     <script src="{{ asset('web/assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('web/assets/libs/simplebar/simplebar.min.js') }}"></script>
@@ -129,6 +132,7 @@
     <script src="https://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
 
     <script src="{{ asset('assets/js/tinymce/tinymce.min.js') }}" referrerpolicy="origin"></script>
+
     <script>
         tinymce.init({
             selector: 'textarea#myeditorinstance',
@@ -138,7 +142,11 @@
         });
     </script>
 
-{!! Toastr::message() !!}
+    <script>
+        @if (Session::has('toastr'))
+            {!! Session::get('toastr') !!}
+        @endif
+    </script>
     @stack('js')
 
 </body>
