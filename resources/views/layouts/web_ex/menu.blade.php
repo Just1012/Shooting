@@ -47,7 +47,7 @@
                 </li>
                 {{-- End Dashboard Page  --}}
 
-                {{-- Start Meals  --}}
+                {{-- Start Home Page  --}}
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarDashboards" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarDashboards">
@@ -61,7 +61,58 @@
                         </ul>
                     </div>
                 </li>
-                <!-- end Meals -->
+                <!-- end Home Page -->
+
+                {{-- Start Category Page  --}}
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="#category" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="category">
+                        <i class='bx bx-category-alt'></i> <span data-key="t-dashboards">Category</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="category">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="{{ route('category.index') }}" class="nav-link" data-key="t-one-page">Category List</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <!-- end Category Page -->
+
+                {{-- Start Partner Page  --}}
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="#partner" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="partner">
+                        <i class='bx bx-partner-alt'></i> <span data-key="t-dashboards">Partners</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="partner">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="{{ route('partner.index') }}" class="nav-link" data-key="t-one-page">Partners List</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <!-- end Category Page -->
+
+                {{-- Start System Settings  --}}
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="#systemSetting" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="systemSetting">
+                        <i class='bx bx-cog'></i> <span data-key="t-dashboards">System Settings</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="systemSetting">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="{{ route('editSystemSetup') }}" class="nav-link" data-key="t-one-page">System SetUp</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('editSystemInfo') }}" class="nav-link" data-key="t-one-page">System Info</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <!-- end System Settings -->
 
 
 

@@ -12,7 +12,7 @@
     <!-- Bootstrap Css -->
 @endpush
 @section('title')
-    Sliders
+    Partner
 @endsection
 @section('content')
     <div class="main-content">
@@ -23,7 +23,7 @@
                         <div class="card-header">
                             <div class="row">
                                 <h5 class="card-title mb-0 col-sm-8 col-md-10">
-                                    Sliders
+                                    Partner
                                 </h5>
                                 <div id="topmodal" class="modal fade" tabindex="-1" aria-hidden="true"
                                     style="display: none;">
@@ -35,7 +35,7 @@
                                                     style="width:120px;height:120px">
                                                 </lord-icon>
                                                 <div class="mt-4">
-                                                    <h4 class="mb-3">Are you sure to delete this slider ?</h4>
+                                                    <h4 class="mb-3">Are you sure to delete this partner ?</h4>
                                                     <p class="text-muted mb-4"> If You Deleted It You Can't Restore It .</p>
                                                     <div class="hstack gap-2 justify-content-center">
                                                         <a href="javascript:void(0);"
@@ -54,7 +54,7 @@
 
                                 <!-- Load More Buttons -->
                                 <div class="hstack flex-wrap gap-2   mb-lg-0 mb-0 col-sm-2 col-md-1">
-                                    <a href="{{ route('slider.addSlider') }}" class="btn btn-outline-secondary btn-load">
+                                    <a href="{{ route('partner.addPartner') }}" class="btn btn-outline-secondary btn-load">
                                         <span class="d-flex align-items-center">
                                             <span class="spinner-grow flex-shrink-0" role="status">
                                                 <span class="visually-hidden">+</span>
@@ -108,7 +108,7 @@
 @push('js')
     <script>
         var table = $('#alternative-pagination').DataTable({
-            ajax: '{{ route('slider.dataTable') }}',
+            ajax: '{{ route('partner.dataTable') }}',
             columns: [{
                     'data': null,
                     render: function(data, type, row, meta) {
@@ -120,7 +120,7 @@
                 {
                     'data': null,
                     render: function(data, row) {
-                        return `<img src="{{ asset('images') }}/${data.image_ar}"
+                        return `<img src="{{ asset('images') }}/${data.image}"
                                 class="small-image" style="height: 50px; width: 50px" onclick="openFullScreen(this)">`;
                     }
                 },
@@ -146,13 +146,13 @@
                 {
                     'data': null,
                     render: function(data) {
-                        var editUrl = '{{ route('slider.edit', ':id') }}';
+                        var editUrl = '{{ route('partner.edit', ':id') }}';
                         editUrl = editUrl.replace(':id', data.id);
 
                         var editButton = '<a href="' + editUrl +
                             '" class="mx-1"> <i class="bx bxs-edit btn btn-warning"></i></a>';
 
-                        var deleteUrl = '{{ route('slider.delete', ':id') }}';
+                        var deleteUrl = '{{ route('partner.delete', ':id') }}';
                         deleteUrl = deleteUrl.replace(':id', data.id);
 
                         var deleteButton =
@@ -209,7 +209,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <script>
         $(document).on('click', '#status', function() {
-            var url = '{{ route('slider.status', ':id') }}';
+            var url = '{{ route('partner.status', ':id') }}';
             url = url.replace(':id', $(this).data('id'));
 
             $.ajax({

@@ -7,12 +7,10 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" />
 
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <!-- Bootstrap Css -->
 @endpush
 @section('title')
-    Sliders
+    Category
 @endsection
 @section('content')
     <div class="main-content">
@@ -22,39 +20,11 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="row">
-                                <h5 class="card-title mb-0 col-sm-8 col-md-10">
-                                    Sliders
-                                </h5>
-                                <div id="topmodal" class="modal fade" tabindex="-1" aria-hidden="true"
-                                    style="display: none;">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-body text-center p-5">
-                                                <lord-icon src="https://cdn.lordicon.com/skkahier.json" trigger="loop"
-                                                    colors="primary:#eb4034,secondary:#eb4034"
-                                                    style="width:120px;height:120px">
-                                                </lord-icon>
-                                                <div class="mt-4">
-                                                    <h4 class="mb-3">Are you sure to delete this slider ?</h4>
-                                                    <p class="text-muted mb-4"> If You Deleted It You Can't Restore It .</p>
-                                                    <div class="hstack gap-2 justify-content-center">
-                                                        <a href="javascript:void(0);"
-                                                            class="btn btn-link link-success fw-medium"
-                                                            data-bs-dismiss="modal"><i
-                                                                class="ri-close-line me-1 align-middle"></i>
-                                                            Close</a>
-                                                        <a href="#" id="delete-confirm"
-                                                            class="btn btn-danger">Delete</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div><!-- /.modal-content -->
-                                    </div><!-- /.modal-dialog -->
-                                </div><!-- /.modal -->
+                                <h5 class="card-title mb-0 col-sm-8 col-md-10">Category</h5>
 
-                                <!-- Load More Buttons -->
                                 <div class="hstack flex-wrap gap-2   mb-lg-0 mb-0 col-sm-2 col-md-1">
-                                    <a href="{{ route('slider.addSlider') }}" class="btn btn-outline-secondary btn-load">
+                                    <a href="{{ route('category.addCategory') }}"
+                                        class="btn btn-outline-secondary btn-load">
                                         <span class="d-flex align-items-center">
                                             <span class="spinner-grow flex-shrink-0" role="status">
                                                 <span class="visually-hidden">+</span>
@@ -88,8 +58,8 @@
                                 <thead>
                                     <tr>
                                         <th>#SSL</th>
-                                        <th>Image</th>
-                                        <th>status</th>
+                                        <th>Title</th>
+                                        <th>Status</th>
                                         <th>Action</th>
                                         <th>Created At</th>
                                     </tr>
@@ -108,20 +78,22 @@
 @push('js')
     <script>
         var table = $('#alternative-pagination').DataTable({
-            ajax: '{{ route('slider.dataTable') }}',
-            columns: [{
+            ajax: '{{ route('category.dataTable') }}',
+            columns: [
+
+                {
                     'data': null,
                     render: function(data, type, row, meta) {
-                        // 'meta.row' is the index number
                         return meta.row + 1;
                     }
                 },
 
                 {
                     'data': null,
-                    render: function(data, row) {
-                        return `<img src="{{ asset('images') }}/${data.image_ar}"
-                                class="small-image" style="height: 50px; width: 50px" onclick="openFullScreen(this)">`;
+                    render: function(data) {
+                        // Choose the appropriate name based on the selected language
+                        var name = '{{ App::getLocale() == 'ar' ? 'name_ar' : 'name_en' }}';
+                        return data[name];
                     }
                 },
 
@@ -146,21 +118,21 @@
                 {
                     'data': null,
                     render: function(data) {
-                        var editUrl = '{{ route('slider.edit', ':id') }}';
+                        var itemUrl = '{{ route('Category.edit', ':id') }}';
+                        var editUrl = '{{ route('Category.edit', ':id') }}';
+
+
+                        itemUrl = itemUrl.replace(':id', data.id);
                         editUrl = editUrl.replace(':id', data.id);
 
+
                         var editButton = '<a href="' + editUrl +
-                            '" class="mx-1"> <i class="bx bxs-edit btn btn-warning"></i></a>';
+                            '"> <i class="bx bxs-edit btn btn-warning"></i></a>';
 
-                        var deleteUrl = '{{ route('slider.delete', ':id') }}';
-                        deleteUrl = deleteUrl.replace(':id', data.id);
+                        var itemsButton = '<a href="' + itemUrl +
+                            '"> <i class="bx bx-show btn btn-success"></i></a>';
 
-                        var deleteButton =
-                            '<a href="javascript:void(0);" class="mx-1" onclick="confirmDeletion(\'' +
-                            deleteUrl + '\')"> <i class="bx bx-trash btn btn-danger"></i></a>';
-
-
-                        return editButton + deleteButton;
+                        return itemsButton + '' + editButton;
                     }
                 },
 
@@ -190,26 +162,8 @@
     </script>
 
     <script>
-        function confirmDeletion(deleteUrl) {
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = deleteUrl;
-                }
-            });
-        }
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
-    <script>
         $(document).on('click', '#status', function() {
-            var url = '{{ route('slider.status', ':id') }}';
+            var url = '{{ route('category.status', ':id') }}';
             url = url.replace(':id', $(this).data('id'));
 
             $.ajax({
@@ -233,20 +187,5 @@
         });
     </script>
 
-    <script>
-        function openFullScreen(image) {
-            var fullScreenContainer = document.createElement('div');
-            fullScreenContainer.className = 'fullscreen-image';
 
-            var fullScreenImage = document.createElement('img');
-            fullScreenImage.src = image.src;
-
-            fullScreenContainer.appendChild(fullScreenImage);
-            document.body.appendChild(fullScreenContainer);
-
-            fullScreenContainer.addEventListener('click', function() {
-                document.body.removeChild(fullScreenContainer);
-            });
-        }
-    </script>
 @endpush
