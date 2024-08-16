@@ -39,8 +39,7 @@
                 {{-- Start Dashboard Page  --}}
                 <li class="nav-item">
                     <a href="{{ route('dashboard') }}"
-                        class="nav-link {{ Request::routeIs('dashboard') ? 'active' : '' }}"
-                        data-key="t-nft-landing">
+                        class="nav-link {{ Request::routeIs('dashboard') ? 'active' : '' }}" data-key="t-nft-landing">
                         <i class='bx bxs-dashboard'></i>
                         <span data-key="t-landing">Dashboard</span>
                     </a>
@@ -56,12 +55,39 @@
                     <div class="collapse menu-dropdown" id="sidebarDashboards">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a href="{{ route('slider.index') }}" class="nav-link" data-key="t-one-page">Slider Section</a>
+                                <a href="{{ route('slider.index') }}" class="nav-link" data-key="t-one-page">Slider
+                                    Section</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('editHomeSection') }}" class="nav-link" data-key="t-one-page">Home
+                                    Section</a>
                             </li>
                         </ul>
                     </div>
                 </li>
                 <!-- end Home Page -->
+
+                {{-- Start  Pages  --}}
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="#pages" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="pages">
+                        <i class='bx bxs-info-circle'></i> <span data-key="t-dashboards">Pages</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="pages">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="{{ route('editAbout') }}" class="nav-link" data-key="t-one-page">About Page</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('editService') }}" class="nav-link" data-key="t-one-page">Our Services Page</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('editIndustry') }}" class="nav-link" data-key="t-one-page">Industry Page</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <!-- End Pages -->
 
                 {{-- Start Category Page  --}}
                 <li class="nav-item">
@@ -72,7 +98,8 @@
                     <div class="collapse menu-dropdown" id="category">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a href="{{ route('category.index') }}" class="nav-link" data-key="t-one-page">Category List</a>
+                                <a href="{{ route('category.index') }}" class="nav-link" data-key="t-one-page">Category
+                                    List</a>
                             </li>
                         </ul>
                     </div>
@@ -83,12 +110,14 @@
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#partner" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="partner">
-                        <i class='bx bx-partner-alt'></i> <span data-key="t-dashboards">Partners</span>
+                        <i class='bx bxs-user-badge'></i> <span data-key="t-dashboards">Partners</span>
                     </a>
                     <div class="collapse menu-dropdown" id="partner">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a href="{{ route('partner.index') }}" class="nav-link" data-key="t-one-page">Partners List</a>
+                                <a href="{{ route('partner.index') }}" class="nav-link"
+                                    data-key="t-one-page">Partners
+                                    List</a>
                             </li>
                         </ul>
                     </div>
@@ -104,18 +133,17 @@
                     <div class="collapse menu-dropdown" id="systemSetting">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a href="{{ route('editSystemSetup') }}" class="nav-link" data-key="t-one-page">System SetUp</a>
+                                <a href="{{ route('editSystemSetup') }}" class="nav-link"
+                                    data-key="t-one-page">System SetUp</a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('editSystemInfo') }}" class="nav-link" data-key="t-one-page">System Info</a>
+                                <a href="{{ route('editSystemInfo') }}" class="nav-link"
+                                    data-key="t-one-page">System Info</a>
                             </li>
                         </ul>
                     </div>
                 </li>
                 <!-- end System Settings -->
-
-
-
 
             </ul>
         </div>
