@@ -10,7 +10,7 @@
     <!-- Bootstrap Css -->
 @endpush
 @section('title')
-    Category
+    Brands
 @endsection
 @section('content')
     <div class="main-content">
@@ -20,11 +20,10 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="row">
-                                <h5 class="card-title mb-0 col-sm-8 col-md-10">Category</h5>
+                                <h5 class="card-title mb-0 col-sm-8 col-md-10">Brands</h5>
 
                                 <div class="hstack flex-wrap gap-2   mb-lg-0 mb-0 col-sm-2 col-md-1">
-                                    <a href="{{ route('category.addCategory') }}"
-                                        class="btn btn-outline-secondary btn-load">
+                                    <a href="{{ route('brand.addBrand') }}" class="btn btn-outline-secondary btn-load">
                                         <span class="d-flex align-items-center">
                                             <span class="spinner-grow flex-shrink-0" role="status">
                                                 <span class="visually-hidden">+</span>
@@ -58,7 +57,8 @@
                                 <thead>
                                     <tr>
                                         <th>#SSL</th>
-                                        <th>Title</th>
+                                        <th>Main Image</th>
+                                        <th>Brand Name</th>
                                         <th>Status</th>
                                         <th>Action</th>
                                         <th>Created At</th>
@@ -78,7 +78,7 @@
 @push('js')
     <script>
         var table = $('#alternative-pagination').DataTable({
-            ajax: '{{ route('category.dataTable') }}',
+            ajax: '{{ route('brand.dataTable') }}',
             columns: [
 
                 {
@@ -90,9 +90,17 @@
 
                 {
                     'data': null,
+                    render: function(data, row) {
+                        return `<img src="{{ asset('images') }}/${data.image}"
+                                class="small-image" style="height: 50px; width: 50px" onclick="openFullScreen(this)">`;
+                    }
+                },
+
+                {
+                    'data': null,
                     render: function(data) {
                         // Choose the appropriate name based on the selected language
-                        var name = '{{ App::getLocale() == 'ar' ? 'name_ar' : 'name_en' }}';
+                        var name = '{{ App::getLocale() == 'ar' ? 'brand_name_ar' : 'brand_name_en' }}';
                         return data[name];
                     }
                 },
@@ -118,11 +126,18 @@
                 {
                     'data': null,
                     render: function(data) {
-                        var editUrl = '{{ route('Category.edit', ':id') }}';
+                        var editUrl = '{{ route('brand.edit', ':id') }}';
+                        var detailsUrl = '{{ route('brandDetails', ':id') }}';
+
                         editUrl = editUrl.replace(':id', data.id);
+                        detailsUrl = detailsUrl.replace(':id', data.id);
+
                         var editButton = '<a href="' + editUrl +
                             '"> <i class="bx bxs-edit btn btn-warning"></i></a>';
-                        return editButton;
+                        var detailsButton = '<a href="' + detailsUrl +
+                            '"> <i class="bx bx-message-alt-detail btn btn-success"></i></a>';
+
+                        return detailsButton + '' + editButton;
                     }
                 },
 
@@ -153,7 +168,7 @@
 
     <script>
         $(document).on('click', '#status', function() {
-            var url = '{{ route('category.status', ':id') }}';
+            var url = '{{ route('brand.status', ':id') }}';
             url = url.replace(':id', $(this).data('id'));
 
             $.ajax({
@@ -175,5 +190,21 @@
             $('#alert').css('display', 'none');
             table.ajax.reload();
         });
+    </script>
+    <script>
+        function openFullScreen(image) {
+            var fullScreenContainer = document.createElement('div');
+            fullScreenContainer.className = 'fullscreen-image';
+
+            var fullScreenImage = document.createElement('img');
+            fullScreenImage.src = image.src;
+
+            fullScreenContainer.appendChild(fullScreenImage);
+            document.body.appendChild(fullScreenContainer);
+
+            fullScreenContainer.addEventListener('click', function() {
+                document.body.removeChild(fullScreenContainer);
+            });
+        }
     </script>
 @endpush

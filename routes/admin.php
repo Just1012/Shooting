@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Dashboard\HomeSliderController;
 use App\Http\Controllers\Dashboard\IndustryController;
+use App\Http\Controllers\Dashboard\OurWorkController;
 use App\Http\Controllers\Dashboard\PartnerController;
 use App\Http\Controllers\Dashboard\ServiceController;
 use App\Http\Controllers\Dashboard\SystemInfoController;
@@ -90,6 +91,19 @@ Route::group(
         Route::prefix('homeSection')->group(function () {
             Route::get('/editHomeSection/edit', [HomeSectionController::class, 'editHomeSection'])->name('editHomeSection');
             Route::post('/updateHomeSection/update', [HomeSectionController::class, 'updateHomeSection'])->name('updateHomeSection');
+        });
+
+        Route::prefix('brand')->group(function () {
+            Route::get('/index', [OurWorkController::class, 'index'])->name('brand.index');
+            Route::get('/dataTable', [OurWorkController::class, 'getBrand'])->name('brand.dataTable');
+            Route::get('/addBrand', [OurWorkController::class, 'addBrand'])->name('brand.addBrand');
+            Route::post('/storeBrand', [OurWorkController::class, 'storeBrand'])->name('brand.store');
+            Route::get('/editBrand/{id}', [OurWorkController::class, 'editBrand'])->name('brand.edit');
+            Route::post('/updateBrand/{id}', [OurWorkController::class, 'updateBrand'])->name('brand.update');
+            Route::get('/updateStatus/{ourWork}', [OurWorkController::class, 'updateStatus'])->name('brand.status');
+
+            Route::get('/brandDetails/edit/{id}', [OurWorkController::class, 'brandDetails'])->name('brandDetails');
+            Route::post('/brandDetails/update/{id}', [OurWorkController::class, 'brandDetailsUpdate'])->name('brandDetailsUpdate');
         });
     }
 );
