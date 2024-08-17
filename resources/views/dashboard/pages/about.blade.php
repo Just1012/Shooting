@@ -108,7 +108,7 @@
                             </div>
                         </div><!-- end card -->
                     </div>
-                    <!-- end col -->
+                    <!-- end col --> 
                 </div>
             </div>
         </div>

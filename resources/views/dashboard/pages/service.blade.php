@@ -96,7 +96,7 @@
                                                 <textarea class="form-control" name="desc_2_en" placeholder="Description 2 En" rows="4" id="myeditorinstance">{{ $service->desc_2_en ?? '' }}</textarea>
                                             </div>
                                         </div><!--end col-->
-
+ 
 
                                         @foreach (range(1, 8) as $i)
                                             <div class="col-md-3">
