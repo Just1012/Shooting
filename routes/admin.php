@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Dashboard\AboutController;
+use App\Http\Controllers\Dashboard\BlogController;
 use App\Http\Controllers\Dashboard\CategoryController;
 use App\Http\Controllers\Dashboard\HiringController;
 use App\Http\Controllers\Dashboard\HiringPageController;
@@ -123,6 +124,17 @@ Route::group(
 
             Route::get('/editHiringPage', [HiringPageController::class, 'editHiringPage'])->name('userHiring.editHiringPage');
             Route::post('/updateHiringPage', [HiringPageController::class, 'updateHiringPage'])->name('userHiring.updateHiringPage');
+        });
+
+        Route::prefix('blog')->group(function () {
+            Route::get('/index', [BlogController::class, 'index'])->name('blog.index');
+            Route::get('/dataTable', [BlogController::class, 'getBlog'])->name('blog.dataTable');
+            Route::get('/addBlog', [BlogController::class, 'addBlog'])->name('blog.addBlog');
+            Route::post('/storeBlog', [BlogController::class, 'storeBlog'])->name('blog.store');
+            Route::get('/editBlog/{id}', [BlogController::class, 'editBlog'])->name('blog.edit');
+            Route::post('/updateBlog/{id}', [BlogController::class, 'updateBlog'])->name('blog.update');
+            Route::get('/updateStatus/{blog}', [BlogController::class, 'updateStatus'])->name('blog.status');
+            Route::get('/deleteBlog/{id}', [BlogController::class, 'deleteBlog'])->name('blog.delete');
         });
     }
 );

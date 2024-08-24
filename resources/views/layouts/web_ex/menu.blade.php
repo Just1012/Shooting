@@ -125,7 +125,25 @@
                         </ul>
                     </div>
                 </li>
-                <!-- end Category Page -->
+                <!-- end Partner Page -->
+
+                {{-- Start Partner Page  --}}
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="#blog" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="blog">
+                        <i class='bx bx-news'></i> <span data-key="t-dashboards">Blog</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="blog">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="{{ route('blog.index') }}" class="nav-link"
+                                    data-key="t-one-page">Blog
+                                    List</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <!-- end Partner Page -->
 
                 {{-- Start User Page  --}}
                 <li class="nav-item">
