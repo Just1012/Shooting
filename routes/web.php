@@ -1,6 +1,10 @@
 <?php
 
+use App\Http\Controllers\Dashboard\HiringController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Dashboard\UserRegisterController;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -14,8 +18,21 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-    require __DIR__ . '/auth.php';
+require __DIR__ . '/auth.php';
 
-    Route::get('/', function () {
-        return view('welcome');
-    });
+
+
+Route::group(
+    [
+        'prefix' => LaravelLocalization::setLocale(),
+        'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath']
+    ],
+    function () { //...
+        Route::get('/', function () {
+            return view('welcome');
+        });
+
+        Route::post('/userHiringStore', [HiringController::class, 'storeUser'])->name('userRegister.store');
+        Route::post('/userHiringStore', [HiringController::class, 'storeUser'])->name('userHiring.store');
+    }
+);

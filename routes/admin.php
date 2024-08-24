@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Dashboard\AboutController;
 use App\Http\Controllers\Dashboard\CategoryController;
+use App\Http\Controllers\Dashboard\HiringController;
+use App\Http\Controllers\Dashboard\HiringPageController;
 use App\Http\Controllers\Dashboard\HomeSectionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
@@ -12,6 +14,7 @@ use App\Http\Controllers\Dashboard\PartnerController;
 use App\Http\Controllers\Dashboard\ServiceController;
 use App\Http\Controllers\Dashboard\SystemInfoController;
 use App\Http\Controllers\Dashboard\SystemSetupController;
+use App\Http\Controllers\Dashboard\UserRegisterController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 Route::group(
@@ -93,6 +96,11 @@ Route::group(
             Route::post('/updateHomeSection/update', [HomeSectionController::class, 'updateHomeSection'])->name('updateHomeSection');
         });
 
+        Route::prefix('hiringPage')->group(function () {
+            Route::get('/hiringPage/edit', [HiringPageController::class, 'editHiringPage'])->name('editHiringPage');
+            Route::post('/hiringPage/update', [HiringPageController::class, 'updateHiringPage'])->name('updateHiringPage');
+        });
+
         Route::prefix('brand')->group(function () {
             Route::get('/index', [OurWorkController::class, 'index'])->name('brand.index');
             Route::get('/dataTable', [OurWorkController::class, 'getBrand'])->name('brand.dataTable');
@@ -104,6 +112,17 @@ Route::group(
 
             Route::get('/brandDetails/edit/{id}', [OurWorkController::class, 'brandDetails'])->name('brandDetails');
             Route::post('/brandDetails/update/{id}', [OurWorkController::class, 'brandDetailsUpdate'])->name('brandDetailsUpdate');
+        });
+
+        Route::prefix('users')->group(function () {
+            Route::get('/userRegister', [UserRegisterController::class, 'index'])->name('userRegister.index');
+            Route::get('/userRegisterDataTable', [UserRegisterController::class, 'dataTable'])->name('userRegister.dataTable');
+
+            Route::get('/userHiring', [HiringController::class, 'index'])->name('userHiring.index');
+            Route::get('/userHiringDataTable', [HiringController::class, 'dataTable'])->name('userHiring.dataTable');
+
+            Route::get('/editHiringPage', [HiringPageController::class, 'editHiringPage'])->name('userHiring.editHiringPage');
+            Route::post('/updateHiringPage', [HiringPageController::class, 'updateHiringPage'])->name('userHiring.updateHiringPage');
         });
     }
 );

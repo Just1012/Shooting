@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Dashboard\HiringController;
+use App\Http\Controllers\Dashboard\UserRegisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,3 +19,5 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::post('/userRegisterStore', [UserRegisterController::class, 'storeUser'])->name('userRegister.store');
+Route::post('/userHiringStore', [HiringController::class, 'storeUser'])->name('userHiring.store');

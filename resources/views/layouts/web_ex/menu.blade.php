@@ -84,6 +84,9 @@
                             <li class="nav-item">
                                 <a href="{{ route('editIndustry') }}" class="nav-link" data-key="t-one-page">Industry Page</a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{ route('userHiring.editHiringPage') }}" class="nav-link" data-key="t-one-page">User Hiring Page</a>
+                            </li>
                         </ul>
                     </div>
                 </li>
@@ -123,6 +126,27 @@
                     </div>
                 </li>
                 <!-- end Category Page -->
+
+                {{-- Start User Page  --}}
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="#users" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="users">
+                        <i class='bx bx-user'></i> <span data-key="t-dashboards">Users</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="users">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="{{ route('userRegister.index') }}" class="nav-link"
+                                    data-key="t-one-page">User Register List</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('userHiring.index') }}" class="nav-link"
+                                    data-key="t-one-page">User Hiring & Training List</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <!-- end User Page -->
 
                 {{-- Start System Settings  --}}
                 <li class="nav-item">
