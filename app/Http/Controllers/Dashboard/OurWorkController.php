@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\OurWorkDetails;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
+
 
 class OurWorkController extends Controller
 {
@@ -34,7 +36,7 @@ class OurWorkController extends Controller
     public function storeBrand(Request $request)
     {
         try {
-            // Validate the request data
+            DB::beginTransaction();
             $request->validate([
                 'brand_name_ar' => 'required|string|max:255',
                 'brand_name_en' => 'required|string|max:255',
@@ -42,7 +44,6 @@ class OurWorkController extends Controller
                 'year' => 'required|digits:4', // Assuming the year is a string like "2024"
                 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate image
             ]);
-
             $requestData = $request->all();
             $requestData['category_id'] = json_encode($request->input('category_id'));
             if ($request->hasFile('image')) {
@@ -52,18 +53,28 @@ class OurWorkController extends Controller
             }
             $brand = OurWork::create($requestData);
 
-            if ($brand) {
-                $brandDetails = OurWorkDetails::create([
-                    'our_work_id' => $brand->id,
-                ]);
+            if (!$brand) {
+                throw new \Exception('Failed to create OurWork.');
             }
+            $brandDetails = OurWorkDetails::create([
+                'our_work_id' => $brand->id,
+                'main_image' => '',
+                'title_color' => '#000',
+                'title_back_color' => '#FFFFFF',
+                'details_color' => '#000',
+                'details_back_color' => '#FFFFFF',
+            ]);
 
+            if (!$brandDetails) {
+                throw new \Exception('Failed to create OurWorkDetails.');
+            }
+            DB::commit();
             toastr()->success(__('Brand Added Successfully'), __('Success'));
-
             return redirect()->route('brandDetails', ['id' => $brand->id]);
         } catch (\Throwable $th) {
+            DB::rollBack();
             toastr()->error(__('Try Again'));
-            return redirect()->route('brand.index');
+            return redirect()->back()->withInput();
         }
     }
 
@@ -147,7 +158,6 @@ class OurWorkController extends Controller
         }
     }
 
-    // Method to update the existing row
     public function brandDetailsUpdate(Request $request, $id)
     {
         // Validation with custom messages
@@ -160,6 +170,10 @@ class OurWorkController extends Controller
             'image_4' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'image_5' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'image_6' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',  // max 2MB
+            'title_color' => 'nullable|string',
+            'title_back_color' => 'nullable|string',
+            'details_color' => 'nullable|string',
+            'details_back_color' => 'nullable|string',
         ], [
             // Custom messages for image validation
             'main_image.image'  => 'The Main Image must be an image file.',
@@ -199,6 +213,11 @@ class OurWorkController extends Controller
                 Storage::delete('public/images/' . $filePath);
             }
         };
+
+        $brand->title_color = $request->title_color;
+        $brand->title_back_color = $request->title_back_color;
+        $brand->details_color = $request->details_color;
+        $brand->details_back_color = $request->details_back_color;
 
         if ($request->hasFile('main_image')) {
             // Delete the old header logo

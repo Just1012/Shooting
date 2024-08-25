@@ -62,6 +62,48 @@
                                                     accept="image/*" name="main_image">
                                             </div>
                                         </div>
+                                        @php
+                                            // Define the default color as white (#ffffff)
+                                            $defaultColor = '#ffffff';
+                                        @endphp
+                                        <!-- Title and Color Fields -->
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="title_color" class="form-label">Title Color</label>
+                                                <input type="color"
+                                                    value="{{ old('title_color', $brand->title_color ?? '#fff') }}"
+                                                    class="form-control" name="title_color" id="title_color">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="title_back_color" class="form-label">Title Background
+                                                    Color</label>
+                                                <input type="color"
+                                                    value="{{ old('title_back_color', $brand->title_back_color ?? $defaultColor) }}"
+                                                    class="form-control" name="title_back_color" id="title_back_color">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="details_color" class="form-label">Details Color</label>
+                                                <input type="color"
+                                                    value="{{ old('details_color', $brand->details_color ?? '#fff') }}"
+                                                    class="form-control" name="details_color" id="details_color">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="details_back_color" class="form-label">Details Background
+                                                    Color</label>
+                                                <input type="color"
+                                                    value="{{ old('details_back_color', $brand->details_back_color ?? $defaultColor) }}"
+                                                    class="form-control" name="details_back_color" id="details_back_color">
+                                            </div>
+                                        </div>
+
                                         <div class="col-md-4">
                                             <div class="mb-3">
                                                 <label for="imageInput" class="form-label">Image 1</label>

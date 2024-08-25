@@ -109,6 +109,23 @@
                 </li>
                 <!-- end Category Page -->
 
+                {{-- Start Brand Page  --}}
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="#brand" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="brand">
+                        <i class='bx bx-money-withdraw' ></i> <span data-key="t-dashboards">Brand</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="brand">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="{{ route('brand.index') }}" class="nav-link" data-key="t-one-page">Brand
+                                    List</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <!-- end Brand Page -->
+
                 {{-- Start Partner Page  --}}
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#partner" data-bs-toggle="collapse" role="button"
