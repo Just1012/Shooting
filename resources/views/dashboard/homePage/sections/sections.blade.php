@@ -133,14 +133,14 @@
                                             <div class="mb-3">
                                                 <label for="titleEnTextarea" class="form-label">Vision Description
                                                     Ar</label>
-                                                <textarea class="form-control" name="vision_desc_ar" rows="4" id="myeditorinstance">{{ $sections->vision_desc_ar ?? '' }}</textarea>
+                                                <textarea class="form-control" name="vision_desc_ar" rows="4">{{ $sections->vision_desc_ar ?? '' }}</textarea>
                                             </div>
                                         </div><!--end col-->
                                         <div class="col-md-12">
                                             <div class="mb-3">
                                                 <label for="titleEnTextarea" class="form-label">Vision Section Description
                                                     En</label>
-                                                <textarea class="form-control" name="vision_desc_en" rows="4" id="myeditorinstance">{{ $sections->vision_desc_en ?? '' }}</textarea>
+                                                <textarea class="form-control" name="vision_desc_en" rows="4">{{ $sections->vision_desc_en ?? '' }}</textarea>
                                             </div>
                                         </div><!--end col-->
                                         <div class="col-md-12">
@@ -220,14 +220,14 @@
                                             <div class="mb-3">
                                                 <label for="titleEnTextarea" class="form-label">Team Description
                                                     Ar</label>
-                                                <textarea class="form-control" name="team_desc_ar" rows="4" id="myeditorinstance">{{ $sections->team_desc_ar ?? '' }}</textarea>
+                                                <textarea class="form-control"  name="team_desc_ar" rows="4">{{ $sections->team_desc_ar ?? '' }}</textarea>
                                             </div>
                                         </div><!--end col-->
                                         <div class="col-md-12">
                                             <div class="mb-3">
                                                 <label for="titleEnTextarea" class="form-label">Team Section Description
                                                     En</label>
-                                                <textarea class="form-control" name="team_desc_en" rows="4" id="myeditorinstance">{{ $sections->team_desc_en ?? '' }}</textarea>
+                                                <textarea class="form-control"  name="team_desc_en" rows="4">{{ $sections->team_desc_en ?? '' }}</textarea>
                                             </div>
                                         </div><!--end col-->
                                         <div class="col-lg-12">

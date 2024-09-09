@@ -12,7 +12,7 @@
     @if (App::getLocale() == 'ar')
         <link rel="stylesheet" href="{{ asset('front/css/style_ar.css') }}" />
     @else
-        <link rel="stylesheet" href="{{ asset('front/css/style_ar.css') }}" />
+        <link rel="stylesheet" href="{{ asset('front/css/style.css') }}" />
         {{-- <link rel="stylesheet" href="{{ asset('front/css/style.css') }}" /> --}}
     @endif
     <link rel="icon" href="{{ asset('front/images/Web Shooting-04.png') }}">
@@ -20,7 +20,7 @@
     @stack('css')
 </head>
 
-<body dir="{{ App::getLocale() == 'ar' ? 'rtl' : '' }}">
+<body>
     @include('layouts.front.header')
     @yield('content')
     @include('layouts.front.footer')

@@ -74,7 +74,14 @@
                                                 <textarea class="form-control" name="address_en" placeholder="Address En" rows="4" id="myeditorinstance">{{ $systemInfo->address_en ?? '' }}</textarea>
                                             </div>
                                         </div><!--end col-->
-
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <label for="titleEnTextarea" class="form-label">Email</label>
+                                                <input type="text" class="form-control" name="email"
+                                                    value="{{ $systemInfo->email ?? '' }}"
+                                                    placeholder="Email" id="titleEnTextarea" required>
+                                            </div>
+                                        </div><!--end col-->
                                         <div class="col-md-4">
                                             <div class="mb-3">
                                                 <label for="phone" class="form-label">Phone</label>

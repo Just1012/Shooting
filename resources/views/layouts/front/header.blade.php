@@ -1,23 +1,29 @@
  <!-- start header  -->
+ @php
+     $data = App\Models\SystemSetup::first();
+     $systemData = App\Models\SystemInfo::first();
+ @endphp
  <header>
      <div class="container">
          <div class="content d-flex flex-wrap justify-content-between align-items-center">
              <div class="left">
                  <div class="icons d-flex align-items-center">
-                     <a class="icon">
-                         <i class="fa-brands fa-twitter"></i>
+                     <a href="{{ $systemData->snapchat }}" class="icon">
+                         <i class="fa-brands fa-snapchat"></i>
                      </a>
-                     <a class="icon">
+                     <a href="{{ $systemData->facebook }}" class="icon">
                          <i class="fa-brands fa-facebook-f"></i>
                      </a>
-                     <a class="icon">
+                     <a href="{{ $systemData->instagram }}" class="icon">
                          <i class="fa-brands fa-instagram"></i>
                      </a>
-                     <a class="icon">
+                     <a href="{{ $systemData->whatsapp }}" class="icon">
                          <i class="fa-brands fa-whatsapp"></i>
                      </a>
                      <a class="lang">
-                         <button>ENGLISH</button>
+                         <button id="langButton" onclick="toggleLanguage()">
+                             {{ app()->getLocale() === 'en' ? 'العربية' : 'English' }}
+                         </button>
                      </a>
                  </div>
              </div>
@@ -27,19 +33,51 @@
             <i class="fa-regular fa-user"></i>
           </a> -->
                  <div class="email">
-                     <p class="m-0">shootingstar.creativity@gmail.com</p>
+                     <p class="m-0">{{ $systemData->email }}</p>
                  </div>
              </div>
          </div>
      </div>
  </header>
  <!-- end header  -->
+ <script>
+     function toggleLanguage() {
+         var currentLocale = '{{ app()->getLocale() }}';
+         var selectedLocale = currentLocale === 'en' ? 'ar' : 'en';
+         var currentUrl = window.location.href;
+         var url = new URL(currentUrl);
+         var pathParts = url.pathname.split('/').filter(Boolean);
+
+         // Identify the position of the current locale in the path
+         var localeIndex = pathParts.findIndex(part => part === 'en' || part === 'ar');
+
+         // Replace the current locale with the selected locale
+         if (localeIndex !== -1) {
+             pathParts[localeIndex] = selectedLocale;
+         } else {
+             // If no locale is found in the path, add the selected locale at the start
+             pathParts.unshift(selectedLocale);
+         }
+
+         // Construct the new URL path
+         var localizedPath = '/' + pathParts.join('/');
+         var localizedUrl = url.origin + localizedPath;
+
+         // Preserve query parameters
+         if (url.search) {
+             localizedUrl += url.search;
+         }
+
+         // Redirect to the appropriate URL based on the selected language
+         window.location.href = localizedUrl;
+     }
+ </script>
  <!-- start nav  -->
  <nav>
      <div class="container">
          <div class="content d-flex justify-content-between align-items-center flex-wrap">
              <div class="logo">
-                 <img src="{{ asset('front/images/Web Shooting-04.png') }}" alt="">
+                 <img src="{{ asset('images/' . $data->header_logo) }}" alt="">
              </div>
              <ul class="links">
                  <a href="./index.html">

@@ -151,7 +151,7 @@
                 </div>
 
                 <div class="ms-1 header-item d-none d-sm-flex">
-                    {{-- <a target="_blank" class="btn btn-primary" href="{{ route('front.index') }}"> <i class='bx bx-globe'></i></a> --}}
+                    <a target="_blank" class="btn btn-primary" href="{{ route('home') }}"> <i class='bx bx-globe'></i></a>
                 </div>
 
                 <div class="dropdown ms-1 topbar-head-dropdown header-item">

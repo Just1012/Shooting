@@ -3,6 +3,7 @@
 use App\Http\Controllers\Dashboard\HiringController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Dashboard\UserRegisterController;
+use App\Http\Controllers\Frontend\HomeController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 
@@ -28,9 +29,10 @@ Route::group(
         'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath']
     ],
     function () { //...
-        Route::get('/', function () {
-            return view('welcome');
-        });
+        Route::get('/', [HomeController::class, 'home'])->name('home');
+        Route::get('/filter-brands', [HomeController::class, 'getAllBrands']);
+        Route::get('/filter-brands/{categoryId}', [HomeController::class, 'filterByCategory']);
+
 
         Route::post('/userHiringStore', [HiringController::class, 'storeUser'])->name('userRegister.store');
         Route::post('/userHiringStore', [HiringController::class, 'storeUser'])->name('userHiring.store');

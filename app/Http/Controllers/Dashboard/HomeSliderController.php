@@ -34,17 +34,17 @@ class HomeSliderController extends Controller
         try {
             // Validation
             $request->validate([
-                'image_ar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-                'image_en' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'image_ar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:10240',
+                'image_en' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:10240',
             ], [
                 'image_ar.required' => 'The Arabic image field is required.',
                 'image_ar.image' => 'The Arabic image must be an image file.',
                 'image_ar.mimes' => 'The Arabic image must be a file of type: jpeg, png, jpg, gif, svg.',
-                'image_ar.max' => 'The Arabic image may not be greater than 2048 kilobytes.',
+                'image_ar.max' => 'The Arabic image may not be greater than 10 MB.',
                 'image_en.required' => 'The English image field is required.',
                 'image_en.image' => 'The English image must be an image file.',
                 'image_en.mimes' => 'The English image must be a file of type: jpeg, png, jpg, gif, svg.',
-                'image_en.max' => 'The English image may not be greater than 2048 kilobytes.',
+                'image_en.max' => 'The English image may not be greater than 10 MB.',
             ]);
 
             $requestData = $request->all();
@@ -92,15 +92,15 @@ class HomeSliderController extends Controller
         try {
             // Validation
             $request->validate([
-                'image_ar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-                'image_en' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'image_ar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:10240',
+                'image_en' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:10240',
             ], [
                 'image_ar.image' => 'The Arabic image must be an image file.',
                 'image_ar.mimes' => 'The Arabic image must be a file of type: jpeg, png, jpg, gif, svg.',
-                'image_ar.max' => 'The Arabic image may not be greater than 2048 kilobytes.',
+                'image_ar.max' => 'The Arabic image may not be greater than 10 MB.',
                 'image_en.image' => 'The English image must be an image file.',
                 'image_en.mimes' => 'The English image must be a file of type: jpeg, png, jpg, gif, svg.',
-                'image_en.max' => 'The English image may not be greater than 2048 kilobytes.',
+                'image_en.max' => 'The English image may not be greater than 10 MB.',
             ]);
 
             $item = HomeSlider::findOrFail($id);

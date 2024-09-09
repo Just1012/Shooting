@@ -125,7 +125,6 @@ class OurWorkController extends Controller
         }
     }
 
-
     public function updateStatus(OurWork $ourWork)
     {
         try {

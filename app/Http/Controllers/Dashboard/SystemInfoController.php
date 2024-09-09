@@ -23,6 +23,7 @@ class SystemInfoController extends Controller
                 'header_btn_link' => 'required|string',
                 'address_ar' => 'required|string',
                 'address_en' => 'required|string',
+                'email' => 'required|email',
                 'phone' => 'required|numeric',
                 'facebook' => 'required|url',
                 'instagram' => 'required|url',
@@ -43,6 +44,7 @@ class SystemInfoController extends Controller
             $systemSetup->header_btn_link = $request->header_btn_link;
             $systemSetup->address_ar = $request->address_ar;
             $systemSetup->address_en = $request->address_en;
+            $systemSetup->email = $request->email;
             $systemSetup->phone = $request->phone;
             $systemSetup->facebook = $request->facebook;
             $systemSetup->instagram = $request->instagram;
