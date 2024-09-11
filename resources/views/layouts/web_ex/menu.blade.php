@@ -62,6 +62,9 @@
                                 <a href="{{ route('editHomeSection') }}" class="nav-link" data-key="t-one-page">Home
                                     Section</a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{ route('journeyImage.index') }}" class="nav-link" data-key="t-one-page">journey Section Image</a>
+                            </li>
                         </ul>
                     </div>
                 </li>
@@ -79,13 +82,16 @@
                                 <a href="{{ route('editAbout') }}" class="nav-link" data-key="t-one-page">About Page</a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('editService') }}" class="nav-link" data-key="t-one-page">Our Services Page</a>
+                                <a href="{{ route('editService') }}" class="nav-link" data-key="t-one-page">Our Services
+                                    Page</a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('editIndustry') }}" class="nav-link" data-key="t-one-page">Industry Page</a>
+                                <a href="{{ route('editIndustry') }}" class="nav-link" data-key="t-one-page">Industry
+                                    Page</a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('userHiring.editHiringPage') }}" class="nav-link" data-key="t-one-page">User Hiring Page</a>
+                                <a href="{{ route('userHiring.editHiringPage') }}" class="nav-link"
+                                    data-key="t-one-page">User Hiring Page</a>
                             </li>
                         </ul>
                     </div>
@@ -101,7 +107,8 @@
                     <div class="collapse menu-dropdown" id="category">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a href="{{ route('category.index') }}" class="nav-link" data-key="t-one-page">Category
+                                <a href="{{ route('category.index') }}" class="nav-link"
+                                    data-key="t-one-page">Category
                                     List</a>
                             </li>
                         </ul>
@@ -113,7 +120,7 @@
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#brand" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="brand">
-                        <i class='bx bx-money-withdraw' ></i> <span data-key="t-dashboards">Brand</span>
+                        <i class='bx bx-money-withdraw'></i> <span data-key="t-dashboards">Brand</span>
                     </a>
                     <div class="collapse menu-dropdown" id="brand">
                         <ul class="nav nav-sm flex-column">
@@ -144,7 +151,7 @@
                 </li>
                 <!-- end Partner Page -->
 
-                {{-- Start Partner Page  --}}
+                {{-- Start Blog Page  --}}
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#blog" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="blog">
@@ -153,14 +160,13 @@
                     <div class="collapse menu-dropdown" id="blog">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a href="{{ route('blog.index') }}" class="nav-link"
-                                    data-key="t-one-page">Blog
+                                <a href="{{ route('blog.index') }}" class="nav-link" data-key="t-one-page">Blog
                                     List</a>
                             </li>
                         </ul>
                     </div>
                 </li>
-                <!-- end Partner Page -->
+                <!-- end Blog Page -->
 
                 {{-- Start User Page  --}}
                 <li class="nav-item">

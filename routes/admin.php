@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Dashboard\HomeSliderController;
 use App\Http\Controllers\Dashboard\IndustryController;
+use App\Http\Controllers\Dashboard\JourneySectionImageController;
 use App\Http\Controllers\Dashboard\OurWorkController;
 use App\Http\Controllers\Dashboard\PartnerController;
 use App\Http\Controllers\Dashboard\ServiceController;
@@ -95,6 +96,15 @@ Route::group(
         Route::prefix('homeSection')->group(function () {
             Route::get('/editHomeSection/edit', [HomeSectionController::class, 'editHomeSection'])->name('editHomeSection');
             Route::post('/updateHomeSection/update', [HomeSectionController::class, 'updateHomeSection'])->name('updateHomeSection');
+
+            Route::get('/journeyImage', [JourneySectionImageController::class, 'index'])->name('journeyImage.index');
+            Route::get('/dataTable', [JourneySectionImageController::class, 'getImages'])->name('journeyImage.dataTable');
+            Route::post('/storeJourneyImage', [JourneySectionImageController::class, 'storeImage'])->name('journeyImage.store');
+            Route::post('/updateJourneyImage/{id}', [JourneySectionImageController::class, 'updateImage'])->name('journeyImage.update');
+            Route::get('/updateStatus/{journeySectionImage}', [JourneySectionImageController::class, 'updateStatus'])->name('journeyImage.status');
+            Route::get('/deleteImage/{id}', [JourneySectionImageController::class, 'deleteImage'])->name('journeyImage.delete');
+
+
         });
 
         Route::prefix('hiringPage')->group(function () {
