@@ -12,7 +12,7 @@
     <!-- Bootstrap Css -->
 @endpush
 @section('title')
-    Sliders
+    {{ __('messages.sliderSection') }}
 @endsection
 @section('content')
     <div class="main-content">
@@ -23,7 +23,7 @@
                         <div class="card-header">
                             <div class="row">
                                 <h5 class="card-title mb-0 col-sm-8 col-md-10">
-                                    Sliders
+                                    {{ __('messages.sliderSection') }}
                                 </h5>
                                 <div id="topmodal" class="modal fade" tabindex="-1" aria-hidden="true"
                                     style="display: none;">
@@ -35,16 +35,16 @@
                                                     style="width:120px;height:120px">
                                                 </lord-icon>
                                                 <div class="mt-4">
-                                                    <h4 class="mb-3">Are you sure to delete this slider ?</h4>
-                                                    <p class="text-muted mb-4"> If You Deleted It You Can't Restore It .</p>
+                                                    <h4 class="mb-3">{{ __('messages.confirmDelete') }}</h4>
+                                                    <p class="text-muted mb-4">{{ __('messages.deleteWarning') }}</p>
                                                     <div class="hstack gap-2 justify-content-center">
                                                         <a href="javascript:void(0);"
                                                             class="btn btn-link link-success fw-medium"
                                                             data-bs-dismiss="modal"><i
                                                                 class="ri-close-line me-1 align-middle"></i>
-                                                            Close</a>
+                                                            {{ __('messages.close') }}</a>
                                                         <a href="#" id="delete-confirm"
-                                                            class="btn btn-danger">Delete</a>
+                                                            class="btn btn-danger">{{ __('messages.delete') }}</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -87,11 +87,11 @@
                                 style="width:100%;overflow: scroll">
                                 <thead>
                                     <tr>
-                                        <th>#SSL</th>
-                                        <th>Image</th>
-                                        <th>status</th>
-                                        <th>Action</th>
-                                        <th>Created At</th>
+                                        <th>{{ __('messages.ssl') }}</th>
+                                        <th>{{ __('messages.image') }}</th>
+                                        <th>{{ __('messages.status') }}</th>
+                                        <th>{{ __('messages.action') }}</th>
+                                        <th>{{ __('messages.createdAt') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody class="text-center">

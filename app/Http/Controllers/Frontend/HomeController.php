@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\About;
 use App\Models\Category;
 use App\Models\HomeSection;
 use App\Models\HomeSlider;
+use App\Models\JourneySectionImage;
 use App\Models\OurWork;
 use App\Models\Partner;
 use App\Models\SystemSetup;
@@ -19,9 +21,10 @@ class HomeController extends Controller
         $category = Category::where('status', 1)->get();
         $brands = OurWork::where('status', 1)->get();
         $content = HomeSection::first();
-        $partner = Partner::where('status',1)->get();
+        $partner = Partner::where('status', 1)->get();
         $gif = SystemSetup::first();
-        return view('welcome', compact('slider', 'category', 'brands','content', 'partner','gif'));
+        $journeySectionImage = JourneySectionImage::where('status', 1)->get();
+        return view('welcome', compact('slider', 'category', 'brands', 'content', 'partner', 'gif', 'journeySectionImage'));
     }
 
     public function getAllBrands()
@@ -48,5 +51,45 @@ class HomeController extends Controller
         return response()->json([
             'brands' => $brands
         ]);
+    }
+
+    public function aboutUs()
+    {
+        $gif = SystemSetup::first();
+        $aboutContent = About::first();
+        return view('frontend.about', compact('gif', 'aboutContent'));
+    }
+
+    public function services()
+    {
+        $gif = SystemSetup::first();
+        $categories = Category::first();
+        return view('frontend.services', compact('gif','categories'));
+    }
+    public function ourWorks()
+    {
+        $category = Category::get();
+        return view('frontend.ourWorks', compact('category'));
+    }
+    public function ourCustomer()
+    {
+        return view('frontend.ourCustomers');
+    }
+
+    public function industry(){
+        $gif = SystemSetup::first();
+        return view('frontend.industry',compact('gif'));
+    }
+    public function blog(){
+        $gif = SystemSetup::first();
+        return view('frontend.blog',compact('gif'));
+    }
+    public function hiringAndTraining(){
+        $gif = SystemSetup::first();
+        return view('frontend.hiringAndTraining',compact('gif'));
+    }
+    public function register(){
+        $gif = SystemSetup::first();
+        return view('frontend.register',compact('gif'));
     }
 }

@@ -150,12 +150,11 @@
                     <div id="splide1" class="splide" aria-labelledby="carousel-heading">
                         <div class="splide__track">
                             <ul class="splide__list">
-                                <li class="splide__slide"><img src="{{ asset('front/images/journey.jpg') }}"
-                                        alt="">
-                                </li>
-                                <li class="splide__slide"><img src="{{ asset('front/images/journey.jpg') }}"
-                                        alt="">
-                                </li>
+                                @foreach ($journeySectionImage as $image)
+                                    <li class="splide__slide"><img src="{{ asset('images/' . $image->image) }}"
+                                            alt="">
+                                    </li>
+                                @endforeach
                             </ul>
                         </div>
                     </div>

@@ -80,41 +80,45 @@
                  <img src="{{ asset('images/' . $data->header_logo) }}" alt="">
              </div>
              <ul class="links">
-                 <a href="./index.html">
+                 <a href="{{ route('home') }}">
                      <span>01</span>
                      الرئيسية
                  </a>
-                 <a href="./about_us.html">
+                 <a href="{{ route('aboutUs') }}">
                      <span>02</span>
                      من نحن
                  </a>
-                 <a href="./services.html">
+                 <a href="{{ route('services') }}">
                      <span>03</span>
                      الخدمات
                  </a>
-                 <a href="./Our_business.html">
+                 <a href="{{ route('ourWorks') }}">
                      <span>04</span>
                      أعمالنا
                  </a>
-                 <a href="./Our_customers.html">
+                 <a href="{{ route('ourCustomer') }}">
                      <span>05</span>
                      عملائنا
                  </a>
-                 <a href="./Industry.html">
+                 <a href="{{ route('industry') }}">
                      <span>06</span>
                      الصناعة
                  </a>
-                 <a href="./recruitment.html">
+                 <a href="{{ route('blog') }}">
                      <span>07</span>
+                     المدونات
+                 </a>
+                 <a href="{{ route('hiringAndTraining') }}">
+                     <span>08</span>
                      التدريب و التوظيف
                  </a>
                  <div class="Btn-phone">
-                     <a href="./register.html" class="btn">تواصل معانا</a>
+                     <a href="{{ route('register') }}" class="btn">تواصل معانا</a>
                  </div>
                  <!-- <a href="" class="Btn"></a> -->
              </ul>
              <div class="Btn">
-                 <a href="./register.html" class="btn m-0">تواصل معانا</a>
+                 <a href="{{ route('register') }}" class="btn m-0">تواصل معانا</a>
              </div>
              <!-- <div class="menu">
           <div>

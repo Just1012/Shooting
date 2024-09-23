@@ -6,7 +6,7 @@
     <link rel="stylesheet" type="text/css" href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css">
 @endpush
 @section('title')
-    Create New Slider
+    {{ __('messages.createSlider') }}
 @endsection
 @section('content')
     <div class="main-content">
@@ -14,14 +14,14 @@
             <div class="col-md-9 mx-auto">
                 <div class="card ">
                     <div class="card-header">
-                        <h4 class="card-title mb-0">Create New Slider</h4>
+                        <h4 class="card-title mb-0">{{ __('messages.createSlider') }}</h4>
                         <div class="card-body ">
                             <div class="listjs-table" id="customerList">
                                 <div class="row g-4 mb-3">
                                     <div class="col-sm-auto">
                                         <div>
                                             <a class="btn btn-success add-btn" id="create-btn"
-                                                href="{{ route('slider.index') }}">Back</a>
+                                                href="{{ route('slider.index') }}">{{ __('messages.back') }}</a>
                                         </div>
                                     </div>
                                 </div>
@@ -32,23 +32,26 @@
 
                                         <div class="col-md-6">
                                             <div class="mb-3">
-                                                <label for="address1ControlTextarea" class="form-label">Image Ar</label>
+                                                <label for="image_ar"
+                                                    class="form-label">{{ __('messages.imageAr') }}</label>
                                                 <input type="file" class="form-control dropify" name="image_ar"
-                                                    id="address1ControlTextarea">
+                                                    id="image_ar">
                                             </div>
                                         </div><!--end col-->
 
                                         <div class="col-md-6">
                                             <div class="mb-3">
-                                                <label for="address1ControlTextarea" class="form-label">Image En</label>
+                                                <label for="image_en"
+                                                    class="form-label">{{ __('messages.imageEn') }}</label>
                                                 <input type="file" class="form-control dropify" name="image_en"
-                                                    id="address1ControlTextarea">
+                                                    id="image_en">
                                             </div>
                                         </div><!--end col-->
 
                                         <div class="col-md-6">
                                             <div class="mb-3">
-                                                <button type="submit" class="btn btn-primary">Save</button>
+                                                <button type="submit"
+                                                    class="btn btn-primary">{{ __('messages.save') }}</button>
                                             </div>
                                         </div><!--end col-->
                                 </form>
@@ -66,14 +69,14 @@
     <script src="{{ asset('web/assets/js/pages/select2.init.js') }}"></script>
 
     <script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
-        <script>
-            $('.dropify').dropify({
-                messages: {
-                    'default': 'Drag and drop a file here or click',
-                    'replace': 'Drag and drop or click to replace',
-                    'remove': 'Remove',
-                    'error': 'Ooops, something wrong happended.'
-                }
-            });
+    <script>
+        $('.dropify').dropify({
+            messages: {
+                'default': '{{ __('messages.dragDropDefault') }}',
+                'replace': '{{ __('messages.dragDropReplace') }}',
+                'remove': '{{ __('messages.dragDropRemove') }}',
+                'error': '{{ __('messages.dragDropError') }}'
+            }
+        });
     </script>
 @endpush
