@@ -15,6 +15,10 @@
     Blog List
 @endsection
 @section('content')
+    {{-- @php
+        $blog = App\Models\Blog::where('id',9)->first();
+    @endphp
+    {!! $blog->body_ar !!} --}}
     <div class="main-content">
         <div class="page-content">
             <div class="row">

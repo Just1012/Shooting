@@ -29,7 +29,7 @@ class BlogController extends Controller
     public function addBlog()
     {
         $categories = Category::all();
-        return view('dashboard.blog.blogAdd',compact('categories'));
+        return view('dashboard.blog.blogAdd', compact('categories'));
     }
 
     public function storeBlog(Request $request)
@@ -41,8 +41,11 @@ class BlogController extends Controller
                 'title_en' => 'required|string|max:255',
                 'body_ar' => 'required|string',
                 'body_en' => 'required|string',
-                'thumbnail' => 'nullable|file|mimes:jpg,jpeg,png|max:2048', // Optional image with validation
-                'main_image' => 'nullable|file|mimes:jpg,jpeg,png|max:2048', // Optional image with validation
+                'thumbnail' => 'nullable|file|mimes:jpg,jpeg,png|max:10240', // Optional image with validation
+                'main_image' => 'nullable|file|mimes:jpg,jpeg,png|max:10240', // Optional image with validation
+                'meta_image' => 'nullable|file|mimes:jpg,jpeg,png|max:10240', // Optional image with validation
+                'meta_title' => 'nullable|string',
+                'meta_description' => 'nullable|string',
                 'category_id' => 'required|exists:categories,id',
             ]);
 
@@ -62,6 +65,13 @@ class BlogController extends Controller
                 $requestData['main_image'] = $mainImageName;
             }
 
+            // Handle meta image upload
+            if ($request->hasFile('meta_image')) {
+                $mainImageName = time() . '_meta_image.' . $request->meta_image->getClientOriginalExtension();
+                $request->meta_image->move(public_path('images'), $mainImageName);
+                $requestData['meta_image'] = $mainImageName;
+            }
+
             // Create the blog post
             Blog::create($requestData);
 
@@ -78,7 +88,7 @@ class BlogController extends Controller
     public function editBlog(Blog $id)
     {
         $categories = Category::all();
-        return view('dashboard.blog.blogEdit', compact('id','categories'));
+        return view('dashboard.blog.blogEdit', compact('id', 'categories'));
     }
 
     public function updateBlog(Request $request, $id)
@@ -109,6 +119,17 @@ class BlogController extends Controller
                 }
                 $requestData['main_image'] = $mainImageName;
             }
+
+            // Handle meta image upload
+            if ($request->hasFile('meta_image')) {
+                $mainImageName = time() . '_meta_image.' . $request->meta_image->getClientOriginalExtension();
+                $request->meta_image->move(public_path('images'), $mainImageName);
+                if ($blog->meta_image && file_exists(public_path('images/' . $blog->meta_image))) {
+                    unlink(public_path('images/' . $blog->meta_image));
+                }
+                $requestData['meta_image'] = $mainImageName;
+            }
+
             $blog->update($requestData);
             toastr()->success(__('Blog Updated Successfully'), __('Success'));
             return redirect()->route('blog.index');
@@ -152,6 +173,9 @@ class BlogController extends Controller
             if ($blog->main_image && file_exists(public_path('images/' . $blog->main_image))) {
                 unlink(public_path('images/' . $blog->main_image));
             }
+            if ($blog->meta_image && file_exists(public_path('images/' . $blog->meta_image))) {
+                unlink(public_path('images/' . $blog->meta_image));
+            }
             $blog->delete();
 
             toastr()->success(__('Blog Deleted Successfully'), __('Success'));
@@ -193,6 +217,4 @@ class BlogController extends Controller
             'message' => 'found data'
         ]);
     }
-
-
 }

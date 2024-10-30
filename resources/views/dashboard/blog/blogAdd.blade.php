@@ -86,6 +86,33 @@
                                             </div>
                                         </div><!--end col-->
 
+                                        <!-- SEO Section -->
+                                        <div class="col-md-12">
+                                            <hr>
+                                            <h5>SEO Section</h5>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="meta_title" class="form-label">Meta Title</label>
+                                                <input type="text" class="form-control" name="meta_title"
+                                                    placeholder="Meta Title" id="meta_title">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="meta_description" class="form-label">Meta Description</label>
+                                                <textarea class="form-control" name="meta_description" placeholder="Meta Description" rows="3"
+                                                    id="meta_description"></textarea>
+                                            </div>
+                                        </div><!--end col-->
+
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="meta_image" class="form-label">Meta Image</label>
+                                                <input type="file" class="form-control dropify" name="meta_image"
+                                                    id="meta_image">
+                                            </div>
+                                        </div><!--end col-->
+
                                         <div class="col-lg-12">
                                             <div class="text-center">
                                                 <button type="submit" class="btn btn-primary">Save</button>
@@ -106,14 +133,14 @@
     <script src="{{ asset('web/assets/js/pages/select2.init.js') }}"></script>
     <script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
 
-        <script>
-            $('.dropify').dropify({
-                messages: {
-                    'default': 'Drag and drop a file here or click',
-                    'replace': 'Drag and drop or click to replace',
-                    'remove': 'Remove',
-                    'error': 'Ooops, something wrong happended.'
-                }
-            });
+    <script>
+        $('.dropify').dropify({
+            messages: {
+                'default': 'Drag and drop a file here or click',
+                'replace': 'Drag and drop or click to replace',
+                'remove': 'Remove',
+                'error': 'Ooops, something wrong happended.'
+            }
+        });
     </script>
 @endpush

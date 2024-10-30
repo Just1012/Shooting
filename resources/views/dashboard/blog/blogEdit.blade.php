@@ -24,74 +24,117 @@
                                         </div>
                                     </div>
                                 </div>
-                                <form action="{{ route('blog.update', $id->id) }}" method="POST" enctype="multipart/form-data">
+                                <form action="{{ route('blog.update', $id->id) }}" method="POST"
+                                    enctype="multipart/form-data">
                                     @csrf
-
                                     <div class="row">
+                                        <!-- Title Ar -->
                                         <div class="col-md-4">
                                             <div class="mb-3">
-                                                <label for="firstNameinput" class="form-label">Title Ar</label>
+                                                <label for="title_ar" class="form-label">Title Ar</label>
                                                 <input type="text" class="form-control" name="title_ar"
-                                                    value="{{ $id->title_ar }}" placeholder="Title Ar" id="firstNameinput">
+                                                    value="{{ $id->title_ar }}" placeholder="Title Ar" id="title_ar">
                                             </div>
-                                        </div><!--end col-->
+                                        </div><!-- end col -->
 
+                                        <!-- Title En -->
                                         <div class="col-md-4">
                                             <div class="mb-3">
-                                                <label for="firstNameinput" class="form-label">Title En</label>
+                                                <label for="title_en" class="form-label">Title En</label>
                                                 <input type="text" class="form-control" name="title_en"
-                                                    value="{{ $id->title_en }}" placeholder="Title En" id="firstNameinput">
+                                                    value="{{ $id->title_en }}" placeholder="Title En" id="title_en">
                                             </div>
-                                        </div><!--end col-->
+                                        </div><!-- end col -->
+
+                                        <!-- Categories -->
                                         <div class="col-md-4">
                                             <div class="mb-3">
                                                 <h6 class="fw-semibold">Categories</h6>
                                                 <select class="js-example-basic-multiple" name="category_id">
-                                                        <option selected disabled value="">-- Select Category --</option>
-                                                        @foreach ($categories as $val)
-                                                            <option value="{{ $val->id }}" {{ $id->category_id == $val->id ? 'selected' : '' }}>
-                                                                {{ $val->{App::getLocale() == 'ar' ? 'name_ar' : 'name_en'} }}
-                                                            </option>
-                                                        @endforeach
+                                                    <option selected disabled value="">-- Select Category --</option>
+                                                    @foreach ($categories as $val)
+                                                        <option value="{{ $val->id }}"
+                                                            {{ $id->category_id == $val->id ? 'selected' : '' }}>
+                                                            {{ $val->{App::getLocale() == 'ar' ? 'name_ar' : 'name_en'} }}
+                                                        </option>
+                                                    @endforeach
                                                 </select>
                                             </div>
-                                        </div><!--end col-->
+                                        </div><!-- end col -->
 
+                                        <!-- Body Ar -->
                                         <div class="col-md-12">
                                             <div class="mb-3">
-                                                <label for="titleEnTextarea" class="form-label">Body Ar</label>
+                                                <label for="body_ar" class="form-label">Body Ar</label>
                                                 <textarea class="form-control" name="body_ar" placeholder="Body Ar" rows="4" id="myeditorinstance">{{ $id->body_ar }}</textarea>
                                             </div>
-                                        </div><!--end col-->
+                                        </div><!-- end col -->
+
+                                        <!-- Body En -->
                                         <div class="col-md-12">
                                             <div class="mb-3">
-                                                <label for="titleEnTextarea" class="form-label">Body En</label>
+                                                <label for="body_en" class="form-label">Body En</label>
                                                 <textarea class="form-control" name="body_en" placeholder="Body En" rows="4" id="myeditorinstance">{{ $id->body_en }}</textarea>
                                             </div>
-                                        </div><!--end col-->
+                                        </div><!-- end col -->
 
+                                        <!-- Thumbnail Image -->
                                         <div class="col-md-3">
                                             <div class="mb-3">
-                                                <label for="address1ControlTextarea" class="form-label">Thumbnail Image</label>
-                                                <input type="file" class="form-control dropify"
+                                                <label for="thumbnail" class="form-label">Thumbnail Image</label>
+                                                <input type="file" class="form-control dropify" name="thumbnail"
                                                     data-default-file="{{ asset('images/' . $id->thumbnail) }}"
-                                                    name="thumbnail" id="address1ControlTextarea">
+                                                    id="thumbnail">
                                             </div>
-                                        </div><!--end col-->
+                                        </div><!-- end col -->
+
+                                        <!-- Main Image -->
                                         <div class="col-md-9">
                                             <div class="mb-3">
                                                 <label for="main_image" class="form-label">Main Image</label>
-                                                <input type="file" class="form-control dropify"
+                                                <input type="file" class="form-control dropify" name="main_image"
                                                     data-default-file="{{ asset('images/' . $id->main_image) }}"
-                                                    name="main_image" id="main_image">
+                                                    id="main_image">
                                             </div>
-                                        </div><!--end col-->
+                                        </div><!-- end col -->
 
+                                        <!-- SEO Section -->
+                                        <div class="col-md-12">
+                                            <hr>
+                                            <h5>SEO Section</h5>
+                                        </div>
+
+                                        <!-- Meta Title and Description -->
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="meta_title" class="form-label">Meta Title</label>
+                                                <input type="text" class="form-control" name="meta_title"
+                                                    placeholder="Meta Title" id="meta_title" value="{{ $id->meta_title }}">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="meta_description" class="form-label">Meta Description</label>
+                                                <textarea class="form-control" name="meta_description" placeholder="Meta Description" rows="3"
+                                                    id="meta_description">{{ $id->meta_description }}</textarea>
+                                            </div>
+                                        </div><!-- end col -->
+
+                                        <!-- Meta Image -->
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="meta_image" class="form-label">Meta Image</label>
+                                                <input type="file" class="form-control dropify" name="meta_image"
+                                                    id="meta_image"
+                                                    data-default-file="{{ asset('images/' . $id->meta_image) }}">
+                                            </div>
+                                        </div><!-- end col -->
+
+                                        <!-- Update Button -->
                                         <div class="col-lg-12">
                                             <div class="text-center">
                                                 <button type="submit" class="btn btn-primary">Update</button>
                                             </div>
-                                        </div><!--end col-->
+                                        </div><!-- end col -->
+                                    </div>
                                 </form>
                             </div>
                         </div><!-- end card -->

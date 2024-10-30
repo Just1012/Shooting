@@ -136,9 +136,32 @@
     <script>
         tinymce.init({
             selector: 'textarea#myeditorinstance',
-            plugins: 'code table lists textcolor', // Include the textcolor plugin
-            toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | forecolor backcolor | code | table', // Add forecolor and backcolor options
+            plugins: 'code table lists textcolor link image', // Include the image plugin
+            toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | forecolor backcolor | link image | code | table', // Add image to the toolbar
             toolbar_drawer: 'floating', // Optional: Change toolbar style to floating for better visibility
+            image_title: true, // Enable the title field in the image dialog
+            automatic_uploads: true,
+            file_picker_types: 'image',
+            file_picker_callback: function(callback, value, meta) {
+                if (meta.filetype === 'image') {
+                    var input = document.createElement('input');
+                    input.setAttribute('type', 'file');
+                    input.setAttribute('accept', 'image/*');
+
+                    input.onchange = function() {
+                        var file = this.files[0];
+                        var reader = new FileReader();
+                        reader.onload = function(e) {
+                            callback(e.target.result, {
+                                alt: file.name
+                            });
+                        };
+                        reader.readAsDataURL(file);
+                    };
+
+                    input.click();
+                }
+            }
         });
     </script>
 
