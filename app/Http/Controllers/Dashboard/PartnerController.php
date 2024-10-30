@@ -165,4 +165,13 @@ class PartnerController extends Controller
             return response()->json(['toastrScript' => $toastrScript], 404);
         }
     }
+    
+    public function getPartnerApi()
+    {
+        $partner = Partner::where('status',1)->get();
+        return response()->json([
+            'data' => $partner,
+            'message' => 'Partener fetched  successfully'
+        ]);
+    }
 }

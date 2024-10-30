@@ -8,16 +8,16 @@
          <div class="content d-flex flex-wrap justify-content-between align-items-center">
              <div class="left">
                  <div class="icons d-flex align-items-center">
-                     <a href="{{ $systemData->snapchat }}" class="icon">
+                     <a href="@if (isset($systemData)) {{ $systemData->snapchat }} @endif " class="icon">
                          <i class="fa-brands fa-snapchat"></i>
                      </a>
-                     <a href="{{ $systemData->facebook }}" class="icon">
+                     <a href="@if (isset($systemData)) {{ $systemData->facebook }} @endif " class="icon">
                          <i class="fa-brands fa-facebook-f"></i>
                      </a>
-                     <a href="{{ $systemData->instagram }}" class="icon">
+                     <a href="@if (isset($systemData)) {{ $systemData->instagram }} @endif " class="icon">
                          <i class="fa-brands fa-instagram"></i>
                      </a>
-                     <a href="{{ $systemData->whatsapp }}" class="icon">
+                     <a href="@if (isset($systemData)) {{ $systemData->whatsapp }} @endif " class="icon">
                          <i class="fa-brands fa-whatsapp"></i>
                      </a>
                      <a class="lang">
@@ -33,7 +33,11 @@
             <i class="fa-regular fa-user"></i>
           </a> -->
                  <div class="email">
-                     <p class="m-0">{{ $systemData->email }}</p>
+                     <p class="m-0">
+                         @if (isset($systemData))
+                             {{ $systemData->email }}
+                         @endif
+                     </p>
                  </div>
              </div>
          </div>
@@ -76,8 +80,10 @@
  <nav>
      <div class="container">
          <div class="content d-flex justify-content-between align-items-center flex-wrap">
-             <div class="logo">
+             <div class="logo">@if (isSet($data))
+
                  <img src="{{ asset('images/' . $data->header_logo) }}" alt="">
+             @endif
              </div>
              <ul class="links">
                  <a href="{{ route('home') }}">

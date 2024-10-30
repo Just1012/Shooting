@@ -12,6 +12,7 @@
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
         "mcamara/laravel-localization": "^2.0",
+        "unisharp/laravel-ckeditor": "^4.7",
         "yoeunes/toastr": "^2.3"
     },
     "require-dev": {

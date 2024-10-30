@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['auth','admin']);
+    }
     public function index()
     {
         return view('dashboard.categories.index');
@@ -78,7 +82,7 @@ class CategoryController extends Controller
             return redirect()->route('category.index');
         }
     }
-    
+
     public function updateStatus(Category $category)
     {
         try {

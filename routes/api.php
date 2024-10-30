@@ -4,6 +4,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Dashboard\HiringController;
 use App\Http\Controllers\Dashboard\UserRegisterController;
+use App\Http\Controllers\Dashboard\BlogController;
+use App\Http\Controllers\Dashboard\OurWorkController;
+use App\Http\Controllers\Dashboard\PartnerController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -19,5 +23,17 @@ use App\Http\Controllers\Dashboard\UserRegisterController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::post('/userRegisterStore', [UserRegisterController::class, 'storeUser'])->name('userRegister.store');
+Route::post('/userRegisterStore', [UserRegisterController::class, 'storeUser']);
 Route::post('/userHiringStore', [HiringController::class, 'storeUser'])->name('userHiring.store');
+// Brand Api
+Route::get('/getBrand',[OurWorkController::class,'getBrandApi']);
+Route::get('/getBrandImagesApi/{id}',[OurWorkController::class,'getBrandImagesApi']);
+
+Route::get('/getBrandDetails',[OurWorkController::class,'getBrandDetailsApi']);
+
+// Blog Api
+Route::get('/getBlog',[BlogController::class,'getBlogApi']);
+Route::get('/getSingleBlog/{id}',[BlogController::class,'getSingleBlogApi']);
+
+// Partenr Api
+Route::get('/getPartnerApi',[PartnerController::class,'getPartnerApi']);

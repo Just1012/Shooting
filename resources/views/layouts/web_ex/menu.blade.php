@@ -46,6 +46,27 @@
                 </li>
                 {{-- End Dashboard Page --}}
 
+                {{-- Start Blog Page --}}
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="#blog" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="blog">
+                        <i class='bx bx-news'></i> <span data-key="t-dashboards">{{ __('messages.blog') }}</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="blog">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="{{ route('blog.index') }}" class="nav-link"
+                                    data-key="t-one-page">{{ __('messages.blogList') }}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <!-- end Blog Page -->
+
+                @if (auth()->user()->role_id == 1)
+
+
+
                 {{-- Start Home Page --}}
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarDashboards" data-bs-toggle="collapse" role="button"
@@ -155,22 +176,7 @@
                 </li>
                 <!-- end Partner Page -->
 
-                {{-- Start Blog Page --}}
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="#blog" data-bs-toggle="collapse" role="button"
-                        aria-expanded="false" aria-controls="blog">
-                        <i class='bx bx-news'></i> <span data-key="t-dashboards">{{ __('messages.blog') }}</span>
-                    </a>
-                    <div class="collapse menu-dropdown" id="blog">
-                        <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
-                                <a href="{{ route('blog.index') }}" class="nav-link"
-                                    data-key="t-one-page">{{ __('messages.blogList') }}</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                <!-- end Blog Page -->
+
 
                 {{-- Start User Page --}}
                 <li class="nav-item">
@@ -214,6 +220,34 @@
                     </div>
                 </li>
                 <!-- end System Settings -->
+
+                {{-- User --}}
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="#user" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="user">
+                        <i class='bx bxs-user'></i> <span data-key="t-landing"> المستخدمين
+                        </span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="user">
+                        <ul class="nav nav-sm flex-column">
+                            @php
+                                $data = DB::table('roles')->get();
+                            @endphp
+                            @foreach ($data as $roles)
+                                <li class="nav-item">
+                                    <a href="{{ route('user.index', $roles->id) }}" class="nav-link"
+                                        data-key="t-one-page">قائمة {{ $roles->name }}</a>
+                                </li>
+                            @endforeach
+
+                            <li class="nav-item">
+                                <a href="{{ route('user.create') }}" class="nav-link" data-key="t-one-page">إضافة
+                                    مستخدم</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                @endif
 
             </ul>
         </div>

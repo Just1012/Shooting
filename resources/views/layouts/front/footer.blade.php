@@ -5,27 +5,33 @@
     @endphp
     <div class="container">
         <div class="image">
-            <img src="{{ asset('images/' . $data->footer_logo) }}" alt="">
+            @if (isset($data))
+                <img src="{{ asset('images/' . $data->footer_logo) }}" alt="">
+            @endif
         </div>
-        <p class="text-center m-sm-0">{{ $data->{App::getLocale() == 'ar' ? 'footer_quote_ar' : 'footer_quote_en'} }}</p>
+        <p class="text-center m-sm-0">
+            @if (isset($data))
+                {{ $data->{App::getLocale() == 'ar' ? 'footer_quote_ar' : 'footer_quote_en'} }}
+            @endif
+        </p>
 
         <div class="boxes d-flex justify-content-between align-items-start flex-wrap">
             <div class="box small">
                 <h3>وسائل التواصل</h3>
                 <div class="icons d-flex justify-content-start align-items-center">
-                    <a href="{{ $systemData->facebook }}" class="icon">
+                    <a href="@if (isset($systemData)) {{ $systemData->facebook }} @endif" class="icon">
                         <i class="fa-brands fa-facebook-f"></i>
                     </a>
-                    <a href="{{ $systemData->instagram }}" class="icon">
+                    <a href="@if (isset($systemData)) {{ $systemData->instagram }} @endif" class="icon">
                         <i class="fa-brands fa-instagram"></i>
                     </a>
-                    <a href="{{ $systemData->snapchat }}" class="icon">
+                    <a href="@if (isset($systemData)) {{ $systemData->snapchat }} @endif" class="icon">
                         <i class="fa-brands fa-snapchat"></i>
                     </a>
-                    <a href="{{ $systemData->tiktok }}" class="icon">
+                    <a href="@if (isset($systemData)) {{ $systemData->tiktok }} @endif" class="icon">
                         <i class="fa-brands fa-tiktok"></i>
                     </a>
-                    <a href="{{ $systemData->whatsapp }}" class="icon">
+                    <a href="@if (isset($systemData)) {{ $systemData->whatsapp }} @endif" class="icon">
                         <i class="fa-brands fa-whatsapp"></i>
                     </a>
                 </div>
@@ -36,13 +42,21 @@
                     <div class="icon">
                         <i class="fa-solid fa-mobile"></i>
                     </div>
-                    <p>{{ $systemData->phone }}</p>
+                    <p>
+                        @if (isset($systemData))
+                            {{ $systemData->phone }}
+                        @endif
+                    </p>
                 </div>
                 <div class="email">
                     <div class="icon">
                         <i class="fa-regular fa-envelope"></i>
                     </div>
-                    <p>{{ $systemData->email }}</p>
+                    <p>
+                        @if (isset($systemData))
+                            {{ $systemData->email }}
+                        @endif
+                    </p>
                 </div>
             </div>
             <div class="box">
@@ -51,7 +65,11 @@
                     <div class="icon">
                         <i class="fa-solid fa-location-dot"></i>
                     </div>
-                    <p>{!! $systemData->{App::getLocale() == 'ar' ? 'address_ar' : 'address_en'} !!}</p>
+                    <p>
+                        @if (isset($systemData))
+                            {!! $systemData->{App::getLocale() == 'ar' ? 'address_ar' : 'address_en'} !!}
+                        @endif
+                    </p>
                 </div>
             </div>
         </div>

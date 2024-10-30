@@ -9,4 +9,13 @@ class OurWork extends Model
 {
     use HasFactory;
     protected $guarded = [];
+
+
+    public function details()
+    {
+        return $this->belongsTo(OurWorkDetails::class,'our_work_id');
+
+    }
+
+
 }

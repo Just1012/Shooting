@@ -12,4 +12,8 @@ class OurWorkDetails extends Model
     public function ourWork(){
         return $this->belongsTo(OurWork::class,'our_work_id');
     }
+    public function images()
+    {
+        return $this->hasMany(BrandImage::class,'our_work_id');
+    }
 }

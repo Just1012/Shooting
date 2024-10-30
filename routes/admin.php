@@ -17,6 +17,7 @@ use App\Http\Controllers\Dashboard\ServiceController;
 use App\Http\Controllers\Dashboard\SystemInfoController;
 use App\Http\Controllers\Dashboard\SystemSetupController;
 use App\Http\Controllers\Dashboard\UserRegisterController;
+use App\Http\Controllers\UserController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 Route::group(
@@ -103,8 +104,6 @@ Route::group(
             Route::post('/updateJourneyImage/{id}', [JourneySectionImageController::class, 'updateImage'])->name('journeyImage.update');
             Route::get('/updateStatus/{journeySectionImage}', [JourneySectionImageController::class, 'updateStatus'])->name('journeyImage.status');
             Route::get('/deleteImage/{id}', [JourneySectionImageController::class, 'deleteImage'])->name('journeyImage.delete');
-
-
         });
 
         Route::prefix('hiringPage')->group(function () {
@@ -145,6 +144,17 @@ Route::group(
             Route::post('/updateBlog/{id}', [BlogController::class, 'updateBlog'])->name('blog.update');
             Route::get('/updateStatus/{blog}', [BlogController::class, 'updateStatus'])->name('blog.status');
             Route::get('/deleteBlog/{id}', [BlogController::class, 'deleteBlog'])->name('blog.delete');
+        });
+
+        /////route User
+        Route::prefix('agent')->middleware('ensureSessionIsActive')->group(function () {
+            Route::get('/index/{role}', [UserController::class, 'index'])->name('user.index');
+            Route::get('/datatable/{id}', [UserController::class, 'datatable'])->name('user.datatable');
+            Route::get('/create', [UserController::class, 'create'])->name('user.create');
+            Route::post('/store', [UserController::class, 'store'])->name('user.store');
+            Route::post('/update', [UserController::class, 'update'])->name('user.update');
+            Route::get('/edit/{user}', [UserController::class, 'edit'])->name('user.edit');
+            Route::get('/delete/{user}', [UserController::class, 'delete'])->name('user.delete');
         });
     }
 );

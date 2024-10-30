@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Models\Blog;
+use App\Models\Category;
+
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -26,7 +28,8 @@ class BlogController extends Controller
 
     public function addBlog()
     {
-        return view('dashboard.blog.blogAdd');
+        $categories = Category::all();
+        return view('dashboard.blog.blogAdd',compact('categories'));
     }
 
     public function storeBlog(Request $request)
@@ -40,6 +43,7 @@ class BlogController extends Controller
                 'body_en' => 'required|string',
                 'thumbnail' => 'nullable|file|mimes:jpg,jpeg,png|max:2048', // Optional image with validation
                 'main_image' => 'nullable|file|mimes:jpg,jpeg,png|max:2048', // Optional image with validation
+                'category_id' => 'required|exists:categories,id',
             ]);
 
             $requestData = $request->all();
@@ -73,7 +77,8 @@ class BlogController extends Controller
 
     public function editBlog(Blog $id)
     {
-        return view('dashboard.blog.blogEdit', compact('id'));
+        $categories = Category::all();
+        return view('dashboard.blog.blogEdit', compact('id','categories'));
     }
 
     public function updateBlog(Request $request, $id)
@@ -159,4 +164,35 @@ class BlogController extends Controller
             return redirect()->back();
         }
     }
+
+    public function getBlogApi(Request $request)
+    {
+
+        $currentPage = $request->currentPage;
+        $perPage = 6;
+        $blogs = Blog::paginate($perPage, ['*'], 'page', $currentPage);
+        return response()->json([
+            'data' => $blogs->items(),
+            'pagination' => [
+                'count' => $blogs->count(),
+                'current_page' => $blogs->currentPage(),
+                'per_page' => $blogs->perPage(),
+                'total' => $blogs->total(),
+                'total_pages' => $blogs->lastPage(),
+            ],
+            'message' => 'found data'
+        ]);
+    }
+
+    public function getSingleBlogApi($id)
+    {
+        $singleBlog = Blog::where('id', $id)
+            ->first();
+        return response()->json([
+            'data' => $singleBlog,
+            'message' => 'found data'
+        ]);
+    }
+
+
 }

@@ -16,7 +16,9 @@
         <div class="container">
             <div class="text">
                 <h3>
-                    {!! $content->{App::getLocale() == 'ar' ? 'header_section_ar' : 'header_section_en'} !!}
+                    @if (isset($content))
+                        {!! $content->{App::getLocale() == 'ar' ? 'header_section_ar' : 'header_section_en'} !!}
+                    @endif
                 </h3>
                 <a href="#" class="btn">
                     أحجز موعدك الأن
@@ -106,17 +108,25 @@
     <!-- start goals -->
     <section class="goals">
         <div class="heading">
-            <h3>{{ $content->{App::getLocale() == 'ar' ? 'goals_title_ar' : 'goals_title_en'} }}</h3>
+            <h3>
+                @if (isset($content))
+                    {{ $content->{App::getLocale() == 'ar' ? 'goals_title_ar' : 'goals_title_en'} }}
+                @endif
+            </h3>
             <hr>
         </div>
         <div class="container">
             <div class="content d-flex justify-content-between align-items-center flex-wrap">
                 <div class="image">
-                    <img src="{{ asset('images/' . $content->goals_image) }}" alt="">
+                    @if (isset($content))
+                        <img src="{{ asset('images/' . $content->goals_image) }}" alt="">
+                    @endif
                 </div>
                 <div class="info">
                     <ul class="mt-4">
-                        {!! $content->{App::getLocale() == 'ar' ? 'goals_desc_ar' : 'goals_desc_en'} !!}
+                        @if (isset($content))
+                            {!! $content->{App::getLocale() == 'ar' ? 'goals_desc_ar' : 'goals_desc_en'} !!}
+                        @endif
                     </ul>
                 </div>
             </div>
@@ -128,12 +138,20 @@
         <img src="{{ asset('front/images/Web Shooting-08.png') }}" class="lap-image" width="100%">
         <img src="{{ asset('front/images/Photo For Mob copy.jpg') }}" class="mob-image">
         <div class="heading">
-            <h3>{{ $content->{App::getLocale() == 'ar' ? 'vision_title_ar' : 'vision_title_en'} }}</h3>
+            <h3>
+                @if (isset($content))
+                    {{ $content->{App::getLocale() == 'ar' ? 'vision_title_ar' : 'vision_title_en'} }}
+                @endif
+            </h3>
             <hr>
         </div>
         <div class="container">
             <div class="info">
-                <p class="mt-5">{{ $content->{App::getLocale() == 'ar' ? 'vision_desc_ar' : 'vision_desc_en'} }}</p>
+                <p class="mt-5">
+                    @if (isset($content))
+                        {{ $content->{App::getLocale() == 'ar' ? 'vision_desc_ar' : 'vision_desc_en'} }}
+                    @endif
+                </p>
             </div>
         </div>
     </section>
@@ -142,7 +160,11 @@
     <section class="our_journey">
         <div class="container">
             <div class="heading">
-                <h3>{{ $content->{App::getLocale() == 'ar' ? 'journey_title_ar' : 'journey_title_en'} }}</h3>
+                <h3>
+                    @if (isset($content))
+                        {{ $content->{App::getLocale() == 'ar' ? 'journey_title_ar' : 'journey_title_en'} }}
+                    @endif
+                </h3>
                 <hr>
             </div>
             <div class="content d-flex align-items-center flex-wrap">
@@ -162,7 +184,9 @@
                 <div class="info">
                     <div class="desc">
                         <p>
-                            {!! $content->{App::getLocale() == 'ar' ? 'journey_desc_ar' : 'journey_desc_en'} !!}
+                            @if (isset($content))
+                                {!! $content->{App::getLocale() == 'ar' ? 'journey_desc_ar' : 'journey_desc_en'} !!}
+                            @endif
                         </p>
                     </div>
                 </div>
@@ -198,21 +222,32 @@
         <div class="container">
             <div class="text">
                 <div class="title">
-                    <h2>{{ $content->{App::getLocale() == 'ar' ? 'team_title_ar' : 'team_title_en'} }}</h2>
+                    <h2>
+                        @if (isset($content))
+                            {{ $content->{App::getLocale() == 'ar' ? 'team_title_ar' : 'team_title_en'} }}
+                        @endif
+                    </h2>
                     <img src="{{ asset('front/images/icon1.svg') }}" alt="">
                     <img src="{{ asset('front/images/icon2.svg') }}" alt="">
                 </div>
                 <p class="text-center lab">
-                    {{ $content->{App::getLocale() == 'ar' ? 'team_desc_ar' : 'team_desc_en'} }}
+                    @if (isset($content))
+                        {{ $content->{App::getLocale() == 'ar' ? 'team_desc_ar' : 'team_desc_en'} }}
+                    @endif
                 </p>
                 <p class="text-center mob">
-                    {{ $content->{App::getLocale() == 'ar' ? 'team_desc_ar' : 'team_desc_en'} }}
+                    @if (isset($content))
+                        {{ $content->{App::getLocale() == 'ar' ? 'team_desc_ar' : 'team_desc_en'} }}
+                    @endif
                 </p>
             </div>
         </div>
     </section>
     <!-- end team-->
     <section class="shooting d-flex justify-content-center align-items-center">
-        <img src="{{ asset('images/' . $gif->footer_gif) }}" alt="">
+        @if (isset($gif))
+            <img src="{{ asset('images/' . $gif->footer_gif) }}" alt="">
+        @endif
+
     </section>
 @endsection

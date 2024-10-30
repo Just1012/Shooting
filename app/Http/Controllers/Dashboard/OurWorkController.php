@@ -6,6 +6,7 @@ use App\Models\OurWork;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\BrandImage;
 use App\Models\OurWorkDetails;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
@@ -33,10 +34,9 @@ class OurWorkController extends Controller
         return view('dashboard.brands.brandAdd', compact('category'));
     }
 
-    public function storeBrand(Request $request)
+     public function storeBrand(Request $request)
     {
         try {
-            DB::beginTransaction();
             $request->validate([
                 'brand_name_ar' => 'required|string|max:255',
                 'brand_name_en' => 'required|string|max:255',
@@ -53,26 +53,10 @@ class OurWorkController extends Controller
             }
             $brand = OurWork::create($requestData);
 
-            if (!$brand) {
-                throw new \Exception('Failed to create OurWork.');
-            }
-            $brandDetails = OurWorkDetails::create([
-                'our_work_id' => $brand->id,
-                'main_image' => '',
-                'title_color' => '#000',
-                'title_back_color' => '#FFFFFF',
-                'details_color' => '#000',
-                'details_back_color' => '#FFFFFF',
-            ]);
-
-            if (!$brandDetails) {
-                throw new \Exception('Failed to create OurWorkDetails.');
-            }
-            DB::commit();
             toastr()->success(__('Brand Added Successfully'), __('Success'));
-            return redirect()->route('brandDetails', ['id' => $brand->id]);
+            return redirect()->route('brand.index');
         } catch (\Throwable $th) {
-            DB::rollBack();
+
             toastr()->error(__('Try Again'));
             return redirect()->back()->withInput();
         }
@@ -146,148 +130,283 @@ class OurWorkController extends Controller
         }
     }
 
-    public function brandDetails($id)
+        public function brandDetailsUpdate(Request $request, $id)
     {
-        $brand = OurWorkDetails::where('our_work_id', $id)->first();
-        if (!$brand) {
-            toastr()->error(__('This is Not Found'), __('Error'));
-            return redirect()->back();
-        } else {
-            return view('dashboard.brands.brandDetails', compact('brand'));
-        }
-    }
-
-    public function brandDetailsUpdate(Request $request, $id)
-    {
-        // Validation with custom messages
+        // Validate the incoming request
         $request->validate([
-            // Validation for images
-            'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'image_1' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'image_2' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'image_3' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'image_4' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'image_5' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'image_6' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',  // max 2MB
-            'title_color' => 'nullable|string',
-            'title_back_color' => 'nullable|string',
-            'details_color' => 'nullable|string',
-            'details_back_color' => 'nullable|string',
-        ], [
-            // Custom messages for image validation
-            'main_image.image'  => 'The Main Image must be an image file.',
-            'main_image.mimes'  => 'The Main Image must be a file of type: jpeg, png, jpg, gif, svg.',
-            'main_image.max'    => 'The Main Image must not be larger than 2MB.',
-            'image_1.image'     => 'The Image 1 must be an image file.',
-            'image_1.mimes'     => 'The Image 1 must be a file of type: jpeg, png, jpg, gif, svg.',
-            'image_1.max'       => 'The Image 1 must not be larger than 2MB.',
-            'image_2.image'     => 'The Image 2 Image must be an image file.',
-            'image_2.mimes'     => 'The Image 2 Image must be a file of type: jpeg, png, jpg, gif, svg.',
-            'image_2.max'       => 'The Image 2 Image must not be larger than 2MB.',
-            'image_3.image'     => 'The Image 3 must be an image file.',
-            'image_3.mimes'     => 'The Image 3 must be a file of type: jpeg, png, jpg, gif, svg.',
-            'image_3.max'       => 'The Image 3 must not be larger than 2MB.',
-            'image_4.image'     => 'The Image 4 Image must be an image file.',
-            'image_4.mimes'     => 'The Image 4 Image must be a file of type: jpeg, png, jpg, gif, svg.',
-            'image_4.max'       => 'The Image 4 Image must not be larger than 2MB.',
-            'image_5.image'     => 'The Image 5 must be an image file.',
-            'image_5.mimes'     => 'The Image 5 must be a file of type: jpeg, png, jpg, gif, svg.',
-            'image_5.max'       => 'The Image 5 must not be larger than 2MB.',
-            'image_6.image'     => 'The Image 6 Image must be an image file.',
-            'image_6.mimes'     => 'The Image 6 Image must be a file of type: jpeg, png, jpg, gif, svg.',
-            'image_6.max'       => 'The Image 6 Image must not be larger than 2MB.',
+            'title_color' => 'required|string',
+            'title_back_color' => 'required|string',
+            'details_color' => 'required|string',
+            'details_back_color' => 'required|string',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // Fetch the first record or create a new one
-        // Fetch the existing brand details
-        $brand = OurWorkDetails::where('our_work_id', $id)->first();
+        // Update or create the OurWorkDetails entry for the given ID
+        $brandDetails = OurWorkDetails::updateOrCreate(
+            ['our_work_id' => $id],
+            [
+                'title_color' => $request->input('title_color'),
+                'title_back_color' => $request->input('title_back_color'),
+                'details_color' => $request->input('details_color'),
+                'details_back_color' => $request->input('details_back_color'),
+            ]
+        );
 
-        if (!$brand) {
-            toastr()->error(__('Brand details not found'), __('Error'));
-            return redirect()->back();
-        }
-        // Function to delete the old file
-        $deleteOldFile = function ($filePath) {
-            if ($filePath && Storage::exists('public/images/' . $filePath)) {
-                Storage::delete('public/images/' . $filePath);
-            }
-        };
+        // Handle image removal
+        if ($request->has('remove_images')) {
+            foreach ($request->input('remove_images') as $imageId) {
+                $image = BrandImage::find($imageId);
 
-        $brand->title_color = $request->title_color;
-        $brand->title_back_color = $request->title_back_color;
-        $brand->details_color = $request->details_color;
-        $brand->details_back_color = $request->details_back_color;
-
-        if ($request->hasFile('main_image')) {
-            // Delete the old header logo
-            $deleteOldFile($brand->main_image);
-            // Store the new header logo
-            $headerLogoPath = $request->file('main_image')->store('images', 'public');
-            $brand->main_image = basename($headerLogoPath);
-        }
-
-        if ($request->hasFile('image_1')) {
-            // Delete the old header logo
-            $deleteOldFile($brand->image_1);
-            // Store the new header logo
-            $headerLogoPath = $request->file('image_1')->store('images', 'public');
-            $brand->image_1 = basename($headerLogoPath);
-        }
-
-        if ($request->hasFile('image_2')) {
-            // Delete the old header logo
-            $deleteOldFile($brand->image_2);
-            // Store the new header logo
-            $headerLogoPath = $request->file('image_2')->store('images', 'public');
-            $brand->image_2 = basename($headerLogoPath);
-        }
-        if ($request->hasFile('image_3')) {
-            // Delete the old header logo
-            $deleteOldFile($brand->image_3);
-            // Store the new header logo
-            $headerLogoPath = $request->file('image_3')->store('images', 'public');
-            $brand->image_3 = basename($headerLogoPath);
-        }
-
-        if ($request->hasFile('image_4')) {
-            // Delete the old header logo
-            $deleteOldFile($brand->image_4);
-            // Store the new header logo
-            $headerLogoPath = $request->file('image_4')->store('images', 'public');
-            $brand->image_4 = basename($headerLogoPath);
-        }
-        if ($request->hasFile('image_5')) {
-            // Delete the old header logo
-            $deleteOldFile($brand->image_5);
-            // Store the new header logo
-            $headerLogoPath = $request->file('image_5')->store('images', 'public');
-            $brand->image_5 = basename($headerLogoPath);
-        }
-
-        if ($request->hasFile('image_6')) {
-            // Delete the old header logo
-            $deleteOldFile($brand->image_6);
-            // Store the new header logo
-            $headerLogoPath = $request->file('image_6')->store('images', 'public');
-            $brand->image_6 = basename($headerLogoPath);
-        }
-        // Save the changes
-        $brand->save();
-
-        toastr()->success('Brand Details Updated Successfully');
-        return redirect()->route('brand.index');
-        try {
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            // Validation exception handling
-            foreach ($e->errors() as $fieldErrors) {
-                foreach ($fieldErrors as $message) {
-                    toastr()->error($message);
+                if ($image) {
+                    // Delete the image from storage
+                    Storage::disk('public')->delete($image->image);
+                    // Delete the image record from the database
+                    $image->delete();
                 }
             }
-            return redirect()->back()->withInput();
-        } catch (\Throwable $th) {
-            toastr()->error('An error occurred. Please try again.');
-            return redirect()->back()->withErrors(['error' => $th->getMessage()])->withInput();
         }
+
+        // Handle image replacement and addition
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $key => $image) {
+
+                // Check if the key is numeric, indicating an existing image ID
+
+                // Add a new image
+                $path = $image->store('images', 'public');
+
+                // Create a new image record
+                BrandImage::create([
+                    'image' => $path,
+                    'our_work_id' => $id,
+                ]);
+            }
+        }
+
+        return redirect()->route('brand.index')->with('success', 'Brand details updated successfully!');
     }
+
+    public function brandDetails($id)
+    {
+        // Find the OurWorkDetails record or create a new instance
+        $brandExists = OurWorkDetails::where('our_work_id', $id)->first();
+
+        // Find the OurWorkDetails record or create a new instance
+        $brand = BrandImage::where('our_work_id', $id)->get();
+
+        return view('dashboard.brands.brandDetails', compact('brand', 'brandExists'));
+    }
+
+    // public function brandDetailsUpdate(Request $request, $id)
+    // {
+    //     // Validation with custom messages
+    //     $request->validate([
+    //         // Validation for images
+    //         'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+    //         'image_1' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+    //         'image_2' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+    //         'image_3' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+    //         'image_4' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+    //         'image_5' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+    //         'image_6' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',  // max 2MB
+    //         'title_color' => 'nullable|string',
+    //         'title_back_color' => 'nullable|string',
+    //         'details_color' => 'nullable|string',
+    //         'details_back_color' => 'nullable|string',
+    //     ], [
+    //         // Custom messages for image validation
+    //         'main_image.image'  => 'The Main Image must be an image file.',
+    //         'main_image.mimes'  => 'The Main Image must be a file of type: jpeg, png, jpg, gif, svg.',
+    //         'main_image.max'    => 'The Main Image must not be larger than 2MB.',
+    //         'image_1.image'     => 'The Image 1 must be an image file.',
+    //         'image_1.mimes'     => 'The Image 1 must be a file of type: jpeg, png, jpg, gif, svg.',
+    //         'image_1.max'       => 'The Image 1 must not be larger than 2MB.',
+    //         'image_2.image'     => 'The Image 2 Image must be an image file.',
+    //         'image_2.mimes'     => 'The Image 2 Image must be a file of type: jpeg, png, jpg, gif, svg.',
+    //         'image_2.max'       => 'The Image 2 Image must not be larger than 2MB.',
+    //         'image_3.image'     => 'The Image 3 must be an image file.',
+    //         'image_3.mimes'     => 'The Image 3 must be a file of type: jpeg, png, jpg, gif, svg.',
+    //         'image_3.max'       => 'The Image 3 must not be larger than 2MB.',
+    //         'image_4.image'     => 'The Image 4 Image must be an image file.',
+    //         'image_4.mimes'     => 'The Image 4 Image must be a file of type: jpeg, png, jpg, gif, svg.',
+    //         'image_4.max'       => 'The Image 4 Image must not be larger than 2MB.',
+    //         'image_5.image'     => 'The Image 5 must be an image file.',
+    //         'image_5.mimes'     => 'The Image 5 must be a file of type: jpeg, png, jpg, gif, svg.',
+    //         'image_5.max'       => 'The Image 5 must not be larger than 2MB.',
+    //         'image_6.image'     => 'The Image 6 Image must be an image file.',
+    //         'image_6.mimes'     => 'The Image 6 Image must be a file of type: jpeg, png, jpg, gif, svg.',
+    //         'image_6.max'       => 'The Image 6 Image must not be larger than 2MB.',
+    //     ]);
+
+    //     // Fetch the first record or create a new one
+    //     // Fetch the existing brand details
+    //     $brand = OurWorkDetails::where('our_work_id', $id)->first();
+
+    //     if (!$brand) {
+    //         toastr()->error(__('Brand details not found'), __('Error'));
+    //         return redirect()->back();
+    //     }
+    //     // Function to delete the old file
+    //     $deleteOldFile = function ($filePath) {
+    //         if ($filePath && Storage::exists('public/images/' . $filePath)) {
+    //             Storage::delete('public/images/' . $filePath);
+    //         }
+    //     };
+
+    //     $brand->title_color = $request->title_color;
+    //     $brand->title_back_color = $request->title_back_color;
+    //     $brand->details_color = $request->details_color;
+    //     $brand->details_back_color = $request->details_back_color;
+
+    //     if ($request->hasFile('main_image')) {
+    //         // Delete the old header logo
+    //         $deleteOldFile($brand->main_image);
+    //         // Store the new header logo
+    //         $headerLogoPath = $request->file('main_image')->store('images', 'public');
+    //         $brand->main_image = basename($headerLogoPath);
+    //     }
+
+    //     if ($request->hasFile('image_1')) {
+    //         // Delete the old header logo
+    //         $deleteOldFile($brand->image_1);
+    //         // Store the new header logo
+    //         $headerLogoPath = $request->file('image_1')->store('images', 'public');
+    //         $brand->image_1 = basename($headerLogoPath);
+    //     }
+
+    //     if ($request->hasFile('image_2')) {
+    //         // Delete the old header logo
+    //         $deleteOldFile($brand->image_2);
+    //         // Store the new header logo
+    //         $headerLogoPath = $request->file('image_2')->store('images', 'public');
+    //         $brand->image_2 = basename($headerLogoPath);
+    //     }
+    //     if ($request->hasFile('image_3')) {
+    //         // Delete the old header logo
+    //         $deleteOldFile($brand->image_3);
+    //         // Store the new header logo
+    //         $headerLogoPath = $request->file('image_3')->store('images', 'public');
+    //         $brand->image_3 = basename($headerLogoPath);
+    //     }
+
+    //     if ($request->hasFile('image_4')) {
+    //         // Delete the old header logo
+    //         $deleteOldFile($brand->image_4);
+    //         // Store the new header logo
+    //         $headerLogoPath = $request->file('image_4')->store('images', 'public');
+    //         $brand->image_4 = basename($headerLogoPath);
+    //     }
+    //     if ($request->hasFile('image_5')) {
+    //         // Delete the old header logo
+    //         $deleteOldFile($brand->image_5);
+    //         // Store the new header logo
+    //         $headerLogoPath = $request->file('image_5')->store('images', 'public');
+    //         $brand->image_5 = basename($headerLogoPath);
+    //     }
+
+    //     if ($request->hasFile('image_6')) {
+    //         // Delete the old header logo
+    //         $deleteOldFile($brand->image_6);
+    //         // Store the new header logo
+    //         $headerLogoPath = $request->file('image_6')->store('images', 'public');
+    //         $brand->image_6 = basename($headerLogoPath);
+    //     }
+    //     // Save the changes
+    //     $brand->save();
+
+    //     toastr()->success('Brand Details Updated Successfully');
+    //     return redirect()->route('brand.index');
+    //     try {
+    //     } catch (\Illuminate\Validation\ValidationException $e) {
+    //         // Validation exception handling
+    //         foreach ($e->errors() as $fieldErrors) {
+    //             foreach ($fieldErrors as $message) {
+    //                 toastr()->error($message);
+    //             }
+    //         }
+    //         return redirect()->back()->withInput();
+    //     } catch (\Throwable $th) {
+    //         toastr()->error('An error occurred. Please try again.');
+    //         return redirect()->back()->withErrors(['error' => $th->getMessage()])->withInput();
+    //     }
+    // }
+
+    public function getBrandApi(Request $request)
+    {
+        $currentPage = $request->currentPage;
+        $perPage = 12;
+         $brand = OurWork::paginate($perPage, ['*'], 'page', $currentPage);
+         $allCategoryIds = $brand->pluck('category_id')
+            ->map(fn($categoryIds) => json_decode($categoryIds, true))  // Decode each category_id
+            ->filter()
+            ->flatten()
+            ->unique()
+            ->toArray();
+         $categories = Category::whereIn('id', $allCategoryIds)->get()->keyBy('id');
+         $brandData = $brand->map(function ($item) use ($categories) {
+             $categoryIds = json_decode($item->category_id, true);
+            $item->categories = $categories->only($categoryIds)->values();
+            unset($item->category_id);
+            return $item;
+        });
+        return response()->json([
+            'data' => $brandData,
+            'pagination' => [
+                'count' => $brand->count(),
+                'current_page' => $brand->currentPage(),
+                'per_page' => $brand->perPage(),
+                'total' => $brand->total(),
+                'total_pages' => $brand->lastPage(),
+            ],
+            'message' => 'found data'
+        ]);
+    }
+
+    public function getBrandDetailsApi(Request $request)
+    {
+    // Fetch the brand details and its related OurWork
+    $brandDetails = OurWorkDetails::with('ourWork')->where('our_work_id', $request->brand_id)->first();
+
+    if ($brandDetails) {
+        // Extract and decode the category_id from the related OurWork
+        $categoryIds = json_decode($brandDetails->ourWork->category_id, true);
+
+        // If there are category IDs, fetch the categories
+        if (!empty($categoryIds)) {
+            $categories = Category::whereIn('id', $categoryIds)->get();
+        } else {
+            $categories = collect([]);  // Return an empty collection if no category IDs
+        }
+
+        // Attach the categories to the ourWork relation
+        $brandDetails->ourWork->categories = $categories;
+
+        // Optionally, remove category_id from the output
+        unset($brandDetails->ourWork->category_id);
+
+        // Return the brand details with attached categories
+        return response()->json([
+            'data' => $brandDetails,
+            'message' => 'found brand details with categories',
+        ]);
+    } else {
+        return response()->json([
+            'message' => 'brand not found',
+        ], 404);
+    }
+}
+
+    public function getBrandImagesApi($id){
+    $brandImage = BrandImage::where('our_work_id',$id)->get();
+    if(!$brandImage){
+         return response()->json([
+            'message' => 'Not Found Data'
+        ]);
+    }
+    return response()->json([
+            'data' => $brandImage,
+            'message' => 'Images Featched Successfully'
+        ]);
+}
+
 }

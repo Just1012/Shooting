@@ -28,7 +28,7 @@
                                     @csrf
 
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="mb-3">
                                                 <label for="firstNameinput" class="form-label">Title Ar</label>
                                                 <input type="text" class="form-control" name="title_ar"
@@ -36,11 +36,24 @@
                                             </div>
                                         </div><!--end col-->
 
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="mb-3">
                                                 <label for="firstNameinput" class="form-label">Title En</label>
                                                 <input type="text" class="form-control" name="title_en"
                                                     value="{{ $id->title_en }}" placeholder="Title En" id="firstNameinput">
+                                            </div>
+                                        </div><!--end col-->
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <h6 class="fw-semibold">Categories</h6>
+                                                <select class="js-example-basic-multiple" name="category_id">
+                                                        <option selected disabled value="">-- Select Category --</option>
+                                                        @foreach ($categories as $val)
+                                                            <option value="{{ $val->id }}" {{ $id->category_id == $val->id ? 'selected' : '' }}>
+                                                                {{ $val->{App::getLocale() == 'ar' ? 'name_ar' : 'name_en'} }}
+                                                            </option>
+                                                        @endforeach
+                                                </select>
                                             </div>
                                         </div><!--end col-->
 
