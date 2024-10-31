@@ -46,6 +46,7 @@ class BlogController extends Controller
                 'meta_image' => 'nullable|file|mimes:jpg,jpeg,png|max:10240', // Optional image with validation
                 'meta_title' => 'nullable|string',
                 'meta_description' => 'nullable|string',
+                'keywords.*' => 'string',  // Each keyword should be a string
                 'category_id' => 'required|exists:categories,id',
             ]);
 
@@ -70,6 +71,11 @@ class BlogController extends Controller
                 $mainImageName = time() . '_meta_image.' . $request->meta_image->getClientOriginalExtension();
                 $request->meta_image->move(public_path('images'), $mainImageName);
                 $requestData['meta_image'] = $mainImageName;
+            }
+
+            // Convert keywords to JSON format if provided
+            if ($request->has('keywords')) {
+                $requestData['keywords'] = json_encode($request->keywords);
             }
 
             // Create the blog post
@@ -99,6 +105,10 @@ class BlogController extends Controller
 
             // Get all request data
             $requestData = $request->all();
+            // Handle keywords as JSON
+            if ($request->has('keywords')) {
+                $requestData['keywords'] = json_encode($request->input('keywords'));
+            }
 
             // Handle thumbnail image upload
             if ($request->hasFile('thumbnail')) {

@@ -3,6 +3,7 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('web/mycss/mycss.css') }}">
     <link rel="stylesheet" type="text/css" href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
 @endpush
 @section('title')
     Create New Blog
@@ -103,6 +104,13 @@
                                                 <textarea class="form-control" name="meta_description" placeholder="Meta Description" rows="3"
                                                     id="meta_description"></textarea>
                                             </div>
+                                            <div class="mb-3">
+                                                <label for="choices-text-remove-button" class="form-label text-muted">
+                                                    Kye Words</label>
+                                                <input class="form-control" name="keywords[]"
+                                                    id="choices-text-remove-button" data-choices data-choices-removeItem
+                                                    type="text" />
+                                            </div>
                                         </div><!--end col-->
 
                                         <div class="col-md-6">
@@ -132,6 +140,7 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="{{ asset('web/assets/js/pages/select2.init.js') }}"></script>
     <script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 
     <script>
         $('.dropify').dropify({
@@ -141,6 +150,13 @@
                 'remove': 'Remove',
                 'error': 'Ooops, something wrong happended.'
             }
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const choices = new Choices('#choices-text-remove-button', {
+                removeItemButton: true,
+            });
         });
     </script>
 @endpush

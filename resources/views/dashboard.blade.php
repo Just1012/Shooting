@@ -7,19 +7,19 @@
     Dashboard
 @endsection
 @section('content')
-<div class="main-content">
-    <div class="page-content">
-        Hello Man ,
+    <div class="main-content">
+        <div class="page-content">
+            Hello Man ,
+        </div>
     </div>
-</div>
 @endsection
 @push('js')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
-<script>
-    @if (Session::has('success'))
-        toastr.success("{{ Session::get('success') }}");
-        toastr.success('أعد المحاولة', 'خطأ !');
-    @endif
-</script>
+    <script>
+        @if (Session::has('success'))
+            toastr.success("{{ Session::get('success') }}");
+            toastr.success('أعد المحاولة', 'خطأ !');
+        @endif
+    </script>
 @endpush
