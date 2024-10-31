@@ -14,11 +14,13 @@ use Illuminate\Support\Facades\DB;
 
 class OurWorkController extends Controller
 {
+    // Our Work Index View
     public function index()
     {
         return view('dashboard.brands.index');
     }
 
+    // Get Our Works For dataTable
     public function getBrand()
     {
         $data = OurWork::all();
@@ -34,7 +36,7 @@ class OurWorkController extends Controller
         return view('dashboard.brands.brandAdd', compact('category'));
     }
 
-     public function storeBrand(Request $request)
+    public function storeBrand(Request $request)
     {
         try {
             $request->validate([
@@ -109,28 +111,19 @@ class OurWorkController extends Controller
         }
     }
 
-    public function updateStatus(OurWork $ourWork)
+    // Our Work Details And Images Update
+    public function brandDetails($id)
     {
-        try {
-            $ourWork->update([
-                'status' => $ourWork->status == 0 ? 1 : 0
-            ]);
+        // Find the OurWorkDetails record or create a new instance
+        $brandExists = OurWorkDetails::where('our_work_id', $id)->first();
 
-            $successMessage = $ourWork->status == 1 ?
-                'تم التفعيل  بنجاح' :
-                'تم إلغاء التفعيل  بنجاح';
+        // Find the OurWorkDetails record or create a new instance
+        $brand = BrandImage::where('our_work_id', $id)->get();
 
-            // Generate the toastr script
-            $toastrScript = "toastr.success('{$successMessage}', 'تم بنجاح');";
-
-            return response()->json(['toastrScript' => $toastrScript]);
-        } catch (\Throwable $th) {
-            $toastrScript = "toastr.error('حدث خطأ ما، يرجى إعادة المحاولة', 'خطأ !');";
-            return response()->json(['toastrScript' => $toastrScript], 404);
-        }
+        return view('dashboard.brands.brandDetails', compact('brand', 'brandExists'));
     }
 
-        public function brandDetailsUpdate(Request $request, $id)
+    public function brandDetailsUpdate(Request $request, $id)
     {
         // Validate the incoming request
         $request->validate([
@@ -169,12 +162,9 @@ class OurWorkController extends Controller
         // Handle image replacement and addition
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $key => $image) {
-
                 // Check if the key is numeric, indicating an existing image ID
-
                 // Add a new image
                 $path = $image->store('images', 'public');
-
                 // Create a new image record
                 BrandImage::create([
                     'image' => $path,
@@ -186,165 +176,44 @@ class OurWorkController extends Controller
         return redirect()->route('brand.index')->with('success', 'Brand details updated successfully!');
     }
 
-    public function brandDetails($id)
+    // Our Work Status update
+    public function updateStatus(OurWork $ourWork)
     {
-        // Find the OurWorkDetails record or create a new instance
-        $brandExists = OurWorkDetails::where('our_work_id', $id)->first();
+        try {
+            $ourWork->update([
+                'status' => $ourWork->status == 0 ? 1 : 0
+            ]);
 
-        // Find the OurWorkDetails record or create a new instance
-        $brand = BrandImage::where('our_work_id', $id)->get();
+            $successMessage = $ourWork->status == 1 ?
+                'تم التفعيل  بنجاح' :
+                'تم إلغاء التفعيل  بنجاح';
 
-        return view('dashboard.brands.brandDetails', compact('brand', 'brandExists'));
+            // Generate the toastr script
+            $toastrScript = "toastr.success('{$successMessage}', 'تم بنجاح');";
+
+            return response()->json(['toastrScript' => $toastrScript]);
+        } catch (\Throwable $th) {
+            $toastrScript = "toastr.error('حدث خطأ ما، يرجى إعادة المحاولة', 'خطأ !');";
+            return response()->json(['toastrScript' => $toastrScript], 404);
+        }
     }
 
-    // public function brandDetailsUpdate(Request $request, $id)
-    // {
-    //     // Validation with custom messages
-    //     $request->validate([
-    //         // Validation for images
-    //         'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-    //         'image_1' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-    //         'image_2' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-    //         'image_3' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-    //         'image_4' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-    //         'image_5' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-    //         'image_6' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',  // max 2MB
-    //         'title_color' => 'nullable|string',
-    //         'title_back_color' => 'nullable|string',
-    //         'details_color' => 'nullable|string',
-    //         'details_back_color' => 'nullable|string',
-    //     ], [
-    //         // Custom messages for image validation
-    //         'main_image.image'  => 'The Main Image must be an image file.',
-    //         'main_image.mimes'  => 'The Main Image must be a file of type: jpeg, png, jpg, gif, svg.',
-    //         'main_image.max'    => 'The Main Image must not be larger than 2MB.',
-    //         'image_1.image'     => 'The Image 1 must be an image file.',
-    //         'image_1.mimes'     => 'The Image 1 must be a file of type: jpeg, png, jpg, gif, svg.',
-    //         'image_1.max'       => 'The Image 1 must not be larger than 2MB.',
-    //         'image_2.image'     => 'The Image 2 Image must be an image file.',
-    //         'image_2.mimes'     => 'The Image 2 Image must be a file of type: jpeg, png, jpg, gif, svg.',
-    //         'image_2.max'       => 'The Image 2 Image must not be larger than 2MB.',
-    //         'image_3.image'     => 'The Image 3 must be an image file.',
-    //         'image_3.mimes'     => 'The Image 3 must be a file of type: jpeg, png, jpg, gif, svg.',
-    //         'image_3.max'       => 'The Image 3 must not be larger than 2MB.',
-    //         'image_4.image'     => 'The Image 4 Image must be an image file.',
-    //         'image_4.mimes'     => 'The Image 4 Image must be a file of type: jpeg, png, jpg, gif, svg.',
-    //         'image_4.max'       => 'The Image 4 Image must not be larger than 2MB.',
-    //         'image_5.image'     => 'The Image 5 must be an image file.',
-    //         'image_5.mimes'     => 'The Image 5 must be a file of type: jpeg, png, jpg, gif, svg.',
-    //         'image_5.max'       => 'The Image 5 must not be larger than 2MB.',
-    //         'image_6.image'     => 'The Image 6 Image must be an image file.',
-    //         'image_6.mimes'     => 'The Image 6 Image must be a file of type: jpeg, png, jpg, gif, svg.',
-    //         'image_6.max'       => 'The Image 6 Image must not be larger than 2MB.',
-    //     ]);
 
-    //     // Fetch the first record or create a new one
-    //     // Fetch the existing brand details
-    //     $brand = OurWorkDetails::where('our_work_id', $id)->first();
-
-    //     if (!$brand) {
-    //         toastr()->error(__('Brand details not found'), __('Error'));
-    //         return redirect()->back();
-    //     }
-    //     // Function to delete the old file
-    //     $deleteOldFile = function ($filePath) {
-    //         if ($filePath && Storage::exists('public/images/' . $filePath)) {
-    //             Storage::delete('public/images/' . $filePath);
-    //         }
-    //     };
-
-    //     $brand->title_color = $request->title_color;
-    //     $brand->title_back_color = $request->title_back_color;
-    //     $brand->details_color = $request->details_color;
-    //     $brand->details_back_color = $request->details_back_color;
-
-    //     if ($request->hasFile('main_image')) {
-    //         // Delete the old header logo
-    //         $deleteOldFile($brand->main_image);
-    //         // Store the new header logo
-    //         $headerLogoPath = $request->file('main_image')->store('images', 'public');
-    //         $brand->main_image = basename($headerLogoPath);
-    //     }
-
-    //     if ($request->hasFile('image_1')) {
-    //         // Delete the old header logo
-    //         $deleteOldFile($brand->image_1);
-    //         // Store the new header logo
-    //         $headerLogoPath = $request->file('image_1')->store('images', 'public');
-    //         $brand->image_1 = basename($headerLogoPath);
-    //     }
-
-    //     if ($request->hasFile('image_2')) {
-    //         // Delete the old header logo
-    //         $deleteOldFile($brand->image_2);
-    //         // Store the new header logo
-    //         $headerLogoPath = $request->file('image_2')->store('images', 'public');
-    //         $brand->image_2 = basename($headerLogoPath);
-    //     }
-    //     if ($request->hasFile('image_3')) {
-    //         // Delete the old header logo
-    //         $deleteOldFile($brand->image_3);
-    //         // Store the new header logo
-    //         $headerLogoPath = $request->file('image_3')->store('images', 'public');
-    //         $brand->image_3 = basename($headerLogoPath);
-    //     }
-
-    //     if ($request->hasFile('image_4')) {
-    //         // Delete the old header logo
-    //         $deleteOldFile($brand->image_4);
-    //         // Store the new header logo
-    //         $headerLogoPath = $request->file('image_4')->store('images', 'public');
-    //         $brand->image_4 = basename($headerLogoPath);
-    //     }
-    //     if ($request->hasFile('image_5')) {
-    //         // Delete the old header logo
-    //         $deleteOldFile($brand->image_5);
-    //         // Store the new header logo
-    //         $headerLogoPath = $request->file('image_5')->store('images', 'public');
-    //         $brand->image_5 = basename($headerLogoPath);
-    //     }
-
-    //     if ($request->hasFile('image_6')) {
-    //         // Delete the old header logo
-    //         $deleteOldFile($brand->image_6);
-    //         // Store the new header logo
-    //         $headerLogoPath = $request->file('image_6')->store('images', 'public');
-    //         $brand->image_6 = basename($headerLogoPath);
-    //     }
-    //     // Save the changes
-    //     $brand->save();
-
-    //     toastr()->success('Brand Details Updated Successfully');
-    //     return redirect()->route('brand.index');
-    //     try {
-    //     } catch (\Illuminate\Validation\ValidationException $e) {
-    //         // Validation exception handling
-    //         foreach ($e->errors() as $fieldErrors) {
-    //             foreach ($fieldErrors as $message) {
-    //                 toastr()->error($message);
-    //             }
-    //         }
-    //         return redirect()->back()->withInput();
-    //     } catch (\Throwable $th) {
-    //         toastr()->error('An error occurred. Please try again.');
-    //         return redirect()->back()->withErrors(['error' => $th->getMessage()])->withInput();
-    //     }
-    // }
-
+    // Apis Part For Our Works
     public function getBrandApi(Request $request)
     {
         $currentPage = $request->currentPage;
         $perPage = 12;
-         $brand = OurWork::paginate($perPage, ['*'], 'page', $currentPage);
-         $allCategoryIds = $brand->pluck('category_id')
+        $brand = OurWork::paginate($perPage, ['*'], 'page', $currentPage);
+        $allCategoryIds = $brand->pluck('category_id')
             ->map(fn($categoryIds) => json_decode($categoryIds, true))  // Decode each category_id
             ->filter()
             ->flatten()
             ->unique()
             ->toArray();
-         $categories = Category::whereIn('id', $allCategoryIds)->get()->keyBy('id');
-         $brandData = $brand->map(function ($item) use ($categories) {
-             $categoryIds = json_decode($item->category_id, true);
+        $categories = Category::whereIn('id', $allCategoryIds)->get()->keyBy('id');
+        $brandData = $brand->map(function ($item) use ($categories) {
+            $categoryIds = json_decode($item->category_id, true);
             $item->categories = $categories->only($categoryIds)->values();
             unset($item->category_id);
             return $item;
@@ -364,49 +233,102 @@ class OurWorkController extends Controller
 
     public function getBrandDetailsApi(Request $request)
     {
-    // Fetch the brand details and its related OurWork
-    $brandDetails = OurWorkDetails::with('ourWork')->where('our_work_id', $request->brand_id)->first();
+        // Fetch the brand details and its related OurWork
+        $brandDetails = OurWorkDetails::with('ourWork')->where('our_work_id', $request->brand_id)->first();
 
-    if ($brandDetails) {
-        // Extract and decode the category_id from the related OurWork
-        $categoryIds = json_decode($brandDetails->ourWork->category_id, true);
+        if ($brandDetails) {
+            // Extract and decode the category_id from the related OurWork
+            $categoryIds = json_decode($brandDetails->ourWork->category_id, true);
 
-        // If there are category IDs, fetch the categories
-        if (!empty($categoryIds)) {
-            $categories = Category::whereIn('id', $categoryIds)->get();
+            // If there are category IDs, fetch the categories
+            if (!empty($categoryIds)) {
+                $categories = Category::whereIn('id', $categoryIds)->get();
+            } else {
+                $categories = collect([]);  // Return an empty collection if no category IDs
+            }
+
+            // Attach the categories to the ourWork relation
+            $brandDetails->ourWork->categories = $categories;
+
+            // Optionally, remove category_id and some images from the output
+            unset(
+                $brandDetails->ourWork->category_id,
+                $brandDetails->main_image,
+                $brandDetails->image_1,
+                $brandDetails->image_2,
+                $brandDetails->image_3,
+                $brandDetails->image_4,
+                $brandDetails->image_5,
+                $brandDetails->image_6
+            );
+
+            // Return the brand details with attached categories
+            return response()->json([
+                'data' => $brandDetails,
+                'message' => 'found brand details with categories',
+            ]);
         } else {
-            $categories = collect([]);  // Return an empty collection if no category IDs
+            return response()->json([
+                'message' => 'brand not found',
+            ], 404);
         }
-
-        // Attach the categories to the ourWork relation
-        $brandDetails->ourWork->categories = $categories;
-
-        // Optionally, remove category_id from the output
-        unset($brandDetails->ourWork->category_id);
-
-        // Return the brand details with attached categories
-        return response()->json([
-            'data' => $brandDetails,
-            'message' => 'found brand details with categories',
-        ]);
-    } else {
-        return response()->json([
-            'message' => 'brand not found',
-        ], 404);
     }
-}
 
-    public function getBrandImagesApi($id){
-    $brandImage = BrandImage::where('our_work_id',$id)->get();
-    if(!$brandImage){
-         return response()->json([
-            'message' => 'Not Found Data'
-        ]);
-    }
-    return response()->json([
+    public function getBrandImagesApi($id)
+    {
+        $brandImage = BrandImage::where('our_work_id', $id)->get();
+        if (!$brandImage) {
+            return response()->json([
+                'message' => 'Not Found Data'
+            ]);
+        }
+        return response()->json([
             'data' => $brandImage,
             'message' => 'Images Featched Successfully'
         ]);
-}
+    }
 
+    // Get Our Work For Services Page
+    public function getBrandApiForService(Request $request)
+    {
+        $perPage = 12;
+        $category = $request->service; // ID of the category to filter by
+        $currentPage = $request->currentPage;
+
+        // Fetch brands where the category_id JSON includes the requested service ID
+        $brand = OurWork::whereJsonContains('category_id', $category)
+            ->paginate($perPage, ['*'], 'page', $currentPage);
+
+        // Extract all unique category IDs from the filtered brands
+        $allCategoryIds = $brand->pluck('category_id')
+            ->map(fn($categoryIds) => json_decode($categoryIds, true))  // Decode each category_id
+            ->filter()
+            ->flatten()
+            ->unique()
+            ->toArray();
+
+        // Fetch categories by these unique IDs
+        $categories = Category::whereIn('id', $allCategoryIds)->get()->keyBy('id');
+
+        // Map through the brands and attach their associated categories
+        $brandData = $brand->map(function ($item) use ($categories) {
+            $categoryIds = json_decode($item->category_id, true);
+            $item->categories = $categories->only($categoryIds)->values(); // Attach only relevant categories
+            unset($item->category_id); // Remove original category_id field
+            return $item;
+        });
+
+        // Return the response with pagination
+        return response()->json([
+            'data' => $brandData,
+            'pagination' => [
+                'count' => $brand->count(),
+                'current_page' => $brand->currentPage(),
+                'per_page' => $brand->perPage(),
+                'total' => $brand->total(),
+                'total_pages' => $brand->lastPage(),
+            ],
+            'message' => 'found data'
+        ]);
+    }
 }
