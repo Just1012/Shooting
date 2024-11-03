@@ -51,17 +51,18 @@
                                         <div class="col-md-4">
                                             <div class="mb-3">
                                                 <h6 class="fw-semibold">Categories</h6>
-                                                <select class="js-example-basic-multiple" name="category_id">
-                                                    <option selected disabled value="">-- Select Category --</option>
-                                                    @foreach ($categories as $val)
-                                                        <option value="{{ $val->id }}"
-                                                            {{ $id->category_id == $val->id ? 'selected' : '' }}>
-                                                            {{ $val->{App::getLocale() == 'ar' ? 'name_ar' : 'name_en'} }}
-                                                        </option>
-                                                    @endforeach
+                                                <select class="js-example-basic-multiple" multiple name="categories_id[]">
+                                                    <optgroup label="Select Category">
+                                                        @foreach ($categories as $val)
+                                                            <option value="{{ $val->id }}"
+                                                                @if (is_array(json_decode($id->categories_id)) && in_array($val->id, json_decode($id->categories_id))) selected @endif>
+                                                                {{ $val->{App::getLocale() == 'ar' ? 'name_ar' : 'name_en'} }}
+                                                            </option>
+                                                        @endforeach
+                                                    </optgroup>
                                                 </select>
                                             </div>
-                                        </div><!-- end col -->
+                                        </div><!--end col-->
 
                                         <!-- Body Ar -->
                                         <div class="col-md-12">
@@ -110,7 +111,8 @@
                                             <div class="mb-3">
                                                 <label for="meta_title" class="form-label">Meta Title</label>
                                                 <input type="text" class="form-control" name="meta_title"
-                                                    placeholder="Meta Title" id="meta_title" value="{{ $id->meta_title }}">
+                                                    placeholder="Meta Title" id="meta_title"
+                                                    value="{{ $id->meta_title }}">
                                             </div>
                                             <div class="mb-3">
                                                 <label for="meta_description" class="form-label">Meta Description</label>
@@ -119,9 +121,9 @@
                                             </div>
                                             <div class="mb-3">
                                                 <label for="keywords" class="form-label">Keywords</label>
-                                                <input class="form-control" name="keywords[]" id="choices-text-remove-button" data-choices
-                                                data-choices-removeItem type="text"
-                                                    placeholder="Add keywords"
+                                                <input class="form-control" name="keywords[]"
+                                                    id="choices-text-remove-button" data-choices data-choices-removeItem
+                                                    type="text" placeholder="Add keywords"
                                                     value="{{ is_array(json_decode($id->keywords)) ? implode(',', json_decode($id->keywords)) : '' }}" />
                                             </div>
                                         </div><!-- end col -->

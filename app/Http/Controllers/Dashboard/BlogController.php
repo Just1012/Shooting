@@ -47,10 +47,11 @@ class BlogController extends Controller
                 'meta_title' => 'nullable|string',
                 'meta_description' => 'nullable|string',
                 'keywords.*' => 'string',  // Each keyword should be a string
-                'category_id' => 'required|exists:categories,id',
+                'categories_id' => 'required|array',
             ]);
 
             $requestData = $request->all();
+            $requestData['categories_id'] = json_encode($request->input('categories_id'));
 
             // Handle thumbnail image upload
             if ($request->hasFile('thumbnail')) {
@@ -105,6 +106,7 @@ class BlogController extends Controller
 
             // Get all request data
             $requestData = $request->all();
+            $requestData['categories_id'] = json_encode($request->input('categories_id'));
             // Handle keywords as JSON
             if ($request->has('keywords')) {
                 $requestData['keywords'] = json_encode($request->input('keywords'));
@@ -220,11 +222,52 @@ class BlogController extends Controller
 
     public function getSingleBlogApi($id)
     {
-        $singleBlog = Blog::where('id', $id)
-            ->first();
-        return response()->json([
-            'data' => $singleBlog,
-            'message' => 'found data'
-        ]);
+        // Fetch the brand details and its related OurWork
+        $singleBlog = Blog::where('id', $id)->first();
+
+        if ($singleBlog) {
+            // Extract and decode the category_id from the related OurWork
+            $categoryIds = json_decode($singleBlog->categories_id, true);
+
+            // If there are category IDs, fetch the categories
+            if (!empty($categoryIds)) {
+                $categories = Category::whereIn('id', $categoryIds)->get();
+            } else {
+                $categories = collect([]);  // Return an empty collection if no category IDs
+            }
+
+            // Attach the categories to the ourWork relation
+            $singleBlog->categories = $categories;
+
+            // Fetch the latest 3 blogs, excluding the current one
+            $latestBlogs = Blog::where('id', '!=', $id)->latest()->take(3)->get();
+            // Hide the unwanted fields from each blog in the latestBlogs collection
+            $latestBlogs->each(function ($blog) {
+                $blog->makeHidden([
+                    'body_ar',
+                    'body_en',
+                    'thumbnail',
+                    'main_image',
+                    'status',
+                    'categories_id',
+                    'meta_title',
+                    'meta_description',
+                    'keywords',
+                    'meta_image',
+                    'created_at',
+                    'updated_at'
+                ]);
+            });
+            // Return the brand details with attached categories
+            return response()->json([
+                'data' => $singleBlog,
+                'latest_blogs' => $latestBlogs,
+                'message' => 'Found Blog Single with categories',
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'brand not found',
+            ], 404);
+        }
     }
 }

@@ -47,7 +47,7 @@
                                         <div class="col-md-4">
                                             <div class="mb-3">
                                                 <h6 class="fw-semibold">Categories</h6>
-                                                <select class="js-example-basic-multiple" name="category_id">
+                                                <select class="js-example-basic-multiple" multiple name="categories_id[]">
                                                     <optgroup label= "Select Category">
                                                         @foreach ($categories as $val)
                                                             <option value="{{ $val->id }}">

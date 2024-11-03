@@ -136,10 +136,10 @@
     <script>
         tinymce.init({
             selector: 'textarea#myeditorinstance',
-            plugins: 'code table lists textcolor link image', // Include the image plugin
-            toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | forecolor backcolor | link image | code | table', // Add image to the toolbar
-            toolbar_drawer: 'floating', // Optional: Change toolbar style to floating for better visibility
-            image_title: true, // Enable the title field in the image dialog
+            plugins: 'code table lists textcolor link image',
+            toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | forecolor backcolor | link image | code | table | callToActionBtn',
+            toolbar_drawer: 'floating',
+            image_title: true,
             automatic_uploads: true,
             file_picker_types: 'image',
             file_picker_callback: function(callback, value, meta) {
@@ -161,6 +161,55 @@
 
                     input.click();
                 }
+            },
+            setup: function(editor) {
+                editor.ui.registry.addButton('callToActionBtn', {
+                    text: 'Add Call to Action',
+                    icon: 'plus',
+                    onAction: function() {
+                        // Open a dialog to get the URL and text from the user
+                        editor.windowManager.open({
+                            title: 'Insert Call to Action',
+                            body: {
+                                type: 'panel',
+                                items: [{
+                                        type: 'input',
+                                        name: 'ctaText',
+                                        label: 'Button Text',
+                                        placeholder: 'Click Here'
+                                    },
+                                    {
+                                        type: 'input',
+                                        name: 'ctaUrl',
+                                        label: 'Button Link',
+                                        placeholder: 'https://example.com'
+                                    }
+                                ]
+                            },
+                            buttons: [{
+                                    text: 'Insert',
+                                    type: 'submit',
+                                    primary: true
+                                },
+                                {
+                                    text: 'Cancel',
+                                    type: 'cancel'
+                                }
+                            ],
+                            onSubmit: function(api) {
+                                const data = api.getData();
+                                const ctaText = data.ctaText || 'Click Here';
+                                const ctaUrl = data.ctaUrl || '#';
+
+                                // Insert only the button with link
+                                editor.insertContent(
+                                    `<a href="${ctaUrl}" target="_blank" style="color:#fff; background-color:#007bff; padding:8px 12px; text-decoration:none; border-radius:4px; display:inline-block;">${ctaText}</a>`
+                                );
+                                api.close();
+                            }
+                        });
+                    }
+                });
             }
         });
     </script>
