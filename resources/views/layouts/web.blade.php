@@ -167,7 +167,7 @@
                     text: 'Add Call to Action',
                     icon: 'plus',
                     onAction: function() {
-                        // Open a dialog to get the URL and text from the user
+                        // Open a dialog to get the URL, text, and color from the user
                         editor.windowManager.open({
                             title: 'Insert Call to Action',
                             body: {
@@ -183,6 +183,12 @@
                                         name: 'ctaUrl',
                                         label: 'Button Link',
                                         placeholder: 'https://example.com'
+                                    },
+                                    {
+                                        type: 'colorinput', // Color picker for the button color
+                                        name: 'ctaColor',
+                                        label: 'Button Color',
+                                        value: '#ec3237' // Default color
                                     }
                                 ]
                             },
@@ -200,10 +206,11 @@
                                 const data = api.getData();
                                 const ctaText = data.ctaText || 'Click Here';
                                 const ctaUrl = data.ctaUrl || '#';
+                                const ctaColor = data.ctaColor || '#ec3237';
 
-                                // Insert only the button with link
+                                // Insert the CTA with user-provided text, URL, and color
                                 editor.insertContent(
-                                    `<a href="${ctaUrl}" target="_blank" style="color:#fff; background-color:#007bff; padding:8px 12px; text-decoration:none; border-radius:4px; display:inline-block;">${ctaText}</a>`
+                                    `<a href="${ctaUrl}" target="_blank" style="color:#fff; background-color:${ctaColor}; padding:8px 12px; text-decoration:none; border-radius:4px; display:inline-block;">${ctaText}</a>`
                                 );
                                 api.close();
                             }

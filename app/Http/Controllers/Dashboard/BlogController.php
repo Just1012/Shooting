@@ -206,7 +206,7 @@ class BlogController extends Controller
 
         $currentPage = $request->currentPage;
         $perPage = 6;
-        $blogs = Blog::paginate($perPage, ['*'], 'page', $currentPage);
+        $blogs = Blog::where('status', 1)->paginate($perPage, ['*'], 'page', $currentPage);
         return response()->json([
             'data' => $blogs->items(),
             'pagination' => [
@@ -223,7 +223,7 @@ class BlogController extends Controller
     public function getSingleBlogApi($id)
     {
         // Fetch the brand details and its related OurWork
-        $singleBlog = Blog::where('id', $id)->first();
+        $singleBlog = Blog::where('status', 1)->where('id', $id)->first();
 
         if ($singleBlog) {
             // Extract and decode the category_id from the related OurWork
@@ -240,7 +240,7 @@ class BlogController extends Controller
             $singleBlog->categories = $categories;
 
             // Fetch the latest 3 blogs, excluding the current one
-            $latestBlogs = Blog::where('id', '!=', $id)->latest()->take(3)->get();
+            $latestBlogs = Blog::where('status', 1)->where('id', '!=', $id)->latest()->take(3)->get();
             // Hide the unwanted fields from each blog in the latestBlogs collection
             $latestBlogs->each(function ($blog) {
                 $blog->makeHidden([
@@ -266,7 +266,7 @@ class BlogController extends Controller
             ]);
         } else {
             return response()->json([
-                'message' => 'brand not found',
+                'message' => 'Blog not found',
             ], 404);
         }
     }
