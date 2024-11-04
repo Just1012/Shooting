@@ -210,7 +210,7 @@
 
                                 // Insert the CTA with user-provided text, URL, and color
                                 editor.insertContent(
-                                    `<a href="${ctaUrl}" target="_blank" style="color:#fff; background-color:${ctaColor}; padding:8px 12px; text-decoration:none; border-radius:4px; display:inline-block;">${ctaText}</a>`
+                                    `<a href="${ctaUrl}" target="_blank" style="color:#fff; background-color:${ctaColor}; padding:8px 12px; text-decoration:none; border-radius:24px; display:inline-block;">${ctaText}</a>`
                                 );
                                 api.close();
                             }
