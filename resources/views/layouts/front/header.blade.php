@@ -80,51 +80,49 @@
  <nav>
      <div class="container">
          <div class="content d-flex justify-content-between align-items-center flex-wrap">
-             <div class="logo">@if (isSet($data))
-
-                 <img src="{{ asset('images/' . $data->header_logo) }}" alt="">
-             @endif
-             </div>
+             <a href="#" class="logo">
+                 <img src="{{ asset('front/images/Web Shooting-04.png') }}" alt="">
+             </a>
              <ul class="links">
-                 <a href="{{ route('home') }}">
+                 <a href="#">
                      <span>01</span>
                      الرئيسية
                  </a>
-                 <a href="{{ route('aboutUs') }}">
+                 <a href=".#">
                      <span>02</span>
                      من نحن
                  </a>
-                 <a href="{{ route('services') }}">
+                 <a href="#">
                      <span>03</span>
                      الخدمات
                  </a>
-                 <a href="{{ route('ourWorks') }}">
+                 <a href="#">
                      <span>04</span>
                      أعمالنا
                  </a>
-                 <a href="{{ route('ourCustomer') }}">
+                 <a href="#">
                      <span>05</span>
                      عملائنا
                  </a>
-                 <a href="{{ route('industry') }}">
+                 <a href="#">
                      <span>06</span>
                      الصناعة
                  </a>
-                 <a href="{{ route('blog') }}">
+                 <a href="#">
                      <span>07</span>
                      المدونات
                  </a>
-                 <a href="{{ route('hiringAndTraining') }}">
+                 <a href="#">
                      <span>08</span>
                      التدريب و التوظيف
                  </a>
                  <div class="Btn-phone">
-                     <a href="{{ route('register') }}" class="btn">تواصل معانا</a>
+                     <a href="#" class="btn">تواصل معانا</a>
                  </div>
                  <!-- <a href="" class="Btn"></a> -->
              </ul>
              <div class="Btn">
-                 <a href="{{ route('register') }}" class="btn m-0">تواصل معانا</a>
+                 <a href="#" class="btn m-0">تواصل معانا</a>
              </div>
              <!-- <div class="menu">
           <div>

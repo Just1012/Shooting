@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use App\Models\Blog;
 use App\Models\Category;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
+use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 
@@ -17,9 +19,39 @@ class BlogController extends Controller
         return view('dashboard.blog.index');
     }
 
-    public function getBlog()
+    public function getBlog(Request $request)
     {
-        $data = Blog::all();
+        $status = $request->input('status');
+        $blogsQuery = Blog::query()->where('is_deleted', 0);
+
+        if (!is_null($status) && $status !== '') {
+            $blogsQuery->where('status', $status);
+        }
+
+        $data = $blogsQuery->get()->map(function ($blog) {
+            // Decode the categories JSON array to an array of IDs, or use an empty array if it's null or invalid
+            $categoryIds = is_string($blog->categories_id) ? json_decode($blog->categories_id, true) : [];
+
+            // Check if $categoryIds is a valid array, otherwise set it to an empty array
+            if (!is_array($categoryIds)) {
+                $categoryIds = [];
+            }
+
+            // Determine the field name based on the locale
+            $nameField = App::getLocale() == 'ar' ? 'name_ar' : 'name_en';
+            // Fetch the category names based on the IDs, if any
+            $categoryNames = Category::whereIn('id', $categoryIds)->pluck($nameField)->toArray();
+
+            return [
+                'id' => $blog->id,
+                'thumbnail' => asset('images/' . $blog->thumbnail),
+                'title' => App::getLocale() == 'ar' ? $blog->title_ar : $blog->title_en,
+                'status' => $blog->status,
+                'created_at' => $blog->created_at->format('Y-m-d'),
+                'categories' => $categoryNames, // Include category names instead of IDs
+            ];
+        });
+
         return response()->json([
             'data' => $data,
             'message' => 'found data'
@@ -104,6 +136,8 @@ class BlogController extends Controller
             // Find the blog by its ID or throw a 404 error
             $blog = Blog::findOrFail($id);
 
+
+
             // Get all request data
             $requestData = $request->all();
             $requestData['categories_id'] = json_encode($request->input('categories_id'));
@@ -142,6 +176,9 @@ class BlogController extends Controller
                 $requestData['meta_image'] = $mainImageName;
             }
 
+            if ($request->has('created_at')) {
+                $requestData['created_at'] = Carbon::createFromFormat('Y-m-d H:i', $request->input('created_at'));
+            }
             $blog->update($requestData);
             toastr()->success(__('Blog Updated Successfully'), __('Success'));
             return redirect()->route('blog.index');
@@ -175,6 +212,99 @@ class BlogController extends Controller
         }
     }
 
+    public function blogTest($id)
+    {
+        $blog = Blog::where('id', $id)->first();
+        if ($blog) {
+            return view('dashboard.blog.blogTest', compact('blog'));
+        } else {
+            // Error message
+            toastr()->error(__('Blog Not Found'), __('Error'));
+            return redirect()->back()->withInput();
+        }
+    }
+
+    // Soft Delete Functions
+    public function softDeleteBlog($id)
+    {
+        try {
+            $blog = Blog::findOrFail($id);
+            $blog->is_deleted = 1;
+            $blog->save();
+
+            toastr()->success(__('Blog Moved to trash Successfully'), __('Success'));
+            return redirect()->back();
+        } catch (ModelNotFoundException $exception) {
+            toastr()->error(__('Blog Not Found'), __('Error'));
+            return redirect()->back();
+        } catch (\Throwable $th) {
+            toastr()->error(__('Something went wrong. Please try again.'), __('Error'));
+            return redirect()->back();
+        }
+    }
+
+    public function blogTrash()
+    {
+        return view('dashboard.blog.blogTrash');
+    }
+
+    public function getBlogForTrash(Request $request)
+    {
+        $status = $request->input('status');
+        $blogsQuery = Blog::query()->where('is_deleted', 1);
+
+        if (!is_null($status) && $status !== '') {
+            $blogsQuery->where('status', $status);
+        }
+
+        $data = $blogsQuery->get()->map(function ($blog) {
+            // Decode the categories JSON array to an array of IDs, or use an empty array if it's null or invalid
+            $categoryIds = is_string($blog->categories_id) ? json_decode($blog->categories_id, true) : [];
+
+            // Check if $categoryIds is a valid array, otherwise set it to an empty array
+            if (!is_array($categoryIds)) {
+                $categoryIds = [];
+            }
+
+            // Determine the field name based on the locale
+            $nameField = App::getLocale() == 'ar' ? 'name_ar' : 'name_en';
+            // Fetch the category names based on the IDs, if any
+            $categoryNames = Category::whereIn('id', $categoryIds)->pluck($nameField)->toArray();
+
+            return [
+                'id' => $blog->id,
+                'thumbnail' => asset('images/' . $blog->thumbnail),
+                'title' => App::getLocale() == 'ar' ? $blog->title_ar : $blog->title_en,
+                'status' => $blog->status,
+                'created_at' => $blog->created_at->format('Y-m-d'),
+                'categories' => $categoryNames, // Include category names instead of IDs
+            ];
+        });
+
+        return response()->json([
+            'data' => $data,
+            'message' => 'found data'
+        ]);
+    }
+
+    public function restoreBlog($id)
+    {
+        try {
+            $blog = Blog::findOrFail($id);
+            $blog->is_deleted = 0;
+            $blog->save();
+
+            toastr()->success(__('Blog Restored Successfully'), __('Success'));
+            return redirect()->back();
+        } catch (ModelNotFoundException $exception) {
+            toastr()->error(__('Blog Not Found'), __('Error'));
+            return redirect()->back();
+        } catch (\Throwable $th) {
+            toastr()->error(__('Something went wrong. Please try again.'), __('Error'));
+            return redirect()->back();
+        }
+    }
+
     public function deleteBlog($id)
     {
         try {
@@ -201,6 +331,8 @@ class BlogController extends Controller
         }
     }
 
+
+    // Blog Api
     public function getBlogApi(Request $request)
     {
 

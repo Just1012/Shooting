@@ -144,6 +144,15 @@ Route::group(
             Route::post('/updateBlog/{id}', [BlogController::class, 'updateBlog'])->name('blog.update');
             Route::get('/updateStatus/{blog}', [BlogController::class, 'updateStatus'])->name('blog.status');
             Route::get('/deleteBlog/{id}', [BlogController::class, 'deleteBlog'])->name('blog.delete');
+
+            Route::get('/blogTest/{id}', [BlogController::class, 'blogTest'])->name('blog.blogTest');
+
+            // Soft Delete Route
+            Route::get('/softDeleteBlog/{id}', [BlogController::class, 'softDeleteBlog'])->name('blog.softDeleteBlog');
+            Route::get('/blogTrash', [BlogController::class, 'blogTrash'])->name('blog.blogTrash');
+            Route::get('/getBlogForTrash', [BlogController::class, 'getBlogForTrash'])->name('blog.getBlogForTrash');
+            Route::get('/restoreBlog/{id}', [BlogController::class, 'restoreBlog'])->name('blog.restoreBlog');
+
         });
 
         /////route User

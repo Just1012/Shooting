@@ -30,7 +30,11 @@ Route::group(
     ],
     function () {
         // Home Page
-        Route::get('/', [HomeController::class, 'home'])->name('home');
+        // Route::get('/', [HomeController::class, 'home'])->name('home');
+
+        Route::get('/', function () {
+            return view('dashboard');
+        })->middleware(['auth', 'verified'])->name('dashboard');
 
         // Home Category Filter
         Route::get('/filter-brands', [HomeController::class, 'getAllBrands']);

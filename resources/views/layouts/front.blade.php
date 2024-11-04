@@ -23,7 +23,7 @@
 <body>
     @include('layouts.front.header')
     @yield('content')
-    @include('layouts.front.footer')
+    {{-- @include('layouts.front.footer') --}}
 </body>
 <script src="{{ asset('front/js/bootstrap.bundle.js') }}"></script>
 <script src="{{ asset('front/js/main.js') }}"></script>

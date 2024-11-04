@@ -4,6 +4,9 @@
     <link rel="stylesheet" href="{{ asset('web/mycss/mycss.css') }}">
     <link rel="stylesheet" type="text/css" href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 @endpush
 @section('title')
     Edit Blog
@@ -30,7 +33,7 @@
                                     @csrf
                                     <div class="row">
                                         <!-- Title Ar -->
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label for="title_ar" class="form-label">Title Ar</label>
                                                 <input type="text" class="form-control" name="title_ar"
@@ -39,7 +42,7 @@
                                         </div><!-- end col -->
 
                                         <!-- Title En -->
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label for="title_en" class="form-label">Title En</label>
                                                 <input type="text" class="form-control" name="title_en"
@@ -47,8 +50,17 @@
                                             </div>
                                         </div><!-- end col -->
 
+                                        <!-- Created At -->
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="created_at" class="form-label">Created At</label>
+                                                <input type="text" class="form-control" name="created_at" id="created_at"
+                                                    placeholder="Select date and time">
+                                            </div>
+                                        </div><!-- end col -->
+
                                         <!-- Categories -->
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
                                             <div class="mb-3">
                                                 <h6 class="fw-semibold">Categories</h6>
                                                 <select class="js-example-basic-multiple" multiple name="categories_id[]">
@@ -161,6 +173,16 @@
     <script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            flatpickr("#created_at", {
+                enableTime: true,
+                dateFormat: "Y-m-d H:i",
+                defaultDate: "{{ $id->created_at ? $id->created_at->format('Y-m-d H:i') : '' }}",
+            });
+        });
+    </script>
 
     <script>
         $('.dropify').dropify({

@@ -21,14 +21,14 @@
                             <div class="row">
                                 <h5 class="card-title mb-0 col-sm-8 col-md-10">Blog List</h5>
                                 <div class="hstack flex-wrap gap-2 mb-lg-0 mb-0 col-sm-2 col-md-1">
-                                    <a href="{{ route('blog.addBlog') }}" class="btn btn-outline-secondary btn-load">
+                                    {{-- <a href="{{ route('blog.addBlog') }}" class="btn btn-outline-secondary btn-load">
                                         <span class="d-flex align-items-center">
                                             <span class="spinner-grow flex-shrink-0" role="status">
                                                 <span class="visually-hidden">+</span>
                                             </span>
                                             <span class="flex-grow-1 ms-2">+</span>
                                         </span>
-                                    </a>
+                                    </a> --}}
                                 </div>
                                 <button type="submit"
                                     class="btn btn-outline-primary mb-0 col-sm-2 col-md-1 btn-icon waves-effect waves-light"
@@ -40,14 +40,10 @@
 
                         <!-- Filter Links -->
                         <div class="card-header d-flex gap-3">
-                            <a href="javascript:void(0);" onclick="filterByStatus('')"
-                                class="btn btn-primary">{{ App::getLocale() == 'ar' ? 'الكل' : 'All' }}</a>
-                            <a href="javascript:void(0);" onclick="filterByStatus(1)"
-                                class="btn btn-success">{{ App::getLocale() == 'ar' ? 'المنشورة' : 'Published' }}</a>
-                            <a href="javascript:void(0);" onclick="filterByStatus(0)"
-                                class="btn btn-secondary">{{ App::getLocale() == 'ar' ? 'المسودة' : 'Draft' }}</a>
-                            <a href="{{ route('blog.blogTrash') }}"
-                                class="btn btn-danger">{{ App::getLocale() == 'ar' ? 'السلة' : 'Trash' }}</a>
+
+                            <a href="{{ route('blog.index') }}"
+                                class="btn btn-primary">{{ App::getLocale() == 'ar' ? 'العودة' : 'Back' }}</a>
+
                         </div>
 
                         <div class="card-body" style="overflow:auto">
@@ -60,7 +56,6 @@
                                         <th>Thumbnail</th>
                                         <th>Title</th>
                                         <th>Categories</th>
-                                        <th>Status</th>
                                         <th>Action</th>
                                         <th>Created At</th>
                                     </tr>
@@ -85,7 +80,7 @@
             }
             table = $('#alternative-pagination').DataTable({
                 ajax: {
-                    url: '{{ route('blog.dataTable') }}',
+                    url: '{{ route('blog.getBlogForTrash') }}',
                     data: function(d) {
                         d.status = status; // Pass the selected status for filtering
                     },
@@ -117,29 +112,19 @@
                             }
                         }
                     },
-                    {
-                        'data': 'status',
-                        render: function(data, type, row) {
-                            const checked = data === 1 ? 'checked' : '';
-                            return `<label class="switch">
-                                        <input type="checkbox" class="status-toggle" data-id="${row.id}" ${checked}>
-                                        <span class="slider round"></span>
-                                    </label>`;
-                        }
-                    },
+
                     {
                         'data': null,
                         render: function(data) {
-                            const testUrl = '{{ route('blog.blogTest', ':id') }}'.replace(':id', data.id);
-                            const editUrl = '{{ route('blog.edit', ':id') }}'.replace(':id', data.id);
-                            const deleteUrl = '{{ route('blog.softDeleteBlog', ':id') }}'.replace(':id',
-                                data.id);
-                            return `<a href="${testUrl}" class="mx-1"><i class="bx bx-book-reader btn btn-primary"></i></a>
-                                    <a href="${editUrl}" class="mx-1"><i class="bx bxs-edit btn btn-warning"></i></a>
+                            const editUrl = '{{ route('blog.restoreBlog', ':id') }}'.replace(':id', data
+                            .id);
+                            const deleteUrl = '{{ route('blog.delete', ':id') }}'.replace(':id', data.id);
+                            return `<a href="${editUrl}" class="mx-1"><i class="bx bx-revision btn btn-primary"></i></a>
                                     <a href="javascript:void(0);" class="mx-1" onclick="confirmDeletion('${deleteUrl}')">
-                                        <i class="bx bx-trash btn btn-success"></i></a>`;
+                                        <i class="bx bx-trash btn btn-danger"></i></a>`;
                         }
                     },
+
                     {
                         'data': 'created_at'
                     }
@@ -151,32 +136,17 @@
             initDataTable(status);
         }
 
-        $(document).on('click', '.status-toggle', function() {
-            const blogId = $(this).data('id');
-            const url = '{{ route('blog.status', ':id') }}'.replace(':id', blogId);
 
-            $.ajax({
-                type: 'GET',
-                url: url,
-                success: function(response) {
-                    eval(response.toastrScript);
-                    table.ajax.reload();
-                },
-                error: function() {
-                    toastr.error('Failed to update status, please try again.');
-                }
-            });
-        });
 
         function confirmDeletion(deleteUrl) {
             Swal.fire({
                 title: 'Are you sure?',
-                text: "Move this blog to trash",
+                text: "You won't be able to revert this!",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, move it!'
+                confirmButtonText: 'Yes, Delete it!'
             }).then((result) => {
                 if (result.isConfirmed) {
                     window.location.href = deleteUrl;
