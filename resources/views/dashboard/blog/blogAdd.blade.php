@@ -87,6 +87,22 @@
                                             </div>
                                         </div><!--end col-->
 
+                                        <!-- Blog Headings (Repeatable) -->
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <h5 class="fw-semibold">Blog Headings</h5>
+                                                <div id="headingRepeater">
+                                                    <div class="d-flex mb-2 heading-group">
+                                                        <input type="text" name="headings[]" class="form-control"
+                                                            placeholder="Enter heading" required>
+                                                    </div>
+                                                </div>
+                                                <!-- Place the "+" button under the heading inputs -->
+                                                <button type="button" class="btn btn-success btn-sm mt-2"
+                                                    onclick="addHeading()">+ {{ App::getLocale() == 'ar' ? 'إضافة' : 'Add' }}</button>
+                                            </div>
+                                        </div>
+
                                         <!-- SEO Section -->
                                         <div class="col-md-12">
                                             <hr>
@@ -158,5 +174,25 @@
                 removeItemButton: true,
             });
         });
+    </script>
+    <script>
+        function addHeading() {
+            // Create a new input group div
+            const headingGroup = document.createElement('div');
+            headingGroup.classList.add('d-flex', 'mb-2', 'heading-group');
+            headingGroup.innerHTML = `
+                <input type="text" name="headings[]" class="form-control" placeholder="Enter heading" required>
+                <button type="button" class="btn btn-danger btn-sm ms-2" onclick="removeHeading(this)">-</button>
+            `;
+
+            // Append the new input group above the "+" button
+            const headingRepeater = document.getElementById('headingRepeater');
+            headingRepeater.appendChild(headingGroup);
+        }
+
+        function removeHeading(button) {
+            // Remove the clicked heading input group
+            button.parentElement.remove();
+        }
     </script>
 @endpush

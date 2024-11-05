@@ -80,10 +80,13 @@ class BlogController extends Controller
                 'meta_description' => 'nullable|string',
                 'keywords.*' => 'string',  // Each keyword should be a string
                 'categories_id' => 'required|array',
+                'headings.*' => 'string|max:255', // Each heading should be a string
             ]);
 
             $requestData = $request->all();
             $requestData['categories_id'] = json_encode($request->input('categories_id'));
+            $requestData['headings'] = json_encode($request->input('headings'));
+
 
             // Handle thumbnail image upload
             if ($request->hasFile('thumbnail')) {
@@ -135,12 +138,10 @@ class BlogController extends Controller
         try {
             // Find the blog by its ID or throw a 404 error
             $blog = Blog::findOrFail($id);
-
-
-
             // Get all request data
             $requestData = $request->all();
             $requestData['categories_id'] = json_encode($request->input('categories_id'));
+            $requestData['headings'] = json_encode($request->input('headings'));
             // Handle keywords as JSON
             if ($request->has('keywords')) {
                 $requestData['keywords'] = json_encode($request->input('keywords'));
