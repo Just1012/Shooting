@@ -16,7 +16,8 @@ class BlogController extends Controller
 {
     public function index()
     {
-        return view('dashboard.blog.index');
+        $category = Category::all();
+        return view('dashboard.blog.index', compact('category'));
     }
 
     public function getBlog(Request $request)
@@ -212,6 +213,54 @@ class BlogController extends Controller
             return response()->json(['toastrScript' => $toastrScript], 404);
         }
     }
+
+    public function filter(Request $request)
+    {
+        $category = $request->input('category');
+        $status = $request->input('status');
+        $query = Blog::query()->where('is_deleted', 0);
+
+        // Filter by category if provided
+        if (!empty($category)) {
+            $query->whereJsonContains('categories_id', $category);
+        }
+
+        // Filter by status if provided
+        if (!is_null($status) && $status !== '') {
+            $query->where('status', $status);
+        }
+
+        $filteredBlogs = $query->get()->map(function ($blog) {
+            // Decode the categories JSON array to an array of IDs
+            $categoryIds = is_string($blog->categories_id) ? json_decode($blog->categories_id, true) : [];
+
+            // Check if $categoryIds is a valid array, otherwise set it to an empty array
+            if (!is_array($categoryIds)) {
+                $categoryIds = [];
+            }
+
+            // Determine the field name based on the locale
+            $nameField = App::getLocale() == 'ar' ? 'name_ar' : 'name_en';
+
+            // Fetch the category names based on the IDs
+            $categoryNames = Category::whereIn('id', $categoryIds)->pluck($nameField)->toArray();
+
+            return [
+                'id' => $blog->id,
+                'thumbnail' => asset('images/' . $blog->thumbnail),
+                'title' => App::getLocale() == 'ar' ? $blog->title_ar : $blog->title_en,
+                'status' => $blog->status,
+                'created_at' => $blog->created_at->format('Y-m-d'),
+                'categories' => $categoryNames, // Include category names instead of IDs
+            ];
+        });
+
+        return response()->json([
+            'data' => $filteredBlogs,
+            'message' => 'Data found',
+        ]);
+    }
+
 
     public function blogTest($id)
     {

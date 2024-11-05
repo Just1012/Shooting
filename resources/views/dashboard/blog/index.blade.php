@@ -38,8 +38,10 @@
                             </div>
                         </div>
 
-                        <!-- Filter Links -->
-                        <div class="card-header d-flex gap-3">
+
+                        <!-- Filter Links and Form -->
+                        <div class="card-header d-flex gap-3 align-items-center">
+                            <!-- Filter Buttons -->
                             <a href="javascript:void(0);" onclick="filterByStatus('')"
                                 class="btn btn-primary">{{ App::getLocale() == 'ar' ? 'الكل' : 'All' }}</a>
                             <a href="javascript:void(0);" onclick="filterByStatus(1)"
@@ -48,6 +50,19 @@
                                 class="btn btn-secondary">{{ App::getLocale() == 'ar' ? 'المسودة' : 'Draft' }}</a>
                             <a href="{{ route('blog.blogTrash') }}"
                                 class="btn btn-danger">{{ App::getLocale() == 'ar' ? 'السلة' : 'Trash' }}</a>
+
+                            <form id="filterForm" action="{{ route('blog.filter') }}" method="GET"
+                                class="d-flex align-items-center ms-auto">
+                                <select class="form-control me-2" name="category" id="category1">
+                                    <option value="">{{ App::getLocale() == 'ar' ? '-- اختر الفئة --' : '-- Select Category --' }}</option>
+                                    @foreach ($category as $cate)
+                                        <option value="{{ $cate->id }}">{{ App::getLocale() == 'ar' ? $cate->name_ar : $cate->name_en }}</option>
+                                    @endforeach
+                                </select>
+                                <button type="submit" class="btn btn-primary">
+                                    {{ App::getLocale() == 'ar' ? 'فلتر' : 'Filter' }}
+                                </button>
+                            </form>
                         </div>
 
                         <div class="card-body" style="overflow:auto">
@@ -203,6 +218,31 @@
                 document.body.removeChild(fullScreenContainer);
             });
         }
+    </script>
+    <script>
+        // Form submission for filtering
+        $('#filterForm').submit(function(e) {
+            e.preventDefault(); // Prevent default form submission
+
+            // Retrieve the selected category value
+            var category = $('#category1').val();
+
+            // Send an AJAX request to fetch filtered data based on category
+            $.ajax({
+                url: '{{ route('blog.filter') }}',
+                method: 'GET',
+                data: {
+                    category: category, // Send the selected category value
+                },
+                success: function(response) {
+                    // Clear and reload DataTable with the filtered data
+                    table.clear().rows.add(response.data).draw();
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+        });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 @endpush
