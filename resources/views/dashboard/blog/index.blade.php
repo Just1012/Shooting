@@ -38,7 +38,6 @@
                             </div>
                         </div>
 
-
                         <!-- Filter Links and Form -->
                         <div class="card-header d-flex gap-3 align-items-center">
                             <!-- Filter Buttons -->
@@ -54,9 +53,12 @@
                             <form id="filterForm" action="{{ route('blog.filter') }}" method="GET"
                                 class="d-flex align-items-center ms-auto">
                                 <select class="form-control me-2" name="category" id="category1">
-                                    <option value="">{{ App::getLocale() == 'ar' ? '-- اختر الفئة --' : '-- Select Category --' }}</option>
+                                    <option value="">
+                                        {{ App::getLocale() == 'ar' ? '-- اختر الفئة --' : '-- Select Category --' }}
+                                    </option>
                                     @foreach ($category as $cate)
-                                        <option value="{{ $cate->id }}">{{ App::getLocale() == 'ar' ? $cate->name_ar : $cate->name_en }}</option>
+                                        <option value="{{ $cate->id }}">
+                                            {{ App::getLocale() == 'ar' ? $cate->name_ar : $cate->name_en }}</option>
                                     @endforeach
                                 </select>
                                 <button type="submit" class="btn btn-primary">

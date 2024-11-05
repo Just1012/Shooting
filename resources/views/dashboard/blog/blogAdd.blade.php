@@ -79,11 +79,32 @@
                                                     id="address1ControlTextarea">
                                             </div>
                                         </div><!--end col-->
-                                        <div class="col-md-9">
+                                        <div class="col-md-3">
+                                            <div class="mb-3">
+                                                <label for="thumbnail_title" class="form-label">Thumbnail Title &
+                                                    Alt</label>
+                                                <input type="text" class="form-control" name="thumbnail_title"
+                                                    placeholder="Thumbnail Title" id="thumbnail_title">
+                                                <textarea style="margin-top: 10px;" class="form-control" name="thumbnail_alt" placeholder="Thumbnail Alt"
+                                                    rows="4"></textarea>
+                                            </div>
+                                        </div><!--end col-->
+
+                                        <div class="col-md-3">
                                             <div class="mb-3">
                                                 <label for="main_image" class="form-label">Main Image</label>
                                                 <input type="file" class="form-control dropify" name="main_image"
                                                     id="main_image">
+                                            </div>
+                                        </div><!--end col-->
+                                        <div class="col-md-3">
+                                            <div class="mb-3">
+                                                <label for="main_image_title" class="form-label">Main Image Title &
+                                                    Alt</label>
+                                                <input type="text" class="form-control" name="main_image_title"
+                                                    placeholder="Main Image Title" id="main_image_title">
+                                                <textarea style="margin-top: 10px;" class="form-control" name="main_image_alt" placeholder="Main Image Alt"
+                                                    rows="4"></textarea>
                                             </div>
                                         </div><!--end col-->
 
@@ -94,12 +115,13 @@
                                                 <div id="headingRepeater">
                                                     <div class="d-flex mb-2 heading-group">
                                                         <input type="text" name="headings[]" class="form-control"
-                                                            placeholder="Enter heading" required>
+                                                            placeholder="Enter heading">
                                                     </div>
                                                 </div>
                                                 <!-- Place the "+" button under the heading inputs -->
                                                 <button type="button" class="btn btn-success btn-sm mt-2"
-                                                    onclick="addHeading()">+ {{ App::getLocale() == 'ar' ? 'إضافة' : 'Add' }}</button>
+                                                    onclick="addHeading()">+
+                                                    {{ App::getLocale() == 'ar' ? 'إضافة' : 'Add' }}</button>
                                             </div>
                                         </div>
 
@@ -129,11 +151,21 @@
                                             </div>
                                         </div><!--end col-->
 
-                                        <div class="col-md-6">
+                                        <div class="col-md-3">
                                             <div class="mb-3">
                                                 <label for="meta_image" class="form-label">Meta Image</label>
                                                 <input type="file" class="form-control dropify" name="meta_image"
                                                     id="meta_image">
+                                            </div>
+                                        </div><!--end col-->
+                                        <div class="col-md-3">
+                                            <div class="mb-3">
+                                                <label for="meta_image_title" class="form-label">Meta Image Title &
+                                                    Alt</label>
+                                                <input type="text" class="form-control" name="meta_image_title"
+                                                    placeholder="Meta Image Title" id="meta_image_title">
+                                                <textarea style="margin-top: 10px;" class="form-control" name="meta_image_alt" placeholder="Meta Image Alt"
+                                                    rows="4"></textarea>
                                             </div>
                                         </div><!--end col-->
 

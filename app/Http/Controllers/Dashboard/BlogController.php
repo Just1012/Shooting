@@ -68,21 +68,56 @@ class BlogController extends Controller
     public function storeBlog(Request $request)
     {
         try {
-            // Validate the request data
+            $messages = [
+                'title_ar.required' => 'The Arabic title is required.',
+                'title_en.required' => 'The English title is required.',
+                'body_ar.required' => 'The Arabic body is required.',
+                'body_en.required' => 'The English body is required.',
+                'thumbnail.required' => 'The thumbnail is required.',
+                'main_image.required' => 'The  main image is required.',
+                'thumbnail.mimes' => 'The thumbnail must be a file of type: jpg, jpeg, png.',
+                'thumbnail.max' => 'The thumbnail may not be greater than 10MB.',
+                'main_image.mimes' => 'The main image must be a file of type: jpg, jpeg, png.',
+                'main_image.max' => 'The main image may not be greater than 10MB.',
+                'meta_image.mimes' => 'The meta image must be a file of type: jpg, jpeg, png.',
+                'meta_image.max' => 'The meta image may not be greater than 10MB.',
+                'categories_id.required' => 'Please select at least one category.',
+                'keywords.*.string' => 'Each keyword must be a valid string.',
+                'headings.*.string' => 'Each heading must be a valid string.',
+                'headings.*.max' => 'Each heading may not exceed 255 characters.',
+
+                // Conditional messages for image titles and alt texts
+                'thumbnail_title.required_with' => 'The thumbnail title is required when uploading a thumbnail image.',
+                'thumbnail_alt.required_with' => 'The thumbnail alt text is required when uploading a thumbnail image.',
+                'main_image_title.required_with' => 'The main image title is required when uploading a main image.',
+                'main_image_alt.required_with' => 'The main image alt text is required when uploading a main image.',
+                'meta_image_title.required_with' => 'The meta image title is required when uploading a meta image.',
+                'meta_image_alt.required_with' => 'The meta image alt text is required when uploading a meta image.',
+            ];
+
+            // Validate the request data, including the new fields conditionally
             $request->validate([
                 'title_ar' => 'required|string|max:255',
                 'title_en' => 'required|string|max:255',
                 'body_ar' => 'required|string',
                 'body_en' => 'required|string',
-                'thumbnail' => 'nullable|file|mimes:jpg,jpeg,png|max:10240', // Optional image with validation
-                'main_image' => 'nullable|file|mimes:jpg,jpeg,png|max:10240', // Optional image with validation
-                'meta_image' => 'nullable|file|mimes:jpg,jpeg,png|max:10240', // Optional image with validation
+                'thumbnail' => 'required|file|mimes:jpg,jpeg,png|max:10240',
+                'main_image' => 'required|file|mimes:jpg,jpeg,png|max:10240',
+                'meta_image' => 'nullable|file|mimes:jpg,jpeg,png|max:10240',
                 'meta_title' => 'nullable|string',
                 'meta_description' => 'nullable|string',
-                'keywords.*' => 'string',  // Each keyword should be a string
+                'keywords.*' => 'nullable|string',
                 'categories_id' => 'required|array',
-                'headings.*' => 'string|max:255', // Each heading should be a string
-            ]);
+                'headings.*' => 'nullable|string|max:255',
+
+                // Conditional validations
+                'thumbnail_title' => 'nullable|string|max:255',
+                'thumbnail_alt' => 'nullable|string',
+                'main_image_title' => 'nullable|string',
+                'main_image_alt' => 'nullable|string',
+                'meta_image_title' => 'nullable|string|max:255',
+                'meta_image_alt' => 'nullable|string',
+            ], $messages);
 
             $requestData = $request->all();
             $requestData['categories_id'] = json_encode($request->input('categories_id'));
@@ -121,6 +156,14 @@ class BlogController extends Controller
             // Success message
             toastr()->success(__('Blog Added Successfully'), __('Success'));
             return redirect()->route('blog.index');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Collect validation errors for toastr
+            foreach ($e->errors() as $errorMessages) {
+                foreach ($errorMessages as $errorMessage) {
+                    toastr()->error($errorMessage);
+                }
+            }
+            return redirect()->back()->withInput();
         } catch (\Throwable $th) {
 
             toastr()->error(__('Try Again'));
@@ -260,7 +303,6 @@ class BlogController extends Controller
             'message' => 'Data found',
         ]);
     }
-
 
     public function blogTest($id)
     {
