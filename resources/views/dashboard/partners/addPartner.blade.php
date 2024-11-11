@@ -35,7 +35,8 @@
                                                 <h6 class="fw-semibold">Brand</h6>
                                                 <select class="js-example-basic-multiple" id="brand_id" name="brand_id">
                                                     <optgroup label="Brand Name">
-                                                        <option value="" disabled selected>-- Select Brand Name --</option>
+                                                        <option value="" disabled selected>-- Select Brand Name --
+                                                        </option>
                                                         @foreach ($brands as $val)
                                                             <option value="{{ $val->id }}">
                                                                 {{ $val->{App::getLocale() == 'ar' ? 'brand_name_ar' : 'brand_name_en'} }}
@@ -44,39 +45,41 @@
                                                     </optgroup>
                                                 </select>
                                             </div>
+                                        </div><!--end col-->
                                             <div class="col-md-6">
                                                 <div class="mb-3">
                                                     <h6 class="fw-semibold">Section</h6>
                                                     <select class="js-example-basic-multiple" id="section" name="section">
                                                         <optgroup label="Section Name">
-                                                            <option value="" disabled selected>-- Select Brand Name --</option>
+                                                            <option value="" disabled selected>-- Select Brand Name --
+                                                            </option>
                                                             @foreach ($section as $sectionId)
-                                                                <option value="{{ $brandId }}">
-                                                                    {{ __('Section') . ' ' . $brandId }}
+                                                                <option value="{{ $sectionId }}">
+                                                                    {{ __('Section') . ' ' . $sectionId }}
                                                                 </option>
                                                             @endforeach
                                                         </optgroup>
                                                     </select>
                                                 </div>
                                             </div><!--end col-->
-                                        </div><!--end col-->
+
+                                    </div>
 
 
+                                    <div class="col-md-12">
+                                        <div class="mb-3">
+                                            <label for="address1ControlTextarea" class="form-label">Partner
+                                                Image</label>
+                                            <input type="file" class="form-control dropify" name="image"
+                                                id="address1ControlTextarea">
+                                        </div>
+                                    </div><!--end col-->
 
-                                        <div class="col-md-12">
-                                            <div class="mb-3">
-                                                <label for="address1ControlTextarea" class="form-label">Partner
-                                                    Image</label>
-                                                <input type="file" class="form-control dropify" name="image"
-                                                    id="address1ControlTextarea">
-                                            </div>
-                                        </div><!--end col-->
-
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <button type="submit" class="btn btn-primary">Save</button>
-                                            </div>
-                                        </div><!--end col-->
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <button type="submit" class="btn btn-primary">Save</button>
+                                        </div>
+                                    </div><!--end col-->
                                 </form>
                             </div>
                         </div><!-- end card -->
