@@ -140,6 +140,24 @@
                 </li>
                 <!-- end Category Page -->
 
+                {{-- Start Industry Page --}}
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="#industry" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="industry">
+                        <i class='bx bxs-factory'></i> <span
+                            data-key="t-dashboards">{{ __('messages.industry') }}</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="industry">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="{{ route('industry.index') }}" class="nav-link"
+                                    data-key="t-one-page">{{ __('messages.industryList') }}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <!-- end Industry Page -->
+
                 {{-- Start Brand Page --}}
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#brand" data-bs-toggle="collapse" role="button"

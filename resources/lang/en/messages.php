@@ -12,6 +12,8 @@ return [
     'userHiringPage' => 'User Hiring Page',
     'category' => 'Services',
     'categoryList' => 'Services List',
+    'industry' => 'Industry',
+    'industryList' => 'Industry List',
     'brand' => 'Brand',
     'brandList' => 'Brand List',
     'partners' => 'Partners',

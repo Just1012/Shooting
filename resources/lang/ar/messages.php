@@ -12,6 +12,8 @@ return [
     'userHiringPage' => 'صفحة التوظيف',
     'category' => 'الخدمات',
     'categoryList' => 'قائمة الخدمات',
+    'industry' => 'الصناعة',
+    'industryList' => 'قائمة الصناعة',
     'brand' => 'العلامات التجارية',
     'brandList' => 'قائمة العلامات التجارية',
     'partners' => 'الشركاء',

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Dashboard\HomeSliderController;
 use App\Http\Controllers\Dashboard\IndustryController;
+use App\Http\Controllers\Dashboard\IndustryServiceController;
 use App\Http\Controllers\Dashboard\JourneySectionImageController;
 use App\Http\Controllers\Dashboard\OurWorkController;
 use App\Http\Controllers\Dashboard\PartnerController;
@@ -66,6 +67,16 @@ Route::group(
             Route::get('/editCategory/{id}', [CategoryController::class, 'editCategory'])->name('Category.edit');
             Route::post('/updateCategory/{id}', [CategoryController::class, 'updateCategory'])->name('Category.update');
             Route::get('/updateStatus/{category}', [CategoryController::class, 'updateStatus'])->name('category.status');
+        });
+
+        Route::prefix('industry')->group(function () {
+            Route::get('/index', [IndustryServiceController::class, 'index'])->name('industry.index');
+            Route::get('/dataTable', [IndustryServiceController::class, 'getIndustryService'])->name('industry.dataTable');
+            Route::get('/addIndustryService', [IndustryServiceController::class, 'addIndustryService'])->name('industry.addIndustry');
+            Route::post('/storeIndustryService', [IndustryServiceController::class, 'storeIndustryService'])->name('industry.store');
+            Route::get('/editIndustryService/{id}', [IndustryServiceController::class, 'editIndustryService'])->name('industry.edit');
+            Route::post('/updateIndustryService/{id}', [IndustryServiceController::class, 'updateIndustryService'])->name('industry.update');
+            Route::get('/updateStatus/{industry}', [IndustryServiceController::class, 'updateStatus'])->name('industry.status');
         });
 
         Route::prefix('partner')->group(function () {
