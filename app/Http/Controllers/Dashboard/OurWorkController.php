@@ -377,8 +377,11 @@ class OurWorkController extends Controller
         $category = $request->input('service');
         $currentPage = $request->input('currentPage', 1); // Default to page 1 if not provided
 
-        // Initialize query
-        $query = OurWork::query();
+        if ($category == 8) {
+            $query = OurWork::query()->where('type', 1);
+        } else {
+            $query = OurWork::query();
+        }
 
         // Apply category filter if a specific category ID is provided
         if (!empty($category)) {
@@ -411,16 +414,43 @@ class OurWorkController extends Controller
             ->unique()
             ->toArray();
 
+        // Extract all unique industry IDs from the filtered brands
+        $allIndustryIds = $brand->pluck('industry_id')
+            ->map(fn($industryIds) => json_decode($industryIds, true))  // Decode each category_id
+            ->filter()
+            ->flatten()
+            ->unique()
+            ->toArray();
+
         // Fetch categories by these unique IDs
         $categories = Category::whereIn('id', $allCategoryIds)->get()->keyBy('id');
 
-        // Map through the brands and attach their associated categories
-        $brandData = $brand->map(function ($item) use ($categories) {
-            $categoryIds = json_decode($item->category_id, true);
-            $item->categories = $categories->only($categoryIds)->values(); // Attach only relevant categories
-            unset($item->category_id); // Remove original category_id field
-            return $item;
-        });
+        // Fetch industries by these unique IDs
+        $industries = IndustryService::whereIn('id', $allIndustryIds)->get()->keyBy('id');
+
+
+        if ($category == 8) {
+            // Map through the brands and attach their associated categories
+            $brandData = $brand->map(function ($item) use ($industries) {
+                $industryIds = json_decode($item->industry_id, true);
+                $item->categories = $industries->only($industryIds)->values(); // Attach only relevant industries
+                unset(
+                    $item->industry_id,
+                    $item->category_id
+                ); // Remove original category_id field
+                return $item;
+            });
+        } else {
+            // Map through the brands and attach their associated categories
+            $brandData = $brand->map(function ($item) use ($categories) {
+                $categoryIds = json_decode($item->category_id, true);
+                $item->categories = $categories->only($categoryIds)->values(); // Attach only relevant categories
+                unset($item->category_id); // Remove original category_id field
+                return $item;
+            });
+        }
+
+
 
         // Return the response with populated data and pagination
         return response()->json([
