@@ -7,6 +7,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\BrandImage;
+use App\Models\IndustryService;
 use App\Models\OurWorkDetails;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
@@ -33,7 +34,8 @@ class OurWorkController extends Controller
     public function addBrand()
     {
         $category = Category::all();
-        return view('dashboard.brands.brandAdd', compact('category'));
+        $industry = IndustryService::all();
+        return view('dashboard.brands.brandAdd', compact('category', 'industry'));
     }
 
     public function storeBrand(Request $request)
@@ -43,22 +45,63 @@ class OurWorkController extends Controller
                 'brand_name_ar' => 'required|string|max:255',
                 'brand_name_en' => 'required|string|max:255',
                 'category_id' => 'required|array',
-                'year' => 'required|digits:4', // Assuming the year is a string like "2024"
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate image
+                'industry_id' => [
+                    'required_if:category_id,8', // Ensures industry_id is required if category_id contains 8
+                    'array', // Ensures industry_id is an array
+                    function ($attribute, $value, $fail) use ($request) {
+                        if (is_array($request->category_id) && in_array(8, $request->category_id) && empty($value)) {
+                            $fail(__('The industry field is required when category includes 8.'));
+                        }
+                    },
+                ],
+                'year' => 'required|digits:4',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
+                'type' => 'required|in:0,1', // Type must be either 0 or 1
+            ], [
+                // Custom error messages
+                'brand_name_ar.required' => 'The Arabic brand name is required.',
+                'brand_name_ar.string' => 'The Arabic brand name must be a string.',
+                'brand_name_ar.max' => 'The Arabic brand name must not exceed 255 characters.',
+
+                'brand_name_en.required' => 'The English brand name is required.',
+                'brand_name_en.string' => 'The English brand name must be a string.',
+                'brand_name_en.max' => 'The English brand name must not exceed 255 characters.',
+
+                'category_id.required' => 'The category field is required.',
+                'category_id.array' => 'The category field must be an array.',
+
+                'industry_id.required_if' => 'The industry field is required when category includes 8.',
+                'industry_id.array' => 'The industry field must be an array.',
+
+                'year.required' => 'The year field is required.',
+                'year.digits' => 'The year must be a 4-digit number.',
+
+                'image.image' => 'The image must be a valid image file.',
+                'image.mimes' => 'The image must be of type: jpeg, png, jpg, or gif.',
+                'image.max' => 'The image size may not be greater than 10MB.',
+
+                'type.required' => 'The type field is required.',
+                'type.in' => 'The type must be either 0 or 1.',
             ]);
+
+            // Process and encode input data
             $requestData = $request->all();
             $requestData['category_id'] = json_encode($request->input('category_id'));
+            $requestData['industry_id'] = json_encode($request->input('industry_id'));
+
+            // Handle image upload
             if ($request->hasFile('image')) {
                 $imageName = time() . '.' . $request->image->getClientOriginalExtension();
                 $request->image->move(public_path('images'), $imageName);
                 $requestData['image'] = $imageName;
             }
+
+            // Create brand record
             $brand = OurWork::create($requestData);
 
             toastr()->success(__('Brand Added Successfully'), __('Success'));
             return redirect()->route('brand.index');
         } catch (\Throwable $th) {
-
             toastr()->error(__('Try Again'));
             return redirect()->back()->withInput();
         }
@@ -67,28 +110,68 @@ class OurWorkController extends Controller
     public function editBrand(OurWork $id)
     {
         $category = Category::all();
-        return view('dashboard.brands.brandEdit', compact('id', 'category'));
+        $industry = IndustryService::all();
+        return view('dashboard.brands.brandEdit', compact('id', 'category', 'industry'));
     }
 
     public function updateBrand(Request $request, $id)
     {
         try {
-            // Validate the request data
+            // Validate the request data with custom rules
             $request->validate([
                 'brand_name_ar' => 'required|string|max:255',
                 'brand_name_en' => 'required|string|max:255',
                 'category_id' => 'required|array',
+                'industry_id' => [
+                    'required_if:category_id,8', // Ensures industry_id is required if category_id contains 8
+                    'array', // Ensures industry_id is an array
+                    function ($attribute, $value, $fail) use ($request) {
+                        if (is_array($request->category_id) && in_array(8, $request->category_id) && empty($value)) {
+                            $fail(__('The industry field is required when category includes 8.'));
+                        }
+                    },
+                ],
                 'year' => 'required|digits:4',
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate image
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240', // Validate image with max 2MB size
+                'type' => 'required|in:0,1', // Type must be either 0 or 1
+            ], [
+                // Custom error messages
+                'brand_name_ar.required' => 'The Arabic brand name is required.',
+                'brand_name_ar.string' => 'The Arabic brand name must be a string.',
+                'brand_name_ar.max' => 'The Arabic brand name must not exceed 255 characters.',
+
+                'brand_name_en.required' => 'The English brand name is required.',
+                'brand_name_en.string' => 'The English brand name must be a string.',
+                'brand_name_en.max' => 'The English brand name must not exceed 255 characters.',
+
+                'category_id.required' => 'The category field is required.',
+                'category_id.array' => 'The category field must be an array.',
+
+                'industry_id.required_if' => 'The industry field is required when category includes 8.',
+                'industry_id.array' => 'The industry field must be an array.',
+
+                'year.required' => 'The year field is required.',
+                'year.digits' => 'The year must be a 4-digit number.',
+
+                'image.image' => 'The image must be a valid image file.',
+                'image.mimes' => 'The image must be of type: jpeg, png, jpg, or gif.',
+                'image.max' => 'The image size may not be greater than 10MB.',
+
+                'type.required' => 'The type field is required.',
+                'type.in' => 'The type must be either 0 or 1.',
             ]);
 
-            $brand = OurWork::findOrFail($id); // Find the brand to update
+            // Find the brand record to update
+            $brand = OurWork::findOrFail($id);
 
+            // Prepare data for updating
             $requestData = $request->all();
             $requestData['category_id'] = json_encode($request->input('category_id'));
+            $requestData['industry_id'] = json_encode($request->input('industry_id'));
 
+            // Handle image upload and deletion of old image
             if ($request->hasFile('image')) {
-                // Delete the old image
+                // Delete the old image if it exists
                 if ($brand->image && file_exists(public_path('images/' . $brand->image))) {
                     unlink(public_path('images/' . $brand->image));
                 }
@@ -107,7 +190,7 @@ class OurWorkController extends Controller
             return redirect()->route('brand.index');
         } catch (\Throwable $th) {
             toastr()->error(__('Try Again'));
-            return redirect()->route('brand.index');
+            return redirect()->back()->withInput();
         }
     }
 

@@ -27,9 +27,9 @@
                                 <form action="{{ route('brand.update', $id->id) }}" method="POST"
                                     enctype="multipart/form-data">
                                     @csrf
-                              
+
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="mb-3">
                                                 <label for="brandNameAr" class="form-label">Brand Name Ar</label>
                                                 <input type="text" class="form-control" name="brand_name_ar"
@@ -38,7 +38,7 @@
                                             </div>
                                         </div><!--end col-->
 
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="mb-3">
                                                 <label for="brandNameEn" class="form-label">Brand Name En</label>
                                                 <input type="text" class="form-control" name="brand_name_en"
@@ -46,7 +46,35 @@
                                                     value="{{ $id->brand_name_en }}">
                                             </div>
                                         </div><!--end col-->
-                                        <div class="col-md-6">
+
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label for="yearInput" class="form-label">Year</label>
+                                                <input type="text" class="form-control" name="year" placeholder="Year"
+                                                    id="yearInput" value="{{ $id->year }}">
+                                            </div>
+                                        </div><!--end col-->
+
+
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <h6 class="fw-semibold">Type</h6>
+                                                <select class="js-example-basic-multiple"  name="type">
+                                                    <optgroup label="Select Type">
+                                                        <option value="0"
+                                                            @if ($id->type == 0) selected @endif>
+                                                            {{ App::getLocale() == 'ar' ? 'خدمة' : 'Service' }}
+                                                        </option>
+                                                        <option value="1"
+                                                            @if ($id->type == 1) selected @endif>
+                                                            {{ App::getLocale() == 'ar' ? 'صناعة' : 'Industry' }}
+                                                        </option>
+                                                    </optgroup>
+                                                </select>
+                                            </div>
+                                        </div><!--end col-->
+
+                                        <div class="col-md-4">
                                             <div class="mb-3">
                                                 <h6 class="fw-semibold">Categories</h6>
                                                 <select class="js-example-basic-multiple" multiple name="category_id[]">
@@ -61,13 +89,23 @@
                                                 </select>
                                             </div>
                                         </div><!--end col-->
-                                        <div class="col-md-6">
+
+                                        <div class="col-md-4">
                                             <div class="mb-3">
-                                                <label for="yearInput" class="form-label">Year</label>
-                                                <input type="text" class="form-control" name="year" placeholder="Year"
-                                                    id="yearInput" value="{{ $id->year }}">
+                                                <h6 class="fw-semibold">Industry</h6>
+                                                <select class="js-example-basic-multiple" multiple name="industry_id[]">
+                                                    <optgroup label="Select Industry">
+                                                        @foreach ($industry as $val)
+                                                            <option value="{{ $val->id }}"
+                                                                @if (in_array($val->id, json_decode($id->industry_id) ?? [])) selected @endif>
+                                                                {{ $val->{App::getLocale() == 'ar' ? 'name_ar' : 'name_en'} }}
+                                                            </option>
+                                                        @endforeach
+                                                    </optgroup>
+                                                </select>
                                             </div>
                                         </div><!--end col-->
+
                                         <div class="col-md-12">
                                             <div class="mb-3">
                                                 <label for="imageInput" class="form-label">Thumbnail</label>

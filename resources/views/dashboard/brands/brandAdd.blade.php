@@ -28,7 +28,7 @@
                                     @csrf
 
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="mb-3">
                                                 <label for="firstNameinput" class="form-label">Brand Name Ar</label>
                                                 <input type="text" class="form-control" name="brand_name_ar"
@@ -36,14 +36,38 @@
                                             </div>
                                         </div><!--end col-->
 
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="mb-3">
                                                 <label for="firstNameinput" class="form-label">Brand Name En</label>
                                                 <input type="text" class="form-control" name="brand_name_en"
                                                     placeholder="Brand Name En" id="firstNameinput">
                                             </div>
                                         </div><!--end col-->
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label for="firstNameinput" class="form-label">Year</label>
+                                                <input type="text" class="form-control" name="year" placeholder="Year"
+                                                    id="firstNameinput">
+                                            </div>
+                                        </div><!--end col-->
+
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <h6 class="fw-semibold">Type</h6>
+                                                <select class="js-example-basic-multiple" name="type">
+                                                    <optgroup label= "Select Type">
+                                                        <option value="0">
+                                                            {{ App::getLocale() == 'ar' ? 'خدمة' : 'Service' }}
+                                                        </option>
+                                                        <option value="1">
+                                                            {{ App::getLocale() == 'ar' ? 'صناعة' : 'Industry' }}
+                                                        </option>
+                                                    </optgroup>
+                                                </select>
+                                            </div>
+                                        </div><!--end col-->
+
+                                        <div class="col-md-4">
                                             <div class="mb-3">
                                                 <h6 class="fw-semibold">Categories</h6>
                                                 <select class="js-example-basic-multiple" multiple name="category_id[]">
@@ -57,13 +81,22 @@
                                                 </select>
                                             </div>
                                         </div><!--end col-->
-                                        <div class="col-md-6">
+
+                                        <div class="col-md-4">
                                             <div class="mb-3">
-                                                <label for="firstNameinput" class="form-label">Year</label>
-                                                <input type="text" class="form-control" name="year" placeholder="Year"
-                                                    id="firstNameinput">
+                                                <h6 class="fw-semibold">Industry</h6>
+                                                <select class="js-example-basic-multiple" multiple name="industry_id[]">
+                                                    <optgroup label= "Select Industry">
+                                                        @foreach ($industry as $val)
+                                                            <option value="{{ $val->id }}">
+                                                                {{ $val->{App::getLocale() == 'ar' ? 'name_ar' : 'name_en'} }}
+                                                            </option>
+                                                        @endforeach
+                                                    </optgroup>
+                                                </select>
                                             </div>
                                         </div><!--end col-->
+
                                         <div class="col-md-12">
                                             <div class="mb-3">
                                                 <label for="address1ControlTextarea" class="form-label">Thumbnail</label>
