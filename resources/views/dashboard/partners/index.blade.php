@@ -89,6 +89,7 @@
                                     <tr>
                                         <th>#SSL</th>
                                         <th>Image</th>
+                                        <th>Section</th>
                                         <th>status</th>
                                         <th>Action</th>
                                         <th>Created At</th>
@@ -122,6 +123,14 @@
                     render: function(data, row) {
                         return `<img src="{{ asset('images') }}/${data.image}"
                                 class="small-image" style="height: 50px; width: 50px" onclick="openFullScreen(this)">`;
+                    }
+                },
+
+                {
+                    'data': 'section',
+                    render: function(data) {
+                        // Return "Not selected yet" if section data is missing or empty
+                        return data ? data : 'Not selected yet';
                     }
                 },
 

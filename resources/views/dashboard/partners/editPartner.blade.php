@@ -30,32 +30,66 @@
                                     @csrf
 
                                     <div class="row">
-
-                                        <div class="col-md-12">
-                                            <div class="mb-3">
-                                                <label for="image" class="form-label">Partner Image</label>
-
-                                                <input type="file" class="form-control dropify" name="image"
-                                                    id="image"
-                                                    data-default-file="{{ asset('images/' . $partner->image) }}">
-                                            </div>
-                                        </div><!--end col-->
-
-
                                         <div class="col-md-6">
                                             <div class="mb-3">
-                                                <button type="submit" class="btn btn-primary">Save</button>
+                                                <h6 class="fw-semibold">Brand</h6>
+                                                <select class="js-example-basic-multiple" id="brand_id" name="brand_id">
+                                                    <optgroup label="Brand Name">
+                                                        <option value="" disabled selected>-- Select Brand Name --
+                                                        </option>
+                                                        @foreach ($brands as $val)
+                                                            <option value="{{ $val->id }}"
+                                                                @if ($val->id == $partner->brand_id) selected @endif>
+                                                                {{ $val->{App::getLocale() == 'ar' ? 'brand_name_ar' : 'brand_name_en'} }}
+                                                            </option>
+                                                        @endforeach
+                                                    </optgroup>
+                                                </select>
                                             </div>
                                         </div><!--end col-->
-                                    </div><!--end row-->
-                                </form>
-                            </div>
-                        </div><!-- end card -->
-                    </div>
-                    <!-- end col -->
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <h6 class="fw-semibold">Section</h6>
+                                                <select class="js-example-basic-multiple" id="section" name="section">
+                                                    <optgroup label="Section Name">
+                                                        <option value="" disabled selected>-- Select Section  --</option>
+                                                        @foreach ($section as $sectionId)
+                                                            <option value="{{ $sectionId }}"
+                                                                @if ($sectionId == $partner->section) selected @endif>
+                                                                {{ __('Section') . ' ' . $sectionId }}
+                                                            </option>
+                                                        @endforeach
+                                                    </optgroup>
+                                                </select>
+                                            </div>
+                                        </div><!--end col-->
+                                    </div>
+
+
+                                    <div class="col-md-12">
+                                        <div class="mb-3">
+                                            <label for="image" class="form-label">Partner Image</label>
+
+                                            <input type="file" class="form-control dropify" name="image" id="image"
+                                                data-default-file="{{ asset('images/' . $partner->image) }}">
+                                        </div>
+                                    </div><!--end col-->
+
+
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <button type="submit" class="btn btn-primary">Save</button>
+                                        </div>
+                                    </div><!--end col-->
+                            </div><!--end row-->
+                            </form>
+                        </div>
+                    </div><!-- end card -->
                 </div>
+                <!-- end col -->
             </div>
         </div>
+    </div>
     </div>
 @endsection
 @push('js')

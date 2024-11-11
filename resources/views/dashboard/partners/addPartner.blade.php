@@ -30,9 +30,43 @@
 
                                     <div class="row">
 
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <h6 class="fw-semibold">Brand</h6>
+                                                <select class="js-example-basic-multiple" id="brand_id" name="brand_id">
+                                                    <optgroup label="Brand Name">
+                                                        <option value="" disabled selected>-- Select Brand Name --</option>
+                                                        @foreach ($brands as $val)
+                                                            <option value="{{ $val->id }}">
+                                                                {{ $val->{App::getLocale() == 'ar' ? 'brand_name_ar' : 'brand_name_en'} }}
+                                                            </option>
+                                                        @endforeach
+                                                    </optgroup>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <h6 class="fw-semibold">Section</h6>
+                                                    <select class="js-example-basic-multiple" id="section" name="section">
+                                                        <optgroup label="Section Name">
+                                                            <option value="" disabled selected>-- Select Brand Name --</option>
+                                                            @foreach ($section as $sectionId)
+                                                                <option value="{{ $brandId }}">
+                                                                    {{ __('Section') . ' ' . $brandId }}
+                                                                </option>
+                                                            @endforeach
+                                                        </optgroup>
+                                                    </select>
+                                                </div>
+                                            </div><!--end col-->
+                                        </div><!--end col-->
+
+
+
                                         <div class="col-md-12">
                                             <div class="mb-3">
-                                                <label for="address1ControlTextarea" class="form-label">Partner Image</label>
+                                                <label for="address1ControlTextarea" class="form-label">Partner
+                                                    Image</label>
                                                 <input type="file" class="form-control dropify" name="image"
                                                     id="address1ControlTextarea">
                                             </div>
@@ -58,14 +92,14 @@
     <script src="{{ asset('web/assets/js/pages/select2.init.js') }}"></script>
     <script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
 
-        <script>
-            $('.dropify').dropify({
-                messages: {
-                    'default': 'Drag and drop a file here or click',
-                    'replace': 'Drag and drop or click to replace',
-                    'remove': 'Remove',
-                    'error': 'Ooops, something wrong happended.'
-                }
-            });
+    <script>
+        $('.dropify').dropify({
+            messages: {
+                'default': 'Drag and drop a file here or click',
+                'replace': 'Drag and drop or click to replace',
+                'remove': 'Remove',
+                'error': 'Ooops, something wrong happended.'
+            }
+        });
     </script>
 @endpush

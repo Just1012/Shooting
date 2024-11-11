@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Http\Controllers\Controller;
+use App\Models\OurWork;
 use App\Models\Partner;
+use App\Enums\BrandEnum;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 
@@ -26,7 +28,9 @@ class PartnerController extends Controller
 
     public function addPartner()
     {
-        return view('dashboard.partners.addPartner');
+        $section = BrandEnum::getValues(); // Get enum values
+        $brands = OurWork::all();
+        return view('dashboard.partners.addPartner',compact('brands','section'));
     }
 
     public function storePartner(Request $request)
@@ -35,11 +39,16 @@ class PartnerController extends Controller
             // Validation
             $request->validate([
                 'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'brand_id' => 'required|exists:our_works,id',
+                'section' => 'required|in:1,2,3,4', // Validation for specific enum values
             ], [
-                'image.required' => 'The Arabic image field is required.',
-                'image.image' => 'The Arabic image must be an image file.',
-                'image.mimes' => 'The Arabic image must be a file of type: jpeg, png, jpg, gif, svg.',
-                'image.max' => 'The Arabic image may not be greater than 2048 kilobytes.',
+                'image.required' => 'The image field is required.',
+                'image.image' => 'The uploaded file must be an image.',
+                'image.mimes' => 'The image must be a type of: jpeg, png, jpg, gif, or svg.',
+                'image.max' => 'The image size must not exceed 2048 kilobytes.',
+                'brand_id.required' => 'The brand ID field is required.',
+                'brand_id.exists' => 'The selected brand ID does not exist.',
+                'section.in' => 'The selected brand is invalid.', // Custom message for invalid enum value
             ]);
 
             $requestData = $request->all();
@@ -73,8 +82,10 @@ class PartnerController extends Controller
 
     public function editPartner($id)
     {
+        $section = BrandEnum::getValues(); // Get enum values
+        $brands = OurWork::all();
         $partner = Partner::findOrFail($id);
-        return view('dashboard.partners.editPartner', compact('partner'));
+        return view('dashboard.partners.editPartner', compact('partner','brands','section'));
     }
 
     public function updatePartner(Request $request, $id)
@@ -83,11 +94,14 @@ class PartnerController extends Controller
             // Validation
             $request->validate([
                 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-
+                'brand_id' => 'nullable|exists:our_works,id',
+                'section' => 'nullable|in:1,2,3,4', // Validation for specific enum values
             ], [
-                'image.image' => 'The Arabic image must be an image file.',
-                'image.mimes' => 'The Arabic image must be a file of type: jpeg, png, jpg, gif, svg.',
-                'image.max' => 'The Arabic image may not be greater than 2048 kilobytes.',
+                'image.image' => 'The image must be a valid image file.',
+                'image.mimes' => 'The image must be of type: jpeg, png, jpg, gif, or svg.',
+                'image.max' => 'The image may not be larger than 2048 kilobytes.',
+                'brand_id.exists' => 'The selected brand does not exist.',
+                'section.in' => 'The selected brand is invalid.', // Custom message for invalid enum value
             ]);
 
             $partner = Partner::findOrFail($id);
@@ -165,10 +179,10 @@ class PartnerController extends Controller
             return response()->json(['toastrScript' => $toastrScript], 404);
         }
     }
-    
+
     public function getPartnerApi()
     {
-        $partner = Partner::where('status',1)->get();
+        $partner = Partner::where('status', 1)->get();
         return response()->json([
             'data' => $partner,
             'message' => 'Partener fetched  successfully'
