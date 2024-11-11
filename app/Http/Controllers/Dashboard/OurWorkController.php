@@ -291,12 +291,34 @@ class OurWorkController extends Controller
     public function getBrandApiForService(Request $request)
     {
         $perPage = 12;
-        $category = $request->service; // ID of the category to filter by
-        $currentPage = $request->currentPage;
+        $category = $request->input('service');
+        $currentPage = $request->input('currentPage', 1); // Default to page 1 if not provided
 
-        // Fetch brands where the category_id JSON includes the requested service ID
-        $brand = OurWork::whereJsonContains('category_id', $category)
-            ->paginate($perPage, ['*'], 'page', $currentPage);
+        // Initialize query
+        $query = OurWork::query();
+
+        // Apply category filter if a specific category ID is provided
+        if (!empty($category)) {
+            $query->whereJsonContains('category_id', $category);
+        }
+
+        // Paginate the results
+        $brand = $query->paginate($perPage, ['*'], 'page', $currentPage);
+
+        // Check if there are no results and format response accordingly
+        if ($brand->isEmpty()) {
+            return response()->json([
+                'data' => [],
+                'pagination' => [
+                    'count' => 0,
+                    'current_page' => $currentPage,
+                    'per_page' => $perPage,
+                    'total' => 0,
+                    'total_pages' => 1,
+                ],
+                'message' => 'No data found'
+            ]);
+        }
 
         // Extract all unique category IDs from the filtered brands
         $allCategoryIds = $brand->pluck('category_id')
@@ -317,7 +339,7 @@ class OurWorkController extends Controller
             return $item;
         });
 
-        // Return the response with pagination
+        // Return the response with populated data and pagination
         return response()->json([
             'data' => $brandData,
             'pagination' => [
@@ -327,7 +349,7 @@ class OurWorkController extends Controller
                 'total' => $brand->total(),
                 'total_pages' => $brand->lastPage(),
             ],
-            'message' => 'found data'
+            'message' => 'Data found'
         ]);
     }
 }

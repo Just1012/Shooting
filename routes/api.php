@@ -37,6 +37,8 @@ Route::get('/getBrandDetails',[OurWorkController::class,'getBrandDetailsApi']);
 // Blog Api
 Route::get('/getBlog',[BlogController::class,'getBlogApi']);
 Route::get('/getSingleBlog/{id}',[BlogController::class,'getSingleBlogApi']);
+Route::get('/blogFilterApi', [BlogController::class, 'blogFilterApi']);
+
 
 // Partner Api
 Route::get('/getPartnerApi',[PartnerController::class,'getPartnerApi']);

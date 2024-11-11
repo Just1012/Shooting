@@ -474,18 +474,55 @@ class BlogController extends Controller
                     'main_image',
                     'status',
                     'categories_id',
-                    'meta_title',
+
                     'meta_description',
                     'keywords',
                     'meta_image',
                     'created_at',
-                    'updated_at'
+                    'updated_at',
+                    'is_deleted',
+                    'headings',
+                    'thumbnail_title',
+                    'thumbnail_alt',
+                    'main_image_title',
+                    'main_image_alt',
+                    'meta_image_title',
+                    'meta_image_alt',
                 ]);
             });
+
+            // Process the 'headings' field to ensure it is an array of strings
+            $headings = json_decode($singleBlog->headings, true);
+            if ($headings && is_array($headings)) {
+                // Convert each item in the headings array to a string if it's not already
+                $headings = array_map('strval', $headings);
+            } else {
+                // If there are no headings or it's not an array, return an empty array
+                $headings = [];
+            }
+
+            // Attach the processed headings to the blog object
+            $singleBlog->headings = $headings;
+            // Fetch the previous blog (one with an id less than the current blog)
+            $previousBlogId = Blog::where('status', 1)
+                ->where('id', '<', $id)
+                ->orderBy('id', 'desc') // Get the highest ID less than current one
+                ->pluck('id') // Fetch only the 'id' field
+                ->first(); // Get the first result (if any)
+
+            // Fetch the next blog (one with an id greater than the current blog)
+            $nextBlogId = Blog::where('status', 1)
+                ->where('id', '>', $id)
+                ->orderBy('id', 'asc') // Get the lowest ID greater than current one
+                ->pluck('id') // Fetch only the 'id' field
+                ->first(); // Get the first result (if any)
+
             // Return the brand details with attached categories
             return response()->json([
                 'data' => $singleBlog,
                 'latest_blogs' => $latestBlogs,
+                'previous_blog' => $previousBlogId ? $previousBlogId : false, // If no previous blog, return false
+                'next_blog' => $nextBlogId ? $nextBlogId : false, // If no next blog, return false
                 'message' => 'Found Blog Single with categories',
             ]);
         } else {
@@ -493,5 +530,52 @@ class BlogController extends Controller
                 'message' => 'Blog not found',
             ], 404);
         }
+    }
+
+    public function blogFilterApi(Request $request)
+    {
+        $category = $request->input('category');
+        $status = $request->input('status');
+        $query = Blog::query()->where('is_deleted', 0);
+
+        // Filter by category if provided
+        if (!empty($category)) {
+            $query->whereJsonContains('categories_id', $category);
+        }
+
+        // Filter by status if provided
+        if (!is_null($status) && $status !== '') {
+            $query->where('status', $status);
+        }
+
+        $filteredBlogs = $query->get()->map(function ($blog) {
+            // Decode the categories JSON array to an array of IDs
+            $categoryIds = is_string($blog->categories_id) ? json_decode($blog->categories_id, true) : [];
+
+            // Check if $categoryIds is a valid array, otherwise set it to an empty array
+            if (!is_array($categoryIds)) {
+                $categoryIds = [];
+            }
+
+            // Determine the field name based on the locale
+            $nameField = App::getLocale() == 'ar' ? 'name_ar' : 'name_en';
+
+            // Fetch the category names based on the IDs
+            $categoryNames = Category::whereIn('id', $categoryIds)->pluck($nameField)->toArray();
+
+            return [
+                'id' => $blog->id,
+                'thumbnail' => asset('images/' . $blog->thumbnail),
+                'title' => App::getLocale() == 'ar' ? $blog->title_ar : $blog->title_en,
+                'status' => $blog->status,
+                'created_at' => $blog->created_at->format('Y-m-d'),
+                'categories' => $categoryNames, // Include category names instead of IDs
+            ];
+        });
+
+        return response()->json([
+            'data' => $filteredBlogs,
+            'message' => 'Data found',
+        ]);
     }
 }
