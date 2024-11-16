@@ -31,6 +31,7 @@ Route::get('/getBrand',[OurWorkController::class,'getBrandApi']);
 Route::get('/getBrandDetailsApi',[OurWorkController::class,'getBrandDetailsApi']);
 Route::get('/getBrandImagesApi/{id}',[OurWorkController::class,'getBrandImagesApi']);
 Route::get('/getBrandApiForService',[OurWorkController::class,'getBrandApiForService']);
+Route::get('/getBrandApiForIndustry',[OurWorkController::class,'getBrandApiForIndustry']);
 
 Route::get('/getBrandDetails',[OurWorkController::class,'getBrandDetailsApi']);
 

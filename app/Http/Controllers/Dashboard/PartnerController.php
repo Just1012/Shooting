@@ -30,7 +30,7 @@ class PartnerController extends Controller
     {
         $section = BrandEnum::getValues(); // Get enum values
         $brands = OurWork::all();
-        return view('dashboard.partners.addPartner',compact('brands','section'));
+        return view('dashboard.partners.addPartner', compact('brands', 'section'));
     }
 
     public function storePartner(Request $request)
@@ -85,7 +85,7 @@ class PartnerController extends Controller
         $section = BrandEnum::getValues(); // Get enum values
         $brands = OurWork::all();
         $partner = Partner::findOrFail($id);
-        return view('dashboard.partners.editPartner', compact('partner','brands','section'));
+        return view('dashboard.partners.editPartner', compact('partner', 'brands', 'section'));
     }
 
     public function updatePartner(Request $request, $id)
@@ -180,12 +180,20 @@ class PartnerController extends Controller
         }
     }
 
-    public function getPartnerApi()
+    public function getPartnerApi(Request $request)
     {
-        $partner = Partner::where('status', 1)->get();
+        $query = Partner::where('status', 1);
+
+        // Check if 'section' is sent in the request and apply filter
+        if ($request->has('section')) {
+            $query->where('section', $request->input('section'));
+        }
+
+        $partners = $query->get();
+
         return response()->json([
-            'data' => $partner,
-            'message' => 'Partener fetched  successfully'
+            'data' => $partners,
+            'message' => 'Partners fetched successfully'
         ]);
     }
 }

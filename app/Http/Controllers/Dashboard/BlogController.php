@@ -427,20 +427,113 @@ class BlogController extends Controller
     // Blog Api
     public function getBlogApi(Request $request)
     {
+        $category = $request->category; // Get category from the request
+        $currentPage = $request->currentPage ?: 1; // Default to page 1 if not provided
+        $perPage = 6; // Number of items per page
 
-        $currentPage = $request->currentPage;
-        $perPage = 6;
-        $blogs = Blog::where('status', 1)->paginate($perPage, ['*'], 'page', $currentPage);
+        // Base query to filter blogs by status
+        $query = Blog::where('status', 1);
+
+        // Apply category filter if a specific category ID is provided
+        if (!empty($category)) {
+            $query->whereJsonContains('categories_id', $category);
+        }
+
+        // Paginate the filtered results
+        $blogs = $query->paginate($perPage, ['*'], 'page', $currentPage);
+
+        // Return paginated data and additional pagination info
         return response()->json([
-            'data' => $blogs->items(),
+            'data' => $blogs->items(), // Current page data
             'pagination' => [
-                'count' => $blogs->count(),
+                'count' => $blogs->count(), // Items on the current page
                 'current_page' => $blogs->currentPage(),
                 'per_page' => $blogs->perPage(),
-                'total' => $blogs->total(),
-                'total_pages' => $blogs->lastPage(),
+                'total' => $blogs->total(), // Total items
+                'total_pages' => $blogs->lastPage(), // Total number of pages
             ],
-            'message' => 'found data'
+            'message' => 'Blogs fetched successfully'
+        ]);
+    }
+
+
+    public function getBrandApiForIndustry(Request $request)
+    {
+        $perPage = 12;
+        $category = $request->input('industry');
+        $currentPage = $request->input('currentPage', 1); // Default to page 1 if not provided
+
+        $query = OurWork::query()->where('type', 1);
+
+        // Apply category filter if a specific category ID is provided
+        if (!empty($category)) {
+            $query->whereJsonContains('category_id', $category);
+        }
+
+        // Paginate the results
+        $brand = $query->paginate($perPage, ['*'], 'page', $currentPage);
+
+        // Check if there are no results and format response accordingly
+        if ($brand->isEmpty()) {
+            return response()->json([
+                'data' => [],
+                'pagination' => [
+                    'count' => 0,
+                    'current_page' => $currentPage,
+                    'per_page' => $perPage,
+                    'total' => 0,
+                    'total_pages' => 1,
+                ],
+                'message' => 'No data found'
+            ]);
+        }
+
+        // Extract all unique category IDs from the filtered brands
+        $allCategoryIds = $brand->pluck('category_id')
+            ->map(fn($categoryIds) => json_decode($categoryIds, true))  // Decode each category_id
+            ->filter()
+            ->flatten()
+            ->unique()
+            ->toArray();
+
+        // Extract all unique industry IDs from the filtered brands
+        $allIndustryIds = $brand->pluck('industry_id')
+            ->map(fn($industryIds) => json_decode($industryIds, true))  // Decode each category_id
+            ->filter()
+            ->flatten()
+            ->unique()
+            ->toArray();
+
+        // Fetch categories by these unique IDs
+        $categories = Category::whereIn('id', $allCategoryIds)->get()->keyBy('id');
+
+        // Fetch industries by these unique IDs
+        $industries = IndustryService::whereIn('id', $allIndustryIds)->get()->keyBy('id');
+
+        // Map through the brands and attach their associated categories
+        $brandData = $brand->map(function ($item) use ($industries) {
+            $industryIds = json_decode($item->industry_id, true);
+            $item->categories = $industries->only($industryIds)->values(); // Attach only relevant industries
+            unset(
+                $item->industry_id,
+                $item->category_id
+            ); // Remove original category_id field
+            return $item;
+        });
+
+
+
+        // Return the response with populated data and pagination
+        return response()->json([
+            'data' => $brandData,
+            'pagination' => [
+                'count' => $brand->count(),
+                'current_page' => $brand->currentPage(),
+                'per_page' => $brand->perPage(),
+                'total' => $brand->total(),
+                'total_pages' => $brand->lastPage(),
+            ],
+            'message' => 'Data found'
         ]);
     }
 
