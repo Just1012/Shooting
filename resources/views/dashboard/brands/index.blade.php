@@ -5,8 +5,8 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
     <!--datatable responsive css-->
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" />
-
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <!-- Bootstrap Css -->
 @endpush
 @section('title')
@@ -128,16 +128,21 @@
                     render: function(data) {
                         var editUrl = '{{ route('brand.edit', ':id') }}';
                         var detailsUrl = '{{ route('brandDetails', ':id') }}';
+                        var deleteUrl = '{{ route('brand.delete', ':id') }}';
 
                         editUrl = editUrl.replace(':id', data.id);
                         detailsUrl = detailsUrl.replace(':id', data.id);
+                        deleteUrl = deleteUrl.replace(':id', data.id);
 
                         var editButton = '<a href="' + editUrl +
                             '"> <i class="bx bxs-edit btn btn-warning"></i></a>';
                         var detailsButton = '<a href="' + detailsUrl +
                             '"> <i class="bx bx-message-alt-detail btn btn-success"></i></a>';
+                        var deleteButton =
+                            '<a href="javascript:void(0);" class="mx-1" onclick="confirmDeletion(\'' +
+                            deleteUrl + '\')"> <i class="bx bx-trash btn btn-danger"></i></a>';
 
-                        return detailsButton + '' + editButton;
+                        return detailsButton + '' + editButton + deleteButton;
                     }
                 },
 
@@ -165,6 +170,25 @@
             ]
         });
     </script>
+
+    <script>
+        function confirmDeletion(deleteUrl) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = deleteUrl;
+                }
+            });
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 
     <script>
         $(document).on('click', '#status', function() {

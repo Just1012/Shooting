@@ -177,6 +177,7 @@ class PhotographyImageController extends Controller
         }
     }
 
+    // API
     public function getPhotographyImage()
     {
         $data = PhotographyImage::all();

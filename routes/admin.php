@@ -131,9 +131,9 @@ Route::group(
             Route::get('/editBrand/{id}', [OurWorkController::class, 'editBrand'])->name('brand.edit');
             Route::post('/updateBrand/{id}', [OurWorkController::class, 'updateBrand'])->name('brand.update');
             Route::get('/updateStatus/{ourWork}', [OurWorkController::class, 'updateStatus'])->name('brand.status');
-
             Route::get('/brandDetails/edit/{id}', [OurWorkController::class, 'brandDetails'])->name('brandDetails');
             Route::post('/brandDetails/update/{id}', [OurWorkController::class, 'brandDetailsUpdate'])->name('brandDetailsUpdate');
+            Route::get('/deleteBrand/{id}', [OurWorkController::class, 'deleteBrand'])->name('brand.delete');
         });
 
         Route::prefix('users')->group(function () {

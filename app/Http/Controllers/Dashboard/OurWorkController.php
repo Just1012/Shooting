@@ -11,6 +11,8 @@ use App\Models\IndustryService;
 use App\Models\OurWorkDetails;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 
 
 class OurWorkController extends Controller
@@ -282,6 +284,25 @@ class OurWorkController extends Controller
         return redirect()->back()->with('success', 'Brand details updated successfully!');
     }
 
+    public function deleteBrand($id)
+    {
+        try {
+            $brand = OurWork::findOrFail($id);
+            if ($brand->image && file_exists(public_path('images/' . $brand->image))) {
+                unlink(public_path('images/' . $brand->image));
+            }
+            $brand->delete();
+
+            toastr()->success(__('Brand Deleted Successfully'), __('Success'));
+            return redirect()->back();
+        } catch (ModelNotFoundException $exception) {
+            toastr()->error(__('Brand Not Found'), __('Error'));
+            return redirect()->back();
+        } catch (\Throwable $th) {
+            toastr()->error(__('Something went wrong. Please try again.'), __('Error'));
+            return redirect()->back();
+        }
+    }
 
     // Our Work Status update
     public function updateStatus(OurWork $ourWork)
