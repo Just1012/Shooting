@@ -18,6 +18,7 @@ use App\Http\Controllers\Dashboard\ServiceController;
 use App\Http\Controllers\Dashboard\SystemInfoController;
 use App\Http\Controllers\Dashboard\SystemSetupController;
 use App\Http\Controllers\Dashboard\UserRegisterController;
+use App\Http\Controllers\PhotographyImageController;
 use App\Http\Controllers\UserController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
@@ -177,6 +178,17 @@ Route::group(
             Route::post('/update', [UserController::class, 'update'])->name('user.update');
             Route::get('/edit/{user}', [UserController::class, 'edit'])->name('user.edit');
             Route::get('/delete/{user}', [UserController::class, 'delete'])->name('user.delete');
+        });
+
+        Route::prefix('photography')->group(function () {
+            Route::get('/index', [PhotographyImageController::class, 'index'])->name('photography.index');
+            Route::get('/dataTable', [PhotographyImageController::class, 'getPhotography'])->name('photography.dataTable');
+            Route::get('/addPhotography', [PhotographyImageController::class, 'addPhotography'])->name('photography.addPhotography');
+            Route::post('/storePhotography', [PhotographyImageController::class, 'storePhotography'])->name('photography.store');
+            Route::get('/editPhotography/{id}', [PhotographyImageController::class, 'editPhotography'])->name('photography.edit');
+            Route::post('/updatePhotography/{id}', [PhotographyImageController::class, 'updatePhotography'])->name('photography.update');
+            Route::get('/deletePhotography/{id}', [PhotographyImageController::class, 'deletePhotography'])->name('photography.delete');
+            Route::get('/updateStatus/{photographyImage}', [PhotographyImageController::class, 'updateStatus'])->name('photography.status');
         });
     }
 );

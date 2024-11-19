@@ -7,7 +7,7 @@ use App\Http\Controllers\Dashboard\UserRegisterController;
 use App\Http\Controllers\Dashboard\BlogController;
 use App\Http\Controllers\Dashboard\OurWorkController;
 use App\Http\Controllers\Dashboard\PartnerController;
-
+use App\Http\Controllers\PhotographyImageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,5 +45,5 @@ Route::get('/blogFilterApi', [BlogController::class, 'blogFilterApi']);
 Route::get('/getPartnerApi',[PartnerController::class,'getPartnerApi']);
 
 // Services Api
-Route::get('/getPartnerApi',[PartnerController::class,'getPartnerApi']);
+Route::get('/getPhotographyImage',[PhotographyImageController::class,'getPhotographyImage']);
 

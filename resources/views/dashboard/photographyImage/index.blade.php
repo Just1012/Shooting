@@ -7,10 +7,12 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" />
 
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <!-- Bootstrap Css -->
 @endpush
 @section('title')
-    Industry
+    Photography Image
 @endsection
 @section('content')
     <div class="main-content">
@@ -20,11 +22,39 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="row">
-                                <h5 class="card-title mb-0 col-sm-8 col-md-10">Industry</h5>
+                                <h5 class="card-title mb-0 col-sm-8 col-md-10">
+                                    Photography Image
+                                </h5>
+                                <div id="topmodal" class="modal fade" tabindex="-1" aria-hidden="true"
+                                    style="display: none;">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-body text-center p-5">
+                                                <lord-icon src="https://cdn.lordicon.com/skkahier.json" trigger="loop"
+                                                    colors="primary:#eb4034,secondary:#eb4034"
+                                                    style="width:120px;height:120px">
+                                                </lord-icon>
+                                                <div class="mt-4">
+                                                    <h4 class="mb-3">Are you sure to delete this partner ?</h4>
+                                                    <p class="text-muted mb-4"> If You Deleted It You Can't Restore It .</p>
+                                                    <div class="hstack gap-2 justify-content-center">
+                                                        <a href="javascript:void(0);"
+                                                            class="btn btn-link link-success fw-medium"
+                                                            data-bs-dismiss="modal"><i
+                                                                class="ri-close-line me-1 align-middle"></i>
+                                                            Close</a>
+                                                        <a href="#" id="delete-confirm"
+                                                            class="btn btn-danger">Delete</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div><!-- /.modal-content -->
+                                    </div><!-- /.modal-dialog -->
+                                </div><!-- /.modal -->
 
+                                <!-- Load More Buttons -->
                                 <div class="hstack flex-wrap gap-2   mb-lg-0 mb-0 col-sm-2 col-md-1">
-                                    {{-- <a href="{{ route('industry.addIndustry') }}"
-                                        class="btn btn-outline-secondary btn-load">
+                                    <a href="{{ route('photography.addPhotography') }}" class="btn btn-outline-secondary btn-load">
                                         <span class="d-flex align-items-center">
                                             <span class="spinner-grow flex-shrink-0" role="status">
                                                 <span class="visually-hidden">+</span>
@@ -33,7 +63,7 @@
                                                 +
                                             </span>
                                         </span>
-                                    </a> --}}
+                                    </a>
                                 </div>
 
                                 <button type="submit"
@@ -58,8 +88,11 @@
                                 <thead>
                                     <tr>
                                         <th>#SSL</th>
-                                        <th>Title</th>
-                                        <th>Status</th>
+                                        <th>Image</th>
+                                        <th>Age</th>
+                                        <th>Weight</th>
+                                        <th>height</th>
+                                        <th>Model Number</th>
                                         <th>Action</th>
                                         <th>Created At</th>
                                     </tr>
@@ -78,51 +111,54 @@
 @push('js')
     <script>
         var table = $('#alternative-pagination').DataTable({
-            ajax: '{{ route('industry.dataTable') }}',
-            columns: [
-
-                {
+            ajax: '{{ route('photography.dataTable') }}',
+            columns: [{
                     'data': null,
                     render: function(data, type, row, meta) {
+                        // 'meta.row' is the index number
                         return meta.row + 1;
                     }
                 },
 
                 {
                     'data': null,
-                    render: function(data) {
-                        // Choose the appropriate name based on the selected language
-                        var name = '{{ App::getLocale() == 'ar' ? 'name_ar' : 'name_en' }}';
-                        return data[name];
+                    render: function(data, row) {
+                        return `<img src="{{ asset('images') }}/${data.image}"
+                                class="small-image" style="height: 50px; width: 50px" onclick="openFullScreen(this)">`;
                     }
                 },
 
                 {
-                    'data': null,
-                    render: function(data, row, type) {
-                        if (data.status == 1) {
-                            return `<label class="switch">
-                                         <input type="checkbox" data-id="${data.id}" id="status" checked>
-                                         <span class="slider round"></span>
-                                    </label>`
-
-                        } else {
-                            return `<label class="switch">
-                                         <input type="checkbox" data-id="${data.id}" id="status">
-                                         <span class="slider round"></span>
-                                    </label>`
-                        }
-                    }
+                    'data': 'age'
+                },
+                {
+                    'data': 'weight'
+                },
+                {
+                    'data': 'height'
+                },
+                {
+                    'data': 'model_number'
                 },
 
                 {
                     'data': null,
                     render: function(data) {
-                        var editUrl = '{{ route('industry.edit', ':id') }}';
+                        var editUrl = '{{ route('photography.edit', ':id') }}';
                         editUrl = editUrl.replace(':id', data.id);
+
                         var editButton = '<a href="' + editUrl +
-                            '"> <i class="bx bxs-edit btn btn-warning"></i></a>';
-                        return editButton;
+                            '" class="mx-1"> <i class="bx bxs-edit btn btn-warning"></i></a>';
+
+                        var deleteUrl = '{{ route('photography.delete', ':id') }}';
+                        deleteUrl = deleteUrl.replace(':id', data.id);
+
+                        var deleteButton =
+                            '<a href="javascript:void(0);" class="mx-1" onclick="confirmDeletion(\'' +
+                            deleteUrl + '\')"> <i class="bx bx-trash btn btn-danger"></i></a>';
+
+
+                        return editButton + deleteButton;
                     }
                 },
 
@@ -152,8 +188,26 @@
     </script>
 
     <script>
+        function confirmDeletion(deleteUrl) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = deleteUrl;
+                }
+            });
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script>
         $(document).on('click', '#status', function() {
-            var url = '{{ route('industry.status', ':id') }}';
+            var url = '{{ route('photography.status', ':id') }}';
             url = url.replace(':id', $(this).data('id'));
 
             $.ajax({
@@ -175,5 +229,22 @@
             $('#alert').css('display', 'none');
             table.ajax.reload();
         });
+    </script>
+
+    <script>
+        function openFullScreen(image) {
+            var fullScreenContainer = document.createElement('div');
+            fullScreenContainer.className = 'fullscreen-image';
+
+            var fullScreenImage = document.createElement('img');
+            fullScreenImage.src = image.src;
+
+            fullScreenContainer.appendChild(fullScreenImage);
+            document.body.appendChild(fullScreenContainer);
+
+            fullScreenContainer.addEventListener('click', function() {
+                document.body.removeChild(fullScreenContainer);
+            });
+        }
     </script>
 @endpush

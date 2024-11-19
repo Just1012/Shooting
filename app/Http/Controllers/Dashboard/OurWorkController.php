@@ -98,6 +98,13 @@ class OurWorkController extends Controller
 
             // Create brand record
             $brand = OurWork::create($requestData);
+            $brandDetails = OurWorkDetails::create([
+                'title_color' => '#fff',
+                'title_back_color' => '#fff',
+                'details_back_color' => '#fff',
+                'details_color' => '#fff',
+                'our_work_id' => $brand->id,
+            ]);
 
             toastr()->success(__('Brand Added Successfully'), __('Success'));
             return redirect()->route('brand.index');
@@ -200,7 +207,16 @@ class OurWorkController extends Controller
         // Find the OurWorkDetails record or create a new instance
         $brandExists = OurWorkDetails::where('our_work_id', $id)->first();
 
-        // Find the OurWorkDetails record or create a new instance
+        if (!$brandExists) {
+            $brandExists = OurWorkDetails::create([
+                'title_color' => '#fff',
+                'title_back_color' => '#fff',
+                'details_back_color' => '#fff',
+                'details_color' => '#fff',
+                'our_work_id' => $id,
+            ]);
+        }
+
         $brand = BrandImage::where('our_work_id', $id)->get();
 
         return view('dashboard.brands.brandDetails', compact('brand', 'brandExists'));
@@ -256,7 +272,7 @@ class OurWorkController extends Controller
             }
         }
 
-        return redirect()->route('brand.index')->with('success', 'Brand details updated successfully!');
+        return redirect()->back()->with('success', 'Brand details updated successfully!');
     }
 
     // Our Work Status update

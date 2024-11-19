@@ -23,7 +23,7 @@
                                 <h5 class="card-title mb-0 col-sm-8 col-md-10">Category</h5>
 
                                 <div class="hstack flex-wrap gap-2   mb-lg-0 mb-0 col-sm-2 col-md-1">
-                                    <a href="{{ route('category.addCategory') }}"
+                                    {{-- <a href="{{ route('category.addCategory') }}"
                                         class="btn btn-outline-secondary btn-load">
                                         <span class="d-flex align-items-center">
                                             <span class="spinner-grow flex-shrink-0" role="status">
@@ -33,7 +33,7 @@
                                                 +
                                             </span>
                                         </span>
-                                    </a>
+                                    </a> --}}
                                 </div>
 
                                 <button type="submit"

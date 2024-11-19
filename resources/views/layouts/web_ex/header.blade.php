@@ -6,19 +6,19 @@
                 <div class="navbar-brand-box horizontal-logo">
                     <a href="#" class="logo logo-dark">
                         <span class="logo-sm">
-                            <img src="{{ asset('web/assets/images/logo-sm.png') }}" alt="" height="22">
+                            <img style="scale: 5 !important;" src="{{ asset('front/images/Web Shooting-04.png') }}" alt="" height="22">
                         </span>
                         <span class="logo-lg">
-                            <img src="{{ asset('web/assets/images/logo-dark.png') }}" alt="" height="17">
+                            <img style="scale: 5 !important;" src="{{ asset('front/images/Web Shooting-04.png') }}" alt="" height="17">
                         </span>
                     </a>
 
                     <a href="#" class="logo logo-light">
                         <span class="logo-sm">
-                            <img src="{{ asset('web/assets/images/logo-sm.png') }}" alt="" height="22">
+                            <img style="scale: 5 !important;" src="{{ asset('front/images/Web Shooting-04.png') }}" alt="" height="22">
                         </span>
                         <span class="logo-lg">
-                            <img src="{{ asset('web/assets/images/logo-light.png') }}" alt="" height="17">
+                            <img style="scale: 5 !important;" src="{{ asset('front/images/Web Shooting-04.png') }}" alt="" height="17">
                         </span>
                     </a>
                 </div>
@@ -151,7 +151,8 @@
                 </div>
 
                 <div class="ms-1 header-item d-none d-sm-flex">
-                    <a target="_blank" class="btn btn-primary" href="https://shootingads.net/ar/home"> <i class='bx bx-globe'></i></a>
+                    <a target="_blank" class="btn btn-primary" href="https://shootingads.net/ar/home"> <i
+                            class='bx bx-globe'></i></a>
                 </div>
 
                 <div class="dropdown ms-1 topbar-head-dropdown header-item">
@@ -188,7 +189,7 @@
                     </button>
                 </div>
 
-                <div class="dropdown topbar-head-dropdown ms-1 header-item" id="notificationDropdown">
+                {{-- <div class="dropdown topbar-head-dropdown ms-1 header-item" id="notificationDropdown">
                     <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle"
                         id="page-header-notifications-dropdown" data-bs-toggle="dropdown"
                         data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
@@ -502,20 +503,14 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
                 <div class="dropdown ms-sm-3 header-item topbar-user">
                     <button type="button" class="btn" id="page-header-user-dropdown" data-bs-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
                         <span class="d-flex align-items-center">
-                            @if (isset(Auth()->user()->image))
-                                <img class="rounded-circle header-profile-user"
-                                    src="{{ asset('images/' . auth()->user()->image) }}" alt="Header Avatar">
-                            @else
-                                <img class="rounded-circle header-profile-user"
-                                    src="{{ asset('images/' . auth()->user()->image) }}" alt="Header Avatar">
-                            @endif
-
+                            <img class="rounded-circle header-profile-user"
+                                src="{{ asset('assets/images/users/avatar-1.jpg') }}" alt="Header Avatar">
                             <span class="text-start ms-xl-2">
                                 <span class="d-none d-xl-inline-block ms-1 fw-semibold user-name-text">
                                 </span>
@@ -528,8 +523,8 @@
                         <h6 class="dropdown-header">مرحباً {{ Auth()->user()->name }} 👋</h6>
 
                         <a class="dropdown-item" href="{{ route('profile.edit', ['id' => auth()->user()->id]) }}"><i
-                            class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i> <span
-                            class="align-middle">Profile</span></a>
+                                class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i> <span
+                                class="align-middle">Profile</span></a>
 
                         <a class="dropdown-item" href="auth-logout-basic.html" href="{{ route('logout') }}"
                             onclick="event.preventDefault();

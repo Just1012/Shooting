@@ -22,3 +22,4 @@ Homestead.json
 /.vagrant
 .phpunit.result.cache
 public/images/1730721725_thumbnail.jpg
+/public/images

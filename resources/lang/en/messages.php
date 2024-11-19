@@ -72,5 +72,8 @@ return [
     'teamDescAr' => 'Team Description Ar',
     'teamDescEn' => 'Team Section Description En',
 
+    'photography' => 'Photography Section',
+    'photographyList' => 'Photography List',
+
 ];
 
