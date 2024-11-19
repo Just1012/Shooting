@@ -216,8 +216,7 @@ class OurWorkController extends Controller
                 'our_work_id' => $id,
             ]);
         }
-
-        $brand = BrandImage::where('our_work_id', $id)->get();
+        $brand = BrandImage::where('our_work_id', $id)->orderBy('priority')->get();
 
         return view('dashboard.brands.brandDetails', compact('brand', 'brandExists'));
     }
@@ -231,10 +230,13 @@ class OurWorkController extends Controller
             'details_color' => 'required|string',
             'details_back_color' => 'required|string',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'new_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'priorities.*' => 'nullable|numeric',
+            'new_priorities.*' => 'nullable|numeric',
         ]);
 
-        // Update or create the OurWorkDetails entry for the given ID
-        $brandDetails = OurWorkDetails::updateOrCreate(
+        // Update or create the OurWorkDetails entry
+        OurWorkDetails::updateOrCreate(
             ['our_work_id' => $id],
             [
                 'title_color' => $request->input('title_color'),
@@ -244,36 +246,42 @@ class OurWorkController extends Controller
             ]
         );
 
-        // Handle image removal
-        if ($request->has('remove_images')) {
-            foreach ($request->input('remove_images') as $imageId) {
+        // Update existing image priorities
+        if ($request->has('priorities')) {
+            foreach ($request->input('priorities') as $imageId => $priority) {
                 $image = BrandImage::find($imageId);
-
                 if ($image) {
-                    // Delete the image from storage
-                    Storage::disk('public')->delete($image->image);
-                    // Delete the image record from the database
-                    $image->delete();
+                    $image->update(['priority' => $priority]);
                 }
             }
         }
 
-        // Handle image replacement and addition
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $key => $image) {
-                // Check if the key is numeric, indicating an existing image ID
-                // Add a new image
+        // Handle image removal
+        if ($request->has('remove_images')) {
+            foreach ($request->input('remove_images') as $imageId) {
+                $image = BrandImage::find($imageId);
+                if ($image) {
+                    Storage::disk('public')->delete($image->image); // Remove from storage
+                    $image->delete(); // Remove from database
+                }
+            }
+        }
+
+        // Handle new images and their priorities
+        if ($request->hasFile('new_images')) {
+            foreach ($request->file('new_images') as $key => $image) {
                 $path = $image->store('images', 'public');
-                // Create a new image record
                 BrandImage::create([
                     'image' => $path,
                     'our_work_id' => $id,
+                    'priority' => $request->input('new_priorities')[$key] ?? 0,
                 ]);
             }
         }
 
         return redirect()->back()->with('success', 'Brand details updated successfully!');
     }
+
 
     // Our Work Status update
     public function updateStatus(OurWork $ourWork)
@@ -374,7 +382,7 @@ class OurWorkController extends Controller
 
     public function getBrandImagesApi($id)
     {
-        $brandImage = BrandImage::where('our_work_id', $id)->get();
+        $brandImage = BrandImage::where('our_work_id', $id)->orderBy('priority')->get();
         if (!$brandImage) {
             return response()->json([
                 'message' => 'Not Found Data'

@@ -17,8 +17,14 @@
         .dropify-wrapper .dropify-preview .dropify-render .dropify-infos .dropify-infos-inner .dropify-infos-message {
             font-size: 16px;
         }
-        textarea { height: 150px; }
-        img { max-width: 200px; }
+
+        textarea {
+            height: 150px;
+        }
+
+        img {
+            max-width: 200px;
+        }
     </style>
 
     <div class="main-content">
@@ -30,7 +36,8 @@
                     </div>
                     <div class="card-body">
                         <a class="btn btn-success add-btn mb-3" href="{{ route('brand.index') }}">Back</a>
-                        <form action="{{ route('brandDetailsUpdate', ['id' => $brandExists->our_work_id]) }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('brandDetailsUpdate', ['id' => $brandExists->our_work_id]) }}" method="POST"
+                            enctype="multipart/form-data">
                             @csrf
                             <div class="row">
                                 @php
@@ -38,10 +45,11 @@
                                 @endphp
 
                                 <!-- Title and Color Fields -->
-                                @foreach(['title_color', 'title_back_color', 'details_color', 'details_back_color'] as $field)
+                                @foreach (['title_color', 'title_back_color', 'details_color', 'details_back_color'] as $field)
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="{{ $field }}" class="form-label">{{ ucfirst(str_replace('_', ' ', $field)) }}</label>
+                                            <label for="{{ $field }}"
+                                                class="form-label">{{ ucfirst(str_replace('_', ' ', $field)) }}</label>
                                             <input type="color"
                                                 value="{{ old($field, $brandExists->$field ?? $defaultColor) }}"
                                                 class="form-control" name="{{ $field }}" id="{{ $field }}">
@@ -57,17 +65,26 @@
                                                 <div class="col-md-3 mb-2">
                                                     <div class="image-item">
                                                         <input type="file" name="images[{{ $image->id }}]"
-                                                               class="form-control dropify"
-                                                               data-default-file="{{ asset('storage/' . $image->image) }}"
-                                                               data-height="100" accept="image/*">
+                                                            class="form-control dropify"
+                                                            data-default-file="{{ asset('storage/' . $image->image) }}"
+                                                            data-height="100" accept="image/*">
                                                         <!-- Remove Image Checkbox -->
                                                         <div class="form-check mt-1">
-                                                            <input type="checkbox" class="form-check-input" name="remove_images[]"
-                                                                   value="{{ $image->id }}" id="remove_image_{{ $image->id }}">
-                                                            <label class="form-check-label" for="remove_image_{{ $image->id }}">
+                                                            <input type="checkbox" class="form-check-input"
+                                                                name="remove_images[]" value="{{ $image->id }}"
+                                                                id="remove_image_{{ $image->id }}">
+                                                            <label class="form-check-label"
+                                                                for="remove_image_{{ $image->id }}">
                                                                 Remove this image
                                                             </label>
                                                         </div>
+                                                    </div>
+
+                                                    <div class="mb-3">
+                                                        <h6 class="fw-semibold">Priority</h6>
+                                                        <input type="number" class="form-control"
+                                                            name="priorities[{{ $image->id }}]" placeholder="Priority"
+                                                            value="{{ $image->priority }}">
                                                     </div>
                                                 </div>
                                             @endforeach
@@ -81,7 +98,10 @@
                                         <label class="form-label">Add New Images</label>
                                         <div id="image-repeater">
                                             <div class="image-item">
-                                                <input type="file" name="images[]" class="form-control dropify"  multiple accept="image/*" data-height="100">
+                                                <input type="file" name="new_images[]" class="form-control dropify"
+                                                    accept="image/*" data-height="100">
+                                                <input type="number" class="form-control mt-2" name="new_priorities[]"
+                                                    placeholder="Priority for this image">
                                             </div>
                                         </div>
                                     </div>
@@ -122,10 +142,10 @@
             // Add new image input
             // $('#add-image').click(function() {
             //     $('#image-repeater').append(`
-            //         <div class="image-item mt-2">
-            //             <input type="file" name="images[]" class="form-control dropify" accept="image/*" data-height="100">
-            //         </div>
-            //     `);
+        //         <div class="image-item mt-2">
+        //             <input type="file" name="images[]" class="form-control dropify" accept="image/*" data-height="100">
+        //         </div>
+        //     `);
             //     // Reinitialize Dropify for new elements
             //     $('.dropify').dropify();
             // });
