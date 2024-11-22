@@ -55,6 +55,7 @@
                                         <th>#SSL</th>
                                         <th>Main Image</th>
                                         <th>Brand Name</th>
+                                        <th>Priority</th>
                                         <th>Status</th>
                                         <th>Action</th>
                                         <th>Created At</th>
@@ -105,6 +106,12 @@
                         return data[name];
                     }
                 },
+
+                {
+                    'data' : 'priority'
+                },
+
+
                 {
                     'data': null,
                     render: function(data) {
