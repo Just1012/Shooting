@@ -120,8 +120,24 @@
                 {
                     'data': null,
                     render: function(data, row) {
-                        return `<img src="{{ asset('images') }}/${data.image_ar}"
-                                class="small-image" style="height: 50px; width: 50px" onclick="openFullScreen(this)">`;
+                        // Construct the file path
+                        const filePath = `{{ asset('images') }}/${data.image_ar}`;
+                        const fileExtension = filePath.split('.').pop().toLowerCase();
+
+                        // Determine whether to render an image or a video
+                        if (['jpeg', 'jpg', 'png', 'gif', 'svg'].includes(fileExtension)) {
+                            // Render an image
+                            return `<img src="${filePath}" class="small-image" style="height: 50px; width: 50px" onclick="openFullScreen('${filePath}', 'image')">`;
+                        } else if (['mp4', 'avi', 'mov'].includes(fileExtension)) {
+                            // Render a video with play controls
+                            return `<video class="small-video" style="height: 50px; width: 50px" onclick="openFullScreen('${filePath}', 'video')" controls>
+                        <source src="${filePath}" type="video/${fileExtension}">
+                        Your browser does not support the video tag.
+                    </video>`;
+                        } else {
+                            // If the file type is unknown, display a placeholder
+                            return `<span>Unsupported format</span>`;
+                        }
                     }
                 },
 
@@ -247,6 +263,50 @@
             fullScreenContainer.addEventListener('click', function() {
                 document.body.removeChild(fullScreenContainer);
             });
+        }
+    </script>
+    <script>
+        function openFullScreen(filePath, type) {
+            // Create a container for the full-screen view
+            const fullScreenContainer = document.createElement('div');
+            fullScreenContainer.className = 'fullscreen-container';
+            fullScreenContainer.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 9999;
+            `;
+
+            // Create the content (image or video)
+            let content;
+            if (type === 'image') {
+                content = document.createElement('img');
+                content.src = filePath;
+                content.style.cssText = 'max-width: 90%; max-height: 90%;';
+            } else if (type === 'video') {
+                content = document.createElement('video');
+                content.src = filePath;
+                content.controls = true;
+                content.autoplay = true;
+                content.style.cssText = 'max-width: 90%; max-height: 90%;';
+            }
+
+            // Append the content to the container
+            fullScreenContainer.appendChild(content);
+
+            // Close the full-screen view on click
+            fullScreenContainer.addEventListener('click', () => {
+                document.body.removeChild(fullScreenContainer);
+            });
+
+            // Append the container to the body
+            document.body.appendChild(fullScreenContainer);
         }
     </script>
 @endpush

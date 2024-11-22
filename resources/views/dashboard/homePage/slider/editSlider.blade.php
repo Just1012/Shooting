@@ -29,26 +29,31 @@
                                     enctype="multipart/form-data">
                                     @csrf
                                     <div class="row">
+                                        <!-- Arabic File -->
                                         <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label for="image_ar"
                                                     class="form-label">{{ __('messages.imageAr') }}</label>
                                                 <input type="file" class="form-control dropify" name="image_ar"
                                                     id="image_ar"
-                                                    data-default-file="{{ asset('images/' . $slider->image_ar) }}">
+                                                    data-default-file="{{ asset('images/' . $slider->image_ar) }}"
+                                                    accept="image/*,video/*">
                                             </div>
                                         </div><!--end col-->
 
+                                        <!-- English File -->
                                         <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label for="image_en"
                                                     class="form-label">{{ __('messages.imageEn') }}</label>
                                                 <input type="file" class="form-control dropify" name="image_en"
                                                     id="image_en"
-                                                    data-default-file="{{ asset('images/' . $slider->image_en) }}">
+                                                    data-default-file="{{ asset('images/' . $slider->image_en) }}"
+                                                    accept="image/*,video/*">
                                             </div>
                                         </div><!--end col-->
 
+                                        <!-- Save Button -->
                                         <div class="col-md-6">
                                             <div class="mb-3">
                                                 <button type="submit"
@@ -72,12 +77,42 @@
     <script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
 
     <script>
+        // Initialize Dropify
         $('.dropify').dropify({
             messages: {
                 'default': '{{ __('messages.dragDropDefault') }}',
                 'replace': '{{ __('messages.dragDropReplace') }}',
                 'remove': '{{ __('messages.dragDropRemove') }}',
                 'error': '{{ __('messages.dragDropError') }}'
+            }
+        });
+
+        // Handle Video Preview
+        $('.dropify').on('change', function() {
+            const file = this.files[0];
+            const fileType = file.type;
+            const dropifyWrapper = $(this).closest('.dropify-wrapper');
+
+            if (fileType.startsWith('video/')) {
+                const videoPreview = `<video controls style="width: 100%; height: auto;">
+                                        <source src="${URL.createObjectURL(file)}" type="${fileType}">
+                                        {{ __('messages.videoNotSupported') }}
+                                      </video>`;
+                dropifyWrapper.find('.dropify-preview').html(videoPreview).fadeIn();
+            }
+        });
+
+        // Handle Preloaded Files (Images/Videos)
+        $('.dropify').each(function() {
+            const filePath = $(this).attr('data-default-file');
+            const dropifyWrapper = $(this).closest('.dropify-wrapper');
+
+            if (filePath && /\.(mp4|avi|mov)$/i.test(filePath)) {
+                const videoPreview = `<video controls style="width: 100%; height: auto;">
+                                        <source src="${filePath}">
+                                        {{ __('messages.videoNotSupported') }}
+                                      </video>`;
+                dropifyWrapper.find('.dropify-preview').html(videoPreview).fadeIn();
             }
         });
     </script>

@@ -34,33 +34,33 @@ class HomeSliderController extends Controller
         try {
             // Validation
             $request->validate([
-                'image_ar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:10240',
-                'image_en' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:10240',
+                'image_ar' => 'required|mimes:jpeg,png,jpg,gif,svg,mp4,avi,mov|max:20480',
+                'image_en' => 'required|mimes:jpeg,png,jpg,gif,svg,mp4,avi,mov|max:20480',
             ], [
-                'image_ar.required' => 'The Arabic image field is required.',
-                'image_ar.image' => 'The Arabic image must be an image file.',
-                'image_ar.mimes' => 'The Arabic image must be a file of type: jpeg, png, jpg, gif, svg.',
-                'image_ar.max' => 'The Arabic image may not be greater than 10 MB.',
-                'image_en.required' => 'The English image field is required.',
-                'image_en.image' => 'The English image must be an image file.',
-                'image_en.mimes' => 'The English image must be a file of type: jpeg, png, jpg, gif, svg.',
-                'image_en.max' => 'The English image may not be greater than 10 MB.',
+                'image_ar.required' => 'The Arabic file field is required.',
+                'image_ar.mimes' => 'The Arabic file must be an image (jpeg, png, jpg, gif, svg) or video (mp4, avi, mov).',
+                'image_ar.max' => 'The Arabic file may not be greater than 20 MB.',
+                'image_en.required' => 'The English file field is required.',
+                'image_en.mimes' => 'The English file must be an image (jpeg, png, jpg, gif, svg) or video (mp4, avi, mov).',
+                'image_en.max' => 'The English file may not be greater than 20 MB.',
             ]);
 
             $requestData = $request->all();
 
-            // Process Arabic Image
+            // Process Arabic File
             if ($request->hasFile('image_ar')) {
-                $imageNameAr = time() . '_ar.' . $request->image_ar->getClientOriginalExtension();
-                $request->image_ar->move(public_path('images'), $imageNameAr);
-                $requestData['image_ar'] = $imageNameAr;
+                $fileAr = $request->file('image_ar');
+                $fileNameAr = time() . '_ar.' . $fileAr->getClientOriginalExtension();
+                $fileAr->move(public_path('images'), $fileNameAr);
+                $requestData['image_ar'] = $fileNameAr;
             }
 
-            // Process English Image
+            // Process English File
             if ($request->hasFile('image_en')) {
-                $imageNameEn = time() . '_en.' . $request->image_en->getClientOriginalExtension();
-                $request->image_en->move(public_path('images'), $imageNameEn);
-                $requestData['image_en'] = $imageNameEn;
+                $fileEn = $request->file('image_en');
+                $fileNameEn = time() . '_en.' . $fileEn->getClientOriginalExtension();
+                $fileEn->move(public_path('images'), $fileNameEn);
+                $requestData['image_en'] = $fileNameEn;
             }
 
             HomeSlider::create($requestData);
@@ -81,6 +81,7 @@ class HomeSliderController extends Controller
         }
     }
 
+
     public function editSlider($id)
     {
         $slider = HomeSlider::findOrFail($id);
@@ -92,42 +93,42 @@ class HomeSliderController extends Controller
         try {
             // Validation
             $request->validate([
-                'image_ar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:10240',
-                'image_en' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:10240',
+                'image_ar' => 'nullable|mimes:jpeg,png,jpg,gif,svg,mp4,avi,mov|max:20480',
+                'image_en' => 'nullable|mimes:jpeg,png,jpg,gif,svg,mp4,avi,mov|max:20480',
             ], [
-                'image_ar.image' => 'The Arabic image must be an image file.',
-                'image_ar.mimes' => 'The Arabic image must be a file of type: jpeg, png, jpg, gif, svg.',
-                'image_ar.max' => 'The Arabic image may not be greater than 10 MB.',
-                'image_en.image' => 'The English image must be an image file.',
-                'image_en.mimes' => 'The English image must be a file of type: jpeg, png, jpg, gif, svg.',
-                'image_en.max' => 'The English image may not be greater than 10 MB.',
+                'image_ar.mimes' => 'The Arabic file must be an image (jpeg, png, jpg, gif, svg) or video (mp4, avi, mov).',
+                'image_ar.max' => 'The Arabic file may not be greater than 20 MB.',
+                'image_en.mimes' => 'The English file must be an image (jpeg, png, jpg, gif, svg) or video (mp4, avi, mov).',
+                'image_en.max' => 'The English file may not be greater than 20 MB.',
             ]);
 
             $item = HomeSlider::findOrFail($id);
             $requestData = $request->all();
 
-            // Process Arabic Image
+            // Process Arabic File (Image/Video)
             if ($request->hasFile('image_ar')) {
-                $imageNameAr = time() . '_ar.' . $request->image_ar->getClientOriginalExtension();
-                $request->image_ar->move(public_path('images'), $imageNameAr);
+                $fileAr = $request->file('image_ar');
+                $fileNameAr = time() . '_ar.' . $fileAr->getClientOriginalExtension();
+                $fileAr->move(public_path('images'), $fileNameAr);
 
-                // Delete old Arabic image if it exists
+                // Delete old Arabic file if it exists
                 if ($item->image_ar && file_exists(public_path('images/' . $item->image_ar))) {
                     unlink(public_path('images/' . $item->image_ar));
                 }
-                $requestData['image_ar'] = $imageNameAr;
+                $requestData['image_ar'] = $fileNameAr;
             }
 
-            // Process English Image
+            // Process English File (Image/Video)
             if ($request->hasFile('image_en')) {
-                $imageNameEn = time() . '_en.' . $request->image_en->getClientOriginalExtension();
-                $request->image_en->move(public_path('images'), $imageNameEn);
+                $fileEn = $request->file('image_en');
+                $fileNameEn = time() . '_en.' . $fileEn->getClientOriginalExtension();
+                $fileEn->move(public_path('images'), $fileNameEn);
 
-                // Delete old English image if it exists
+                // Delete old English file if it exists
                 if ($item->image_en && file_exists(public_path('images/' . $item->image_en))) {
                     unlink(public_path('images/' . $item->image_en));
                 }
-                $requestData['image_en'] = $imageNameEn;
+                $requestData['image_en'] = $fileNameEn;
             }
 
             $item->update($requestData);
@@ -147,6 +148,7 @@ class HomeSliderController extends Controller
             return redirect()->route('slider.index');
         }
     }
+
 
 
     public function deleteSlider($id)
@@ -191,5 +193,14 @@ class HomeSliderController extends Controller
             $toastrScript = "toastr.error('حدث خطأ ما، يرجى إعادة المحاولة', 'خطأ !');";
             return response()->json(['toastrScript' => $toastrScript], 404);
         }
+    }
+
+    public function getSliderApi()
+    {
+        $data = HomeSlider::all();
+        return response()->json([
+            'data' => $data,
+            'message' => 'found data'
+        ]);
     }
 }

@@ -5,9 +5,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Dashboard\HiringController;
 use App\Http\Controllers\Dashboard\UserRegisterController;
 use App\Http\Controllers\Dashboard\BlogController;
+use App\Http\Controllers\Dashboard\HomeSliderController;
 use App\Http\Controllers\Dashboard\OurWorkController;
 use App\Http\Controllers\Dashboard\PartnerController;
 use App\Http\Controllers\PhotographyImageController;
+use App\Models\HomeSlider;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +27,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 Route::post('/userRegisterStore', [UserRegisterController::class, 'storeUser']);
 Route::post('/userHiringStore', [HiringController::class, 'storeUser'])->name('userHiring.store');
+
+// Slider Api
+Route::get('/getSlider',[HomeSliderController::class,'getSliderApi']);
 
 // Brand Api
 Route::get('/getBrand',[OurWorkController::class,'getBrandApi']);

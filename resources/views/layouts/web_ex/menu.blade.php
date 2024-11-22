@@ -66,28 +66,29 @@
                 @if (auth()->user()->role_id == 1)
 
                     {{-- Start Home Page --}}
-                    {{-- <li class="nav-item">
-                    <a class="nav-link menu-link" href="#sidebarDashboards" data-bs-toggle="collapse" role="button"
-                        aria-expanded="false" aria-controls="sidebarDashboards">
-                        <i class='bx bx-home'></i> <span data-key="t-dashboards">{{ __('messages.homePage') }}</span>
-                    </a>
-                    <div class="collapse menu-dropdown" id="sidebarDashboards">
-                        <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
-                                <a href="{{ route('slider.index') }}" class="nav-link"
-                                    data-key="t-one-page">{{ __('messages.sliderSection') }}</a>
-                            </li>
-                            <li class="nav-item">
+                    <li class="nav-item">
+                        <a class="nav-link menu-link" href="#sidebarDashboards" data-bs-toggle="collapse" role="button"
+                            aria-expanded="false" aria-controls="sidebarDashboards">
+                            <i class='bx bx-home'></i> <span
+                                data-key="t-dashboards">{{ __('messages.homePage') }}</span>
+                        </a>
+                        <div class="collapse menu-dropdown" id="sidebarDashboards">
+                            <ul class="nav nav-sm flex-column">
+                                <li class="nav-item">
+                                    <a href="{{ route('slider.index') }}" class="nav-link"
+                                        data-key="t-one-page">{{ __('messages.sliderSection') }}</a>
+                                </li>
+                                {{-- <li class="nav-item">
                                 <a href="{{ route('editHomeSection') }}" class="nav-link"
                                     data-key="t-one-page">{{ __('messages.homeSection') }}</a>
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route('journeyImage.index') }}" class="nav-link"
                                     data-key="t-one-page">{{ __('messages.journeySectionImage') }}</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li> --}}
+                            </li> --}}
+                            </ul>
+                        </div>
+                    </li>
                     <!-- end Home Page -->
 
                     {{-- Start Pages --}}
@@ -197,7 +198,7 @@
                     <li class="nav-item">
                         <a class="nav-link menu-link" href="#photography" data-bs-toggle="collapse" role="button"
                             aria-expanded="false" aria-controls="photography">
-                            <i class='bx bx-image-add' ></i> <span
+                            <i class='bx bx-image-add'></i> <span
                                 data-key="t-dashboards">{{ __('messages.photography') }}</span>
                         </a>
                         <div class="collapse menu-dropdown" id="photography">

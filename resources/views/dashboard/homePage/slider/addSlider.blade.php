@@ -29,13 +29,12 @@
                                     @csrf
 
                                     <div class="row">
-
                                         <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label for="image_ar"
                                                     class="form-label">{{ __('messages.imageAr') }}</label>
                                                 <input type="file" class="form-control dropify" name="image_ar"
-                                                    id="image_ar">
+                                                    id="image_ar" accept="image/*,video/*">
                                             </div>
                                         </div><!--end col-->
 
@@ -44,7 +43,7 @@
                                                 <label for="image_en"
                                                     class="form-label">{{ __('messages.imageEn') }}</label>
                                                 <input type="file" class="form-control dropify" name="image_en"
-                                                    id="image_en">
+                                                    id="image_en" accept="image/*,video/*">
                                             </div>
                                         </div><!--end col-->
 
@@ -54,7 +53,9 @@
                                                     class="btn btn-primary">{{ __('messages.save') }}</button>
                                             </div>
                                         </div><!--end col-->
+                                    </div>
                                 </form>
+
                             </div>
                         </div><!-- end card -->
                     </div>
@@ -76,6 +77,25 @@
                 'replace': '{{ __('messages.dragDropReplace') }}',
                 'remove': '{{ __('messages.dragDropRemove') }}',
                 'error': '{{ __('messages.dragDropError') }}'
+            },
+            error: {
+                'fileSize': '{{ __('messages.fileSizeError') }}',
+                'fileExtension': '{{ __('messages.fileExtensionError') }}'
+            }
+        });
+
+        // Support video preview
+        $('.dropify').on('change', function() {
+            const file = this.files[0];
+            const fileType = file.type;
+            const dropifyElement = $(this).closest('.dropify-wrapper');
+
+            if (fileType.startsWith('video/')) {
+                const videoTag = `<video controls style="width: 100%; height: auto;">
+                                    <source src="${URL.createObjectURL(file)}" type="${fileType}">
+                                    {{ __('messages.videoNotSupported') }}
+                                  </video>`;
+                dropifyElement.find('.dropify-preview').html(videoTag).fadeIn();
             }
         });
     </script>

@@ -94,12 +94,20 @@
                         'data': 'file',
                         render: function(data, type, row) {
                             if (data) {
-                                return `<a href="{{ asset('uploads/files') }}/${data}" target="_blank">Open File</a>`;
+                                // Use the full path from the database
+                                const baseUrl =
+                                '{{ url('/') }}'; // Base URL of your application
+                                const fileUrl =
+                                `${baseUrl}/${data}`; // Combine base URL with stored path
+
+                                return `<a href="${fileUrl}" target="_blank" class="btn btn-secondary">Open File</a>`;
                             } else {
                                 return 'No File';
                             }
                         }
                     },
+
+
 
                     {
                         'data': 'message',
