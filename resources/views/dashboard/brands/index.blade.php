@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-    <!-- Bootstrap Css -->
 @endpush
 @section('title')
     Brands
@@ -22,15 +21,13 @@
                             <div class="row">
                                 <h5 class="card-title mb-0 col-sm-8 col-md-10">Brands</h5>
 
-                                <div class="hstack flex-wrap gap-2   mb-lg-0 mb-0 col-sm-2 col-md-1">
+                                <div class="hstack flex-wrap gap-2 mb-lg-0 mb-0 col-sm-2 col-md-1">
                                     <a href="{{ route('brand.addBrand') }}" class="btn btn-outline-secondary btn-load">
                                         <span class="d-flex align-items-center">
                                             <span class="spinner-grow flex-shrink-0" role="status">
                                                 <span class="visually-hidden">+</span>
                                             </span>
-                                            <span class="flex-grow-1 ms-2">
-                                                +
-                                            </span>
+                                            <span class="flex-grow-1 ms-2">+</span>
                                         </span>
                                     </a>
                                 </div>
@@ -39,14 +36,13 @@
                                     class="btn btn-outline-primary mb-0 col-sm-2 col-md-1 btn-icon waves-effect waves-light"
                                     id="refresh"><i class="ri-24-hours-fill"></i></button>
 
-
                                 <div class="alert alert-secondary col-md-7 mx-auto alert-border-left alert-dismissible fade show"
                                     role="alert" id="alert" style="display: none">
-                                    <i class="ri-check-double-line me-3 align-middle"></i> <strong id="strong"></strong>
+                                    <i class="ri-check-double-line me-3 align-middle"></i>
+                                    <strong id="strong"></strong>
                                     <button type="button" class="btn-close" data-bs-dismiss="alert"
                                         aria-label="Close"></button>
                                 </div>
-
                             </div>
                         </div>
 
@@ -64,9 +60,7 @@
                                         <th>Created At</th>
                                     </tr>
                                 </thead>
-                                <tbody class="text-center">
-
-                                </tbody>
+                                <tbody class="text-center"></tbody>
                             </table>
                         </div>
                     </div>
@@ -80,98 +74,68 @@
         var table = $('#alternative-pagination').DataTable({
             ajax: '{{ route('brand.dataTable') }}',
             columns: [
-
                 {
                     'data': null,
                     render: function(data, type, row, meta) {
-                        return meta.row + 1;
+                        return meta.row + 1; // Row numbering
                     }
                 },
-
-                {
-                    'data': null,
-                    render: function(data, row) {
-                        return `<img src="{{ asset('images') }}/${data.image}"
-                                class="small-image" style="height: 50px; width: 50px" onclick="openFullScreen(this)">`;
-                    }
-                },
-
                 {
                     'data': null,
                     render: function(data) {
-                        // Choose the appropriate name based on the selected language
+                        const filePath = `{{ asset('images') }}/${data.image}`;
+                        const fileExtension = filePath.split('.').pop().toLowerCase();
+
+                        if (['jpeg', 'jpg', 'png', 'gif', 'svg'].includes(fileExtension)) {
+                            return `<img src="${filePath}" class="small-image" style="height: 50px; width: 50px" onclick="openFullScreen('${filePath}', 'image')">`;
+                        } else if (['mp4', 'avi', 'mov'].includes(fileExtension)) {
+                            return `<video class="small-video" style="height: 50px; width: 50px" onclick="openFullScreen('${filePath}', 'video')" controls>
+                                        <source src="${filePath}" type="video/${fileExtension}">
+                                        Your browser does not support the video tag.
+                                    </video>`;
+                        } else {
+                            return `<span>Unsupported format</span>`;
+                        }
+                    }
+                },
+                {
+                    'data': null,
+                    render: function(data) {
                         var name = '{{ App::getLocale() == 'ar' ? 'brand_name_ar' : 'brand_name_en' }}';
                         return data[name];
                     }
                 },
-
-                {
-                    'data': null,
-                    render: function(data, row, type) {
-                        if (data.status == 1) {
-                            return `<label class="switch">
-                                         <input type="checkbox" data-id="${data.id}" id="status" checked>
-                                         <span class="slider round"></span>
-                                    </label>`
-
-                        } else {
-                            return `<label class="switch">
-                                         <input type="checkbox" data-id="${data.id}" id="status">
-                                         <span class="slider round"></span>
-                                    </label>`
-                        }
-                    }
-                },
-
                 {
                     'data': null,
                     render: function(data) {
-                        var editUrl = '{{ route('brand.edit', ':id') }}';
-                        var detailsUrl = '{{ route('brandDetails', ':id') }}';
-                        var deleteUrl = '{{ route('brand.delete', ':id') }}';
-
-                        editUrl = editUrl.replace(':id', data.id);
-                        detailsUrl = detailsUrl.replace(':id', data.id);
-                        deleteUrl = deleteUrl.replace(':id', data.id);
-
-                        var editButton = '<a href="' + editUrl +
-                            '"> <i class="bx bxs-edit btn btn-warning"></i></a>';
-                        var detailsButton = '<a href="' + detailsUrl +
-                            '"> <i class="bx bx-message-alt-detail btn btn-success"></i></a>';
-                        var deleteButton =
-                            '<a href="javascript:void(0);" class="mx-1" onclick="confirmDeletion(\'' +
-                            deleteUrl + '\')"> <i class="bx bx-trash btn btn-danger"></i></a>';
-
-                        return detailsButton + '' + editButton + deleteButton;
+                        return `<label class="switch">
+                                    <input type="checkbox" data-id="${data.id}" id="status" ${data.status == 1 ? 'checked' : ''}>
+                                    <span class="slider round"></span>
+                                </label>`;
                     }
                 },
+                {
+                    'data': null,
+                    render: function(data) {
+                        var editUrl = '{{ route('brand.edit', ':id') }}'.replace(':id', data.id);
+                        var deleteUrl = '{{ route('brand.delete', ':id') }}'.replace(':id', data.id);
 
-
+                        return `<a href="${editUrl}" class="mx-1"> <i class="bx bxs-edit btn btn-warning"></i></a>
+                                <a href="javascript:void(0);" class="mx-1" onclick="confirmDeletion('${deleteUrl}')">
+                                    <i class="bx bx-trash btn btn-danger"></i>
+                                </a>`;
+                    }
+                },
                 {
                     'data': 'created_at',
-                    render: function(data, type, row) {
-                        // Parse the date string
+                    render: function(data) {
                         var date = new Date(data);
-
-                        // Check if the date is valid
-                        if (!isNaN(date.getTime())) {
-                            // Format the date as 'YYYY-MM-DD'
-                            var year = date.getFullYear();
-                            var month = (date.getMonth() + 1).toString().padStart(2,
-                                '0'); // Months are zero-based
-                            var day = date.getDate().toString().padStart(2, '0');
-
-                            return year + '-' + month + '-' + day;
-                        } else {
-                            return 'لا يجود بيانات'; // Handle invalid date strings
-                        }
+                        return !isNaN(date.getTime()) ? date.toISOString().split('T')[0] : 'Invalid Date';
                     }
-                },
+                }
             ]
         });
-    </script>
 
-    <script>
         function confirmDeletion(deleteUrl) {
             Swal.fire({
                 title: 'Are you sure?',
@@ -187,9 +151,59 @@
                 }
             });
         }
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 
+        function openFullScreen(filePath, type) {
+            const fullScreenContainer = document.createElement('div');
+            fullScreenContainer.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 9999;
+            `;
+
+            let content;
+            if (type === 'image') {
+                content = document.createElement('img');
+                content.src = filePath;
+                content.style.cssText = 'max-width: 90%; max-height: 90%;';
+            } else if (type === 'video') {
+                content = document.createElement('video');
+                content.src = filePath;
+                content.controls = true;
+                content.autoplay = true;
+                content.style.cssText = 'max-width: 90%; max-height: 90%;';
+            }
+
+            const closeButton = document.createElement('button');
+            closeButton.innerText = '×';
+            closeButton.style.cssText = `
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                color: white;
+                font-size: 30px;
+                background: none;
+                border: none;
+                cursor: pointer;
+            `;
+            closeButton.addEventListener('click', () => document.body.removeChild(fullScreenContainer));
+
+            fullScreenContainer.appendChild(content);
+            fullScreenContainer.appendChild(closeButton);
+            document.body.appendChild(fullScreenContainer);
+        }
+
+        $('#refresh').on('click', function() {
+            $('#alert').hide();
+            table.ajax.reload();
+        });
+    </script>
     <script>
         $(document).on('click', '#status', function() {
             var url = '{{ route('brand.status', ':id') }}';
@@ -214,21 +228,5 @@
             $('#alert').css('display', 'none');
             table.ajax.reload();
         });
-    </script>
-    <script>
-        function openFullScreen(image) {
-            var fullScreenContainer = document.createElement('div');
-            fullScreenContainer.className = 'fullscreen-image';
-
-            var fullScreenImage = document.createElement('img');
-            fullScreenImage.src = image.src;
-
-            fullScreenContainer.appendChild(fullScreenImage);
-            document.body.appendChild(fullScreenContainer);
-
-            fullScreenContainer.addEventListener('click', function() {
-                document.body.removeChild(fullScreenContainer);
-            });
-        }
     </script>
 @endpush

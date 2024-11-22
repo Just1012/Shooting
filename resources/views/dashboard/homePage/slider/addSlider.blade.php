@@ -71,31 +71,57 @@
 
     <script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
     <script>
+        // Initialize Dropify
         $('.dropify').dropify({
             messages: {
                 'default': '{{ __('messages.dragDropDefault') }}',
                 'replace': '{{ __('messages.dragDropReplace') }}',
                 'remove': '{{ __('messages.dragDropRemove') }}',
                 'error': '{{ __('messages.dragDropError') }}'
-            },
-            error: {
-                'fileSize': '{{ __('messages.fileSizeError') }}',
-                'fileExtension': '{{ __('messages.fileExtensionError') }}'
             }
         });
 
-        // Support video preview
+        // Handle File Preview (Images and Videos)
         $('.dropify').on('change', function() {
             const file = this.files[0];
             const fileType = file.type;
-            const dropifyElement = $(this).closest('.dropify-wrapper');
+            const dropifyWrapper = $(this).closest('.dropify-wrapper');
 
-            if (fileType.startsWith('video/')) {
-                const videoTag = `<video controls style="width: 100%; height: auto;">
-                                    <source src="${URL.createObjectURL(file)}" type="${fileType}">
-                                    {{ __('messages.videoNotSupported') }}
-                                  </video>`;
-                dropifyElement.find('.dropify-preview').html(videoTag).fadeIn();
+            // Reset preview area
+            dropifyWrapper.find('.dropify-preview').hide().html('');
+
+            if (fileType.startsWith('image/')) {
+                // Handle image preview
+                const imagePreview = `<img src="${URL.createObjectURL(file)}" style="width: 40%; height: auto;">`;
+                dropifyWrapper.find('.dropify-preview').html(imagePreview).fadeIn();
+            } else if (fileType.startsWith('video/')) {
+                // Handle video preview
+                const videoPreview = `<video controls style="width: auto; height: auto;">
+                                        <source src="${URL.createObjectURL(file)}" type="${fileType}">
+                                        {{ __('messages.videoNotSupported') }}
+                                      </video>`;
+                dropifyWrapper.find('.dropify-preview').html(videoPreview).fadeIn();
+            }
+        });
+
+        // Handle Preloaded Files (Images/Videos)
+        $('.dropify').each(function() {
+            const filePath = $(this).attr('data-default-file');
+            const dropifyWrapper = $(this).closest('.dropify-wrapper');
+
+            if (filePath) {
+                if (/\.(mp4|avi|mov)$/i.test(filePath)) {
+                    // Preload video
+                    const videoPreview = `<video controls style="width: auto; height: auto;">
+                                            <source src="${filePath}">
+                                            {{ __('messages.videoNotSupported') }}
+                                          </video>`;
+                    dropifyWrapper.find('.dropify-preview').html(videoPreview).fadeIn();
+                } else if (/\.(jpeg|jpg|png|gif|svg)$/i.test(filePath)) {
+                    // Preload image
+                    const imagePreview = `<img src="${filePath}" style="width: 40%; height: auto;">`;
+                    dropifyWrapper.find('.dropify-preview').html(imagePreview).fadeIn();
+                }
             }
         });
     </script>

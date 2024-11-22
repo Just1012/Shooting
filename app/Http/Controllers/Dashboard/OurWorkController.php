@@ -26,7 +26,7 @@ class OurWorkController extends Controller
     // Get Our Works For dataTable
     public function getBrand()
     {
-        $data = OurWork::all();
+        $data = OurWork::orderBy('priority')->get();
         return response()->json([
             'data' => $data,
             'message' => 'found data'
@@ -48,8 +48,8 @@ class OurWorkController extends Controller
                 'brand_name_en' => 'required|string|max:255',
                 'category_id' => 'required|array',
                 'industry_id' => [
-                    'required_if:category_id,8', // Ensures industry_id is required if category_id contains 8
-                    'array', // Ensures industry_id is an array
+                    'required_if:category_id,8',
+                    'array',
                     function ($attribute, $value, $fail) use ($request) {
                         if (is_array($request->category_id) && in_array(8, $request->category_id) && empty($value)) {
                             $fail(__('The industry field is required when category includes 8.'));
@@ -57,50 +57,28 @@ class OurWorkController extends Controller
                     },
                 ],
                 'year' => 'required|digits:4',
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
-                'type' => 'required|in:0,1', // Type must be either 0 or 1
+                'image' => 'nullable|mimes:jpeg,png,jpg,gif,mp4,avi,mov|max:20480', // Allow images and videos, max 20MB
+                'type' => 'required|in:0,1',
+                'priority' => 'required|numeric|min:0|unique:our_works,priority',
             ], [
-                // Custom error messages
-                'brand_name_ar.required' => 'The Arabic brand name is required.',
-                'brand_name_ar.string' => 'The Arabic brand name must be a string.',
-                'brand_name_ar.max' => 'The Arabic brand name must not exceed 255 characters.',
-
-                'brand_name_en.required' => 'The English brand name is required.',
-                'brand_name_en.string' => 'The English brand name must be a string.',
-                'brand_name_en.max' => 'The English brand name must not exceed 255 characters.',
-
-                'category_id.required' => 'The category field is required.',
-                'category_id.array' => 'The category field must be an array.',
-
-                'industry_id.required_if' => 'The industry field is required when category includes 8.',
-                'industry_id.array' => 'The industry field must be an array.',
-
-                'year.required' => 'The year field is required.',
-                'year.digits' => 'The year must be a 4-digit number.',
-
-                'image.image' => 'The image must be a valid image file.',
-                'image.mimes' => 'The image must be of type: jpeg, png, jpg, or gif.',
-                'image.max' => 'The image size may not be greater than 10MB.',
-
-                'type.required' => 'The type field is required.',
-                'type.in' => 'The type must be either 0 or 1.',
+                'image.mimes' => 'The image must be of type: jpeg, png, jpg, gif, mp4, avi, mov.',
+                'image.max' => 'The file size may not exceed 20MB.',
+                'priority.unique' => 'The priority has already been taken.',
             ]);
 
-            // Process and encode input data
             $requestData = $request->all();
             $requestData['category_id'] = json_encode($request->input('category_id'));
             $requestData['industry_id'] = json_encode($request->input('industry_id'));
 
-            // Handle image upload
+            // Handle image/video upload
             if ($request->hasFile('image')) {
-                $imageName = time() . '.' . $request->image->getClientOriginalExtension();
-                $request->image->move(public_path('images'), $imageName);
-                $requestData['image'] = $imageName;
+                $fileName = time() . '.' . $request->image->getClientOriginalExtension();
+                $request->image->move(public_path('images'), $fileName);
+                $requestData['image'] = $fileName;
             }
 
-            // Create brand record
             $brand = OurWork::create($requestData);
-            $brandDetails = OurWorkDetails::create([
+            OurWorkDetails::create([
                 'title_color' => '#fff',
                 'title_back_color' => '#fff',
                 'details_back_color' => '#fff',
@@ -116,6 +94,7 @@ class OurWorkController extends Controller
         }
     }
 
+
     public function editBrand(OurWork $id)
     {
         $category = Category::all();
@@ -126,14 +105,13 @@ class OurWorkController extends Controller
     public function updateBrand(Request $request, $id)
     {
         try {
-            // Validate the request data with custom rules
             $request->validate([
                 'brand_name_ar' => 'required|string|max:255',
                 'brand_name_en' => 'required|string|max:255',
                 'category_id' => 'required|array',
                 'industry_id' => [
-                    'required_if:category_id,8', // Ensures industry_id is required if category_id contains 8
-                    'array', // Ensures industry_id is an array
+                    'required_if:category_id,8',
+                    'array',
                     function ($attribute, $value, $fail) use ($request) {
                         if (is_array($request->category_id) && in_array(8, $request->category_id) && empty($value)) {
                             $fail(__('The industry field is required when category includes 8.'));
@@ -141,67 +119,40 @@ class OurWorkController extends Controller
                     },
                 ],
                 'year' => 'required|digits:4',
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240', // Validate image with max 2MB size
-                'type' => 'required|in:0,1', // Type must be either 0 or 1
+                'image' => 'nullable|mimes:jpeg,png,jpg,gif,mp4,avi,mov|max:20480', // Allow images and videos, max 20MB
+                'type' => 'required|in:0,1',
+                'priority' => 'required|numeric|min:0|unique:our_works,priority,' . $id,
             ], [
-                // Custom error messages
-                'brand_name_ar.required' => 'The Arabic brand name is required.',
-                'brand_name_ar.string' => 'The Arabic brand name must be a string.',
-                'brand_name_ar.max' => 'The Arabic brand name must not exceed 255 characters.',
-
-                'brand_name_en.required' => 'The English brand name is required.',
-                'brand_name_en.string' => 'The English brand name must be a string.',
-                'brand_name_en.max' => 'The English brand name must not exceed 255 characters.',
-
-                'category_id.required' => 'The category field is required.',
-                'category_id.array' => 'The category field must be an array.',
-
-                'industry_id.required_if' => 'The industry field is required when category includes 8.',
-                'industry_id.array' => 'The industry field must be an array.',
-
-                'year.required' => 'The year field is required.',
-                'year.digits' => 'The year must be a 4-digit number.',
-
-                'image.image' => 'The image must be a valid image file.',
-                'image.mimes' => 'The image must be of type: jpeg, png, jpg, or gif.',
-                'image.max' => 'The image size may not be greater than 10MB.',
-
-                'type.required' => 'The type field is required.',
-                'type.in' => 'The type must be either 0 or 1.',
+                'image.mimes' => 'The image must be of type: jpeg, png, jpg, gif, mp4, avi, mov.',
+                'image.max' => 'The file size may not exceed 20MB.',
+                'priority.unique' => 'The priority has already been taken.',
             ]);
 
-            // Find the brand record to update
             $brand = OurWork::findOrFail($id);
-
-            // Prepare data for updating
             $requestData = $request->all();
             $requestData['category_id'] = json_encode($request->input('category_id'));
             $requestData['industry_id'] = json_encode($request->input('industry_id'));
 
-            // Handle image upload and deletion of old image
+            // Handle image/video upload and old file deletion
             if ($request->hasFile('image')) {
-                // Delete the old image if it exists
                 if ($brand->image && file_exists(public_path('images/' . $brand->image))) {
                     unlink(public_path('images/' . $brand->image));
                 }
-
-                // Upload the new image
-                $imageName = time() . '.' . $request->image->getClientOriginalExtension();
-                $request->image->move(public_path('images'), $imageName);
-                $requestData['image'] = $imageName;
+                $fileName = time() . '.' . $request->image->getClientOriginalExtension();
+                $request->image->move(public_path('images'), $fileName);
+                $requestData['image'] = $fileName;
             }
 
-            // Update the brand data
             $brand->update($requestData);
 
             toastr()->success(__('Brand Updated Successfully'), __('Success'));
-
             return redirect()->route('brand.index');
         } catch (\Throwable $th) {
             toastr()->error(__('Try Again'));
             return redirect()->back()->withInput();
         }
     }
+
 
     // Our Work Details And Images Update
     public function brandDetails($id)
@@ -499,7 +450,7 @@ class OurWorkController extends Controller
 
         // Return the response with populated data and pagination
         return response()->json([
-            'data' => $brandData,
+            'data' => $brandData->sortBy('priority')->values(),
             'pagination' => [
                 'count' => $brand->count(),
                 'current_page' => $brand->currentPage(),

@@ -55,11 +55,19 @@
                                             </div>
                                         </div><!--end col-->
 
+                                        <div class="col-md-3">
+                                            <div class="mb-3">
+                                                <label for="Priority" class="form-label">Priority</label>
+                                                <input type="number" class="form-control" name="priority" placeholder="Priority"
+                                                    id="Priority" value="{{ $id->priority }}">
+                                            </div>
+                                        </div><!--end col-->
 
-                                        <div class="col-md-4">
+
+                                        <div class="col-md-3">
                                             <div class="mb-3">
                                                 <h6 class="fw-semibold">Type</h6>
-                                                <select class="js-example-basic-multiple"  name="type">
+                                                <select class="js-example-basic-multiple" name="type">
                                                     <optgroup label="Select Type">
                                                         <option value="0"
                                                             @if ($id->type == 0) selected @endif>
@@ -74,7 +82,7 @@
                                             </div>
                                         </div><!--end col-->
 
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <div class="mb-3">
                                                 <h6 class="fw-semibold">Categories</h6>
                                                 <select class="js-example-basic-multiple" multiple name="category_id[]">
@@ -90,7 +98,7 @@
                                             </div>
                                         </div><!--end col-->
 
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <div class="mb-3">
                                                 <h6 class="fw-semibold">Industry</h6>
                                                 <select class="js-example-basic-multiple" multiple name="industry_id[]">
@@ -108,10 +116,10 @@
 
                                         <div class="col-md-12">
                                             <div class="mb-3">
-                                                <label for="imageInput" class="form-label">Thumbnail</label>
+                                                <label for="image" class="form-label">Thumbnail</label>
                                                 <input type="file" class="form-control dropify" name="image"
-                                                    id="imageInput"
-                                                    data-default-file="{{ asset('images/' . $id->image) }}">
+                                                    id="image" data-default-file="{{ asset('images/' . $id->image) }}"
+                                                    accept="image/*,video/*">
                                             </div>
                                         </div><!--end col-->
 
@@ -135,12 +143,57 @@
     <script src="{{ asset('web/assets/js/pages/select2.init.js') }}"></script>
     <script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
     <script>
+        // Initialize Dropify
         $('.dropify').dropify({
             messages: {
-                'default': 'Drag and drop a file here or click',
-                'replace': 'Drag and drop or click to replace',
-                'remove': 'Remove',
-                'error': 'Ooops, something wrong happended.'
+                'default': '{{ __('messages.dragDropDefault') }}',
+                'replace': '{{ __('messages.dragDropReplace') }}',
+                'remove': '{{ __('messages.dragDropRemove') }}',
+                'error': '{{ __('messages.dragDropError') }}'
+            }
+        });
+
+        // Handle File Preview (Images and Videos)
+        $('.dropify').on('change', function() {
+            const file = this.files[0];
+            const fileType = file.type;
+            const dropifyWrapper = $(this).closest('.dropify-wrapper');
+
+            // Reset preview area
+            dropifyWrapper.find('.dropify-preview').hide().html('');
+
+            if (fileType.startsWith('image/')) {
+                // Handle image preview
+                const imagePreview = `<img src="${URL.createObjectURL(file)}" style="width: 40%; height: auto;">`;
+                dropifyWrapper.find('.dropify-preview').html(imagePreview).fadeIn();
+            } else if (fileType.startsWith('video/')) {
+                // Handle video preview
+                const videoPreview = `<video controls style="width: auto; height: auto;">
+                                        <source src="${URL.createObjectURL(file)}" type="${fileType}">
+                                        {{ __('messages.videoNotSupported') }}
+                                      </video>`;
+                dropifyWrapper.find('.dropify-preview').html(videoPreview).fadeIn();
+            }
+        });
+
+        // Handle Preloaded Files (Images/Videos)
+        $('.dropify').each(function() {
+            const filePath = $(this).attr('data-default-file');
+            const dropifyWrapper = $(this).closest('.dropify-wrapper');
+
+            if (filePath) {
+                if (/\.(mp4|avi|mov)$/i.test(filePath)) {
+                    // Preload video
+                    const videoPreview = `<video controls style="width: auto; height: auto;">
+                                            <source src="${filePath}">
+                                            {{ __('messages.videoNotSupported') }}
+                                          </video>`;
+                    dropifyWrapper.find('.dropify-preview').html(videoPreview).fadeIn();
+                } else if (/\.(jpeg|jpg|png|gif|svg)$/i.test(filePath)) {
+                    // Preload image
+                    const imagePreview = `<img src="${filePath}" style="width: 40%; height: auto;">`;
+                    dropifyWrapper.find('.dropify-preview').html(imagePreview).fadeIn();
+                }
             }
         });
     </script>

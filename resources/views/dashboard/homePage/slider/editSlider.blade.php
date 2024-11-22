@@ -87,14 +87,22 @@
             }
         });
 
-        // Handle Video Preview
+        // Handle File Preview (Images and Videos)
         $('.dropify').on('change', function() {
             const file = this.files[0];
             const fileType = file.type;
             const dropifyWrapper = $(this).closest('.dropify-wrapper');
 
-            if (fileType.startsWith('video/')) {
-                const videoPreview = `<video controls style="width: 100%; height: auto;">
+            // Reset preview area
+            dropifyWrapper.find('.dropify-preview').hide().html('');
+
+            if (fileType.startsWith('image/')) {
+                // Handle image preview
+                const imagePreview = `<img src="${URL.createObjectURL(file)}" style="width: 40%; height: auto;">`;
+                dropifyWrapper.find('.dropify-preview').html(imagePreview).fadeIn();
+            } else if (fileType.startsWith('video/')) {
+                // Handle video preview
+                const videoPreview = `<video controls style="width: auto; height: auto;">
                                         <source src="${URL.createObjectURL(file)}" type="${fileType}">
                                         {{ __('messages.videoNotSupported') }}
                                       </video>`;
@@ -107,12 +115,19 @@
             const filePath = $(this).attr('data-default-file');
             const dropifyWrapper = $(this).closest('.dropify-wrapper');
 
-            if (filePath && /\.(mp4|avi|mov)$/i.test(filePath)) {
-                const videoPreview = `<video controls style="width: 100%; height: auto;">
-                                        <source src="${filePath}">
-                                        {{ __('messages.videoNotSupported') }}
-                                      </video>`;
-                dropifyWrapper.find('.dropify-preview').html(videoPreview).fadeIn();
+            if (filePath) {
+                if (/\.(mp4|avi|mov)$/i.test(filePath)) {
+                    // Preload video
+                    const videoPreview = `<video controls style="width: auto; height: auto;">
+                                            <source src="${filePath}">
+                                            {{ __('messages.videoNotSupported') }}
+                                          </video>`;
+                    dropifyWrapper.find('.dropify-preview').html(videoPreview).fadeIn();
+                } else if (/\.(jpeg|jpg|png|gif|svg)$/i.test(filePath)) {
+                    // Preload image
+                    const imagePreview = `<img src="${filePath}" style="width: 40%; height: auto;">`;
+                    dropifyWrapper.find('.dropify-preview').html(imagePreview).fadeIn();
+                }
             }
         });
     </script>
