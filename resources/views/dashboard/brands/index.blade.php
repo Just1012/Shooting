@@ -74,8 +74,7 @@
     <script>
         var table = $('#alternative-pagination').DataTable({
             ajax: '{{ route('brand.dataTable') }}',
-            columns: [
-                {
+            columns: [{
                     'data': null,
                     render: function(data, type, row, meta) {
                         return meta.row + 1; // Row numbering
@@ -108,7 +107,7 @@
                 },
 
                 {
-                    'data' : 'priority'
+                    'data': 'priority'
                 },
 
 
@@ -125,9 +124,11 @@
                     'data': null,
                     render: function(data) {
                         var editUrl = '{{ route('brand.edit', ':id') }}'.replace(':id', data.id);
+                        var detailsUrl = '{{ route('brandDetails', ':id') }}'.replace(':id', data.id);
                         var deleteUrl = '{{ route('brand.delete', ':id') }}'.replace(':id', data.id);
 
-                        return `<a href="${editUrl}" class="mx-1"> <i class="bx bxs-edit btn btn-warning"></i></a>
+                        return `<a href="${detailsUrl}" class="mx-1"> <i class="bx bxs-detail btn btn-success"></i></a>
+                        <a href="${editUrl}" class="mx-1"> <i class="bx bxs-edit btn btn-warning"></i></a>
                                 <a href="javascript:void(0);" class="mx-1" onclick="confirmDeletion('${deleteUrl}')">
                                     <i class="bx bx-trash btn btn-danger"></i>
                                 </a>`;
