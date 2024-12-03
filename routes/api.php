@@ -5,7 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Dashboard\HiringController;
 use App\Http\Controllers\Dashboard\UserRegisterController;
 use App\Http\Controllers\Dashboard\BlogController;
+use App\Http\Controllers\Dashboard\HiringPageController;
 use App\Http\Controllers\Dashboard\HomeSliderController;
+use App\Http\Controllers\Dashboard\JourneySectionImageController;
 use App\Http\Controllers\Dashboard\OurWorkController;
 use App\Http\Controllers\Dashboard\PartnerController;
 use App\Http\Controllers\PhotographyImageController;
@@ -45,10 +47,15 @@ Route::get('/getBlog',[BlogController::class,'getBlogApi']);
 Route::get('/getSingleBlog/{id}',[BlogController::class,'getSingleBlogApi']);
 Route::get('/blogFilterApi', [BlogController::class, 'blogFilterApi']);
 
+// Journey Image
+Route::get('/getImagesSliderApi',[JourneySectionImageController::class,'getImagesSliderApi']);
 
 // Partner Api
 Route::get('/getPartnerApi',[PartnerController::class,'getPartnerApi']);
 
 // Services Api
 Route::get('/getPhotographyImage',[PhotographyImageController::class,'getPhotographyImage']);
+
+// User Hiring Page Image Api
+Route::get('/getUserHiringImage',[HiringPageController::class,'getHiringPageApi']);
 

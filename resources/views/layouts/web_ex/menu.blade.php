@@ -81,18 +81,18 @@
                                 {{-- <li class="nav-item">
                                 <a href="{{ route('editHomeSection') }}" class="nav-link"
                                     data-key="t-one-page">{{ __('messages.homeSection') }}</a>
-                            </li>
+                            </li> --}}
                             <li class="nav-item">
                                 <a href="{{ route('journeyImage.index') }}" class="nav-link"
                                     data-key="t-one-page">{{ __('messages.journeySectionImage') }}</a>
-                            </li> --}}
+                            </li>
                             </ul>
                         </div>
                     </li>
                     <!-- end Home Page -->
 
                     {{-- Start Pages --}}
-                    {{-- <li class="nav-item">
+                    <li class="nav-item">
                     <a class="nav-link menu-link" href="#pages" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="pages">
                         <i class='bx bxs-info-circle'></i> <span
@@ -100,7 +100,7 @@
                     </a>
                     <div class="collapse menu-dropdown" id="pages">
                         <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
+                            {{-- <li class="nav-item">
                                 <a href="{{ route('editAbout') }}" class="nav-link"
                                     data-key="t-one-page">{{ __('messages.aboutPage') }}</a>
                             </li>
@@ -111,14 +111,14 @@
                             <li class="nav-item">
                                 <a href="{{ route('editIndustry') }}" class="nav-link"
                                     data-key="t-one-page">{{ __('messages.industryPage') }}</a>
-                            </li>
+                            </li> --}}
                             <li class="nav-item">
                                 <a href="{{ route('userHiring.editHiringPage') }}" class="nav-link"
                                     data-key="t-one-page">{{ __('messages.userHiringPage') }}</a>
                             </li>
                         </ul>
                     </div>
-                </li> --}}
+                </li>
                     <!-- End Pages -->
 
                     {{-- Start Category Page --}}

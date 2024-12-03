@@ -123,4 +123,19 @@ class JourneySectionImageController extends Controller
             return redirect()->back();
         }
     }
+
+    public function getImagesSliderApi()
+    {
+        try {
+            $images = JourneySectionImage::where('status',1)->get();
+            return response()->json([
+                'data' => $images,
+                'message' => 'Images retrieved successfully'
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => 'Something went wrong, please try again'
+            ], 500);
+        }
+    }
 }

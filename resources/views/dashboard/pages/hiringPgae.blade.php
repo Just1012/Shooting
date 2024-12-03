@@ -53,12 +53,12 @@
                                     @csrf
                                     <div class="row">
 
-                                        <div class="col-md-12">
+                                        {{-- <div class="col-md-12">
                                             <div class="mb-3">
                                                 <label for="titleEnTextarea" class="form-label">Head Sentence Ar</label>
                                                 <input type="text" class="form-control" name="head_sentence_ar"
                                                     value="{{ $hiringPage->head_sentence_ar ?? '' }}"
-                                                    placeholder="Head Sentence Ar" id="titleEnTextarea" required>
+                                                    placeholder="Head Sentence Ar" id="titleEnTextarea">
                                             </div>
                                         </div><!--end col-->
                                         <div class="col-md-12">
@@ -66,7 +66,7 @@
                                                 <label for="titleEnTextarea" class="form-label">Head Sentence En</label>
                                                 <input type="text" class="form-control" name="head_sentence_en"
                                                     value="{{ $hiringPage->head_sentence_en ?? '' }}"
-                                                    placeholder="Head Sentence En" id="titleEnTextarea" required>
+                                                    placeholder="Head Sentence En" id="titleEnTextarea">
                                             </div>
                                         </div><!--end col-->
 
@@ -75,7 +75,7 @@
                                                 <label for="titleEnTextarea" class="form-label">Welcome Title Ar</label>
                                                 <input type="text" class="form-control" name="welcome_title_ar"
                                                     value="{{ $hiringPage->welcome_title_ar ?? '' }}"
-                                                    placeholder="Welcome Title Ar" id="titleEnTextarea" required>
+                                                    placeholder="Welcome Title Ar" id="titleEnTextarea">
                                             </div>
                                         </div><!--end col-->
                                         <div class="col-md-6">
@@ -83,7 +83,7 @@
                                                 <label for="titleEnTextarea" class="form-label">Welcome Title En</label>
                                                 <input type="text" class="form-control" name="welcome_title_en"
                                                     value="{{ $hiringPage->welcome_title_en ?? '' }}"
-                                                    placeholder="Welcome Title En" id="titleEnTextarea" required>
+                                                    placeholder="Welcome Title En" id="titleEnTextarea">
                                             </div>
                                         </div><!--end col-->
 
@@ -92,7 +92,7 @@
                                                 <label for="titleEnTextarea" class="form-label">Hiring Title Ar</label>
                                                 <input type="text" class="form-control" name="hiring_title_ar"
                                                     value="{{ $hiringPage->hiring_title_ar ?? '' }}"
-                                                    placeholder="Hiring Title Ar" id="titleEnTextarea" required>
+                                                    placeholder="Hiring Title Ar" id="titleEnTextarea">
                                             </div>
                                         </div><!--end col-->
                                         <div class="col-md-6">
@@ -100,10 +100,9 @@
                                                 <label for="titleEnTextarea" class="form-label">Hiring Title En</label>
                                                 <input type="text" class="form-control" name="hiring_title_en"
                                                     value="{{ $hiringPage->hiring_title_en ?? '' }}"
-                                                    placeholder="Hiring Title En" id="titleEnTextarea" required>
+                                                    placeholder="Hiring Title En" id="titleEnTextarea">
                                             </div>
                                         </div><!--end col-->
-
 
                                         <div class="col-md-12">
                                             <div class="mb-3">
@@ -127,7 +126,7 @@
                                                 <label for="titleEnTextarea" class="form-label">Training Title Ar</label>
                                                 <input type="text" class="form-control" name="training_title_ar"
                                                     value="{{ $hiringPage->training_title_ar ?? '' }}"
-                                                    placeholder="Training Title Ar" id="titleEnTextarea" required>
+                                                    placeholder="Training Title Ar" id="titleEnTextarea">
                                             </div>
                                         </div><!--end col-->
                                         <div class="col-md-6">
@@ -135,7 +134,7 @@
                                                 <label for="titleEnTextarea" class="form-label">Training Title En</label>
                                                 <input type="text" class="form-control" name="training_title_en"
                                                     value="{{ $hiringPage->training_title_en ?? '' }}"
-                                                    placeholder="Training Title En" id="titleEnTextarea" required>
+                                                    placeholder="Training Title En" id="titleEnTextarea">
                                             </div>
                                         </div><!--end col-->
 
@@ -154,7 +153,7 @@
                                                 <textarea class="form-control" name="training_desc_en" placeholder="Training Description Ar" rows="4"
                                                     id="myeditorinstance">{{ $hiringPage->training_desc_en ?? '' }}</textarea>
                                             </div>
-                                        </div><!--end col-->
+                                        </div><!--end col--> --}}
 
                                         <div class="col-md-12">
                                             <div class="mb-3">

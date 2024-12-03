@@ -97,4 +97,24 @@ class HiringPageController extends Controller
             return redirect()->back()->withErrors(['error' => $th->getMessage()])->withInput();
         }
     }
+
+    public function getHiringPageApi()
+    {
+        $hiringPage = HiringPage::first();
+        unset(
+            $hiringPage->head_sentence_ar,
+            $hiringPage->head_sentence_en,
+            $hiringPage->welcome_title_ar,
+            $hiringPage->welcome_title_en,
+            $hiringPage->hiring_title_ar,
+            $hiringPage->hiring_title_en,
+            $hiringPage->hiring_desc_ar,
+            $hiringPage->hiring_desc_en,
+            $hiringPage->training_title_ar,
+            $hiringPage->training_title_en,
+            $hiringPage->training_desc_ar,
+            $hiringPage->training_desc_en,
+        );
+        return response()->json($hiringPage);
+    }
 }
